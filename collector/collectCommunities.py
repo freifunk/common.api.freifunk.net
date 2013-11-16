@@ -130,10 +130,10 @@ def geoJson(summary, geoJsonPath):
 		pass
 
 #define some constants
-ffDirUrl = "https://raw.github.com/freifunk/api.freifunk.net/master/directory/directory.json"
-ffGeoJson = "/var/www/ffmap/ffGeoJson.json"
-ffSummarizedJson = "/var/www/ffmap/ffSummarizedDir.json"
-ffHtmlTable = "/var/www/ffmap/ffHtmlTable.html"
+ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json" 
+ffGeoJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffGeoJson.json" 
+ffSummarizedJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffSummarizedDir.json" 
+ffHtmlTable = "/home/user/freifunk/websites/www.freifunk.net/map/ffHtmlTable.html"
 
 #read some command line arguments
 parser = OptionParser()
