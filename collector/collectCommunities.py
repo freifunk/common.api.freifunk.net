@@ -107,6 +107,8 @@ def geoJson(summary, geoJsonPath):
 				properties['events'] = details['events']
 			if 'nodes' in details['state']:
 				properties['nodes'] = details['state']['nodes']
+			if 'nodeMaps' in details:
+				properties['nodeMaps'] = details['nodeMaps']
 		
 			properties['mtime'] = details['state']['lastchange']
 		except BaseException as e:
