@@ -1,10 +1,22 @@
 #!/usr/bin/python3
 
 import json
+import re
 import urllib
 from optparse import OptionParser
 from urllib.request import urlopen
 from datetime import tzinfo, timedelta, datetime
+
+#please configure these constants for your needs
+#define some constants for output directories
+ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json" 
+ffGeoJson = "/var/www/ffmap/ffGeoJson.json" 
+ffSummarizedJson = "/var/www/ffmap/ffSummarizedDir.json" 
+ffHtmlTable = "/var/www/ffmap/ffHtmlTable.html"
+#to propely display the html table we need our community map css
+htmlTableCommunityMapCss = "http://weimarnetz.de/ffmap2/community_map.css"
+#to sort our table we need sorttable.js
+htmlTableSorttableJs = "http://weimarnetz.de/ffmap2/sorttable.js"
 
 #log helper function
 def log(logLevel, message):
@@ -132,16 +144,91 @@ def geoJson(summary, geoJsonPath):
 	except IOError:
 		pass
 
-#define some constants
-ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json" 
-ffGeoJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffGeoJson.json" 
-ffSummarizedJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffSummarizedDir.json" 
-ffHtmlTable = "/home/user/freifunk/websites/www.freifunk.net/map/ffHtmlTable.html"
+def sanitizeContactUrls(contacts):
+	if 'url' in contacts and not re.match(r'^http([s]?):\/\/.*', contacts['url']):
+		contacts['url'] = "http://" + contacts['url']
+	if 'email' in contacts and not re.match(r'^mailto:.*', contacts['email']):
+		contacts['email'] = "mailto:" + contacts['email']
+	if 'twitter' in contacts and not re.match(r'^http([s]?):\/\/.*', contacts['twitter']):
+		contacts['twitter'] = "https://twitter.com/" + contacts['twitter']
+	if 'irc' in contacts and not re.match(r'^irc:.*', contacts['irc']):
+		contacts['irc'] = "irc:" + contacts['irc']
+	if 'jabber' in contacts and not re.match(r'^jabber:.*', contacts['jabber']):
+		contacts['jabber'] = "jabber:" + contacts['jabber']
+	if 'identica' in contacts and not re.match(r'^identica:.*', contacts['identica']):
+		contacts['identica'] = "identica:" + contacts['identica']
+	if 'phone' in contacts and not re.match(r'^tel:.*', contacts['phone']):
+		contacts['phone'] = "tel:" + contacts['phone']
+	return contacts
+
+def tableHtml(summary, HtmlTablePath):
+	htmlOutputHead = "<link rel=\"stylesheet\" href=\"" + htmlTableCommunityMapCss + "\" />"
+	htmlOutputHead += "<script src=\"" + htmlTableSorttableJs + "\"></script>"
+	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th>Stadt/Region</th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
+
+	htmlOutputFoot = "</table>"
+	htmlOutputContent = ""
+	for community in sorted(summary):
+		details = summary[community]
+		htmlOutputContent += "<tr>"
+		if 'url' in details:
+			if not re.match(r'^http([s]?):\/\/.*', details['url']):
+				details['url'] = "http://" + details['url']
+			htmlOutputContent += "<td><a href=\"" + details['url'] + "\">" + details['name'] + "</a></td>"
+		else:
+			htmlOutputContent += "<td>" + details['name'] + "</td>"
+		htmlOutputContent += "<td>" + details['location']['city'] + "</td>"
+		if 'techDetails' in details:
+			if 'firmware' in details['techDetails'] and 'name' in details['techDetails']['firmware']:
+				htmlOutputContent += "<td>" + details['techDetails']['firmware']['name'] + "</td>"
+			else:
+				htmlOutputContent += "<td></td>"
+
+			if 'routing' in details['techDetails']:
+				htmlOutputContent += "<td>" + details['techDetails']['routing'] + "</td>"
+			else:
+				htmlOutputContent += "<td></td>"
+		else:
+			htmlOutputContent += "<td></td><td></td>"
+	
+		if 'nodes' in details['state']:
+			htmlOutputContent += "<td>" + str(details['state']['nodes']) + "</td>"
+		else:
+			htmlOutputContent += "<td></td>"
+
+		if 'contact' in details:
+			details['contact'] = sanitizeContactUrls(details['contact'])
+			htmlOutputContent += "<td class=\"community-popup\"><ul class=\"contacts\">"
+			for contact in details['contact']:
+				if contact == 'ml':
+					continue
+				htmlOutputContent += "<li class=\"contact\"><a href=\"" + details['contact'][contact] + "\" class=\"button " + contact + "\" target=\"_window\"></a></li>" 
+			htmlOutputContent += "</ul></td>"
+		else:
+			htmlOutputContent += "<td></td>"
+
+
+		htmlOutputContent += "</tr>"
+
+	
+	result = htmlOutputHead + htmlOutputContent + htmlOutputFoot
+	log(3, "our result: " + result)
+	#write summary to bin directory
+	try:
+		f = open(HtmlTablePath, "w")
+		try:
+			f.write(str(result))
+		finally:
+			f.close()
+	except IOError:
+		pass
+
 
 #read some command line arguments
 parser = OptionParser()
 parser.add_option("-l", "--loglevel", dest="logLevel", default=1, type=int, help="define logleel")
 parser.add_option("-g", "--geojson", dest="geoJSON", default=True, action="store_true", help="Output format: geoJSON")
+parser.add_option("-t", "--tableHtml", dest="tableHtml", default=True, action="store_true", help="Output format: HTML table")
 (options, args) = parser.parse_args()
 
 #first step: load directory
@@ -163,3 +250,5 @@ except IOError as e:
 if options.geoJSON:
 	geoJson(summary, ffGeoJson)
 
+if options.tableHtml:
+	tableHtml(summary, ffHtmlTable)
