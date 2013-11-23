@@ -9,14 +9,14 @@ from datetime import tzinfo, timedelta, datetime
 
 #please configure these constants for your needs
 #define some constants for output directories
-ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json" 
-ffGeoJson = "/var/www/ffmap/ffGeoJson.json" 
-ffSummarizedJson = "/var/www/ffmap/ffSummarizedDir.json" 
-ffHtmlTable = "/var/www/ffmap/ffHtmlTable.html"
+ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json"
+ffGeoJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffGeoJson.json"
+ffSummarizedJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffSummarizedDir.json"
+ffHtmlTable = "/home/user/freifunk/websites/www.freifunk.net/map/ffHtmlTable.html"
 #to propely display the html table we need our community map css
-htmlTableCommunityMapCss = "http://weimarnetz.de/ffmap2/community_map.css"
+htmlTableCommunityMapCss = "http://www.freifunk.net/map/community_map.css"
 #to sort our table we need sorttable.js
-htmlTableSorttableJs = "http://weimarnetz.de/ffmap2/sorttable.js"
+htmlTableSorttableJs = "http://www.freifunk.net/map/sorttable.js"
 
 #log helper function
 def log(logLevel, message):
@@ -164,11 +164,11 @@ def sanitizeContactUrls(contacts):
 def tableHtml(summary, HtmlTablePath):
 	htmlOutputHead = "<link rel=\"stylesheet\" href=\"" + htmlTableCommunityMapCss + "\" />"
 	htmlOutputHead += "<script src=\"" + htmlTableSorttableJs + "\"></script>"
-	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th>Stadt/Region</th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
+	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th>Stadt/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
 
 	htmlOutputFoot = "</table>"
 	htmlOutputContent = ""
-	for community in sorted(summary):
+	for community in sorted(summary, key=str.lower):
 		details = summary[community]
 		htmlOutputContent += "<tr>"
 		if 'url' in details:
