@@ -63,11 +63,14 @@ def uniqueIPs(topo):
 
 def getServices():
     """ read services from olsrServices """
+    if not olsrServices or olsrServices == '':
+        return False
+
     servicesText = []
     if not os.access(olsrServices, os.R_OK):
         print 'Error: Could not read %(file)s.' % { "file": olsrServices }
         print 'Make sure the path is correct and your user has read and write permissions.'
-        exit()
+        return False
     with open(olsrServices, 'r') as services:
         servicesText = services.read().splitlines()
         services.closed
@@ -134,13 +137,16 @@ def main():
     countNodes = len(uniqueIPs(getTopo()))
     apiDict = loadApiFile()
     apiDictUpdated = updateApiNodes(apiDict, countNodes)
-    apiDictUpdated = updateApiServices(apiDictUpdated,getServices())
+    services = getServices()
+    if services:
+        apiDictUpdated = updateApiServices(apiDictUpdated, services)
     
 
     if writeApiFile(apiDictUpdated):
         print('Update of %s successful.' % apiFile)
-        print('We have %d Nodes.' % countNodes)
-        print('and %d services' % len(apiDictUpdated['services']))
+        print('We now have %d Nodes' % countNodes)
+        if services:
+            print('and %d services' % len(apiDictUpdated['services']))
 
 if __name__ == "__main__":
     main()
