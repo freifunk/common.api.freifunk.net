@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 import json
+import shutil
+import os.path
 import re
 import urllib
 from optparse import OptionParser
@@ -40,12 +42,16 @@ def summarizedJson(ffDir, path):
 	#open summarized file first
 	try:
 		summaryFile = open(path, "r")
+		historyPath = os.path.dirname(path) + "/history"
+		shutil.copy(path, historyPath + "/" + time.strip() + os.path.basename(path))
 	except IOError as e:
 		if e.errno == 2:
 			summaryFile = open(path, "w")
 		else:
 			log(0, "error opening summary file " +str(e))
 			exit(1)
+	except shutil.Error as e:
+		log(0, "error backupping ffSummarizedDir.json to \"history/" + path + "." + time.strip())
 	except BaseException as e:
 		log(0, "error opening summary file " +str(e))
 		exit(1)
