@@ -1,16 +1,14 @@
 Anwendungen
 ===========
 
-Freifunk Community Map
+FFAPI File Updater
 ----------------------
 
-Ein Beispiel gibt es hier: http://weimarnetz.de/ffmap/map.html
+Eine Möglichkeit, die Anzahl der Knoten und die von OLSR angekündigten Services zu erneuern bietet das Python-Script unter https://github.com/freifunk/common.api.freifunk.net/blob/master/contrib/ffapi-update-nodes.py.
 
-Freifunk Community Feed Merger
-------------------------------
+Es kann beispielsweise per Cronjob regelmäßig ausgeführt werden und muss auf dem Server laufen, auf dem auch die API-Datei liegt. Außerdem benötigt das Script Zugriff auf eine Instanz des jsoninfo-Plugins von OLSR. Um auch die von OLSR angekündigten Services darstellen zu können, muss die Datei mit den Informationen lokal vorliegen. Idealerweise läuft ein OLSR-Client mit Verbindung zum restlichen Netz auf dem Server.
 
-Blogfeeds werden hier zusammengefast: http://weimarnetz.de/fffeed/feed.php
-
+Alle notwendigen Einstellungen können im Kopf des Scripts konfiguriert werden.
 
 Entstehung
 ==========
