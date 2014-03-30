@@ -38,12 +38,13 @@ def loadDirectory(url):
 #create a summarized json file, works as cache
 def summarizedJson(ffDir, path):
 	time = datetime.now().isoformat(' ')
+	historyTime = datetime.now().strftime('%Y%m%d-%H.%M.%S-')
 	summary = dict() 
 	#open summarized file first
 	try:
 		summaryFile = open(path, "r")
 		historyPath = os.path.dirname(path) + "/history"
-		shutil.copy(path, historyPath + "/" + time.strip() + os.path.basename(path))
+		shutil.copy(path, historyPath + "/" + historyTime + os.path.basename(path))
 	except IOError as e:
 		if e.errno == 2:
 			summaryFile = open(path, "w")
@@ -51,7 +52,7 @@ def summarizedJson(ffDir, path):
 			log(0, "error opening summary file " +str(e))
 			exit(1)
 	except shutil.Error as e:
-		log(0, "error backupping ffSummarizedDir.json to \"history/" + path + "." + time.strip())
+		log(0, "error backupping ffSummarizedDir.json to \"history/" + historyTime + os.path.basename(path))
 	except BaseException as e:
 		log(0, "error opening summary file " +str(e))
 		exit(1)
