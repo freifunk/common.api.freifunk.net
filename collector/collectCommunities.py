@@ -192,12 +192,13 @@ def tableHtml(summary, HtmlTablePath):
 				htmlOutputContent += "<td></td>"
 
 			if 'routing' in details['techDetails']:
-        if isinstance()details['techDetails']['routing'], list):
-          routing = ""
-          for r in details['techDetails']['routing']:
-            routing = routing + ","
-        else:
-          routing = details['techDetails']['routing']
+				routing = ""
+				if isinstance(details['techDetails']['routing'], list):
+					for r in details['techDetails']['routing']:
+						routing = routing + ", " + r
+					routing = routing[2:]
+				else:
+					routing = details['techDetails']['routing']
 				htmlOutputContent += "<td>" + routing + "</td>"
 			else:
 				htmlOutputContent += "<td></td>"
