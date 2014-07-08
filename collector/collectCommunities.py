@@ -6,7 +6,7 @@ import os.path
 import re
 import urllib
 from optparse import OptionParser
-from urllib.request import urlopen
+from urllib.request import urlopen, install_opener, build_opener, ProxyHandler
 from datetime import tzinfo, timedelta, datetime
 
 #please configure these constants for your needs
@@ -244,6 +244,11 @@ parser.add_option("-l", "--loglevel", dest="logLevel", default=1, type=int, help
 parser.add_option("-g", "--geojson", dest="geoJSON", default=True, action="store_true", help="Output format: geoJSON")
 parser.add_option("-t", "--tableHtml", dest="tableHtml", default=True, action="store_true", help="Output format: HTML table")
 (options, args) = parser.parse_args()
+
+
+proxy_handler = ProxyHandler({})
+opener = build_opener(proxy_handler)
+install_opener(opener)
 
 #first step: load directory
 ffDirectory = loadDirectory(ffDirUrl) 
