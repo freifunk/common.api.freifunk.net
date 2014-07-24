@@ -171,12 +171,12 @@ def sanitizeContactUrls(contacts):
 def tableHtml(summary, HtmlTablePath):
 	htmlOutputHead = "<link rel=\"stylesheet\" href=\"" + htmlTableCommunityMapCss + "\" />"
 	htmlOutputHead += "<script src=\"" + htmlTableSorttableJs + "\"></script>"
-	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th>Stadt/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
+	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th class=\"sorttable_sorted\">Stadt/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
 
 	htmlOutputFoot = "</table>"
 	htmlOutputContent = ""
-	for community in sorted(summary, key=str.lower):
-		details = summary[community]
+	for community in sorted(summary.items(), key=lambda k_v: k_v[1]['location']['city']):
+		details = community[1]
 		htmlOutputContent += "<tr>"
 		if 'url' in details:
 			if not re.match(r'^http([s]?):\/\/.*', details['url']):
