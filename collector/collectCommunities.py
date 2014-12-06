@@ -11,14 +11,14 @@ from datetime import tzinfo, timedelta, datetime
 
 #please configure these constants for your needs
 #define some constants for output directories
-ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json"
-ffGeoJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffGeoJson.json"
-ffSummarizedJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffSummarizedDir.json"
-ffHtmlTable = "/home/user/freifunk/websites/www.freifunk.net/map/ffHtmlTable.html"
+ffDirUrl = "https://raw.github.com/fossasia/directory.api.fossasia.net/master/directory.json"
+ffGeoJson = "/home/web/fossasia-net/map/ffGeoJson.json"
+ffSummarizedJson = "/home/web/fossasia-net/map/ffSummarizedDir.json"
+ffHtmlTable = "/home/web/fossasia-net/map/ffHtmlTable.html"
 #to propely display the html table we need our community map css
-htmlTableCommunityMapCss = "http://www.freifunk.net/map/community_map.css"
+htmlTableCommunityMapCss = "//fossasia.net/map/community_map.css"
 #to sort our table we need sorttable.js
-htmlTableSorttableJs = "http://www.freifunk.net/map/sorttable.js"
+htmlTableSorttableJs = "//fossasia.net/map/sorttable.js"
 
 #log helper function
 def log(logLevel, message):
@@ -171,7 +171,7 @@ def sanitizeContactUrls(contacts):
 def tableHtml(summary, HtmlTablePath):
 	htmlOutputHead = "<link rel=\"stylesheet\" href=\"" + htmlTableCommunityMapCss + "\" />"
 	htmlOutputHead += "<script src=\"" + htmlTableSorttableJs + "\"></script>"
-	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th class=\"sorttable_sorted\">Stadt/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
+	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th class=\"sorttable_sorted\">City/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Contact</th></tr>"
 
 	htmlOutputFoot = "</table>"
 	htmlOutputContent = ""
@@ -185,30 +185,7 @@ def tableHtml(summary, HtmlTablePath):
 		else:
 			htmlOutputContent += "<td>" + details['name'] + "</td>"
 		htmlOutputContent += "<td>" + details['location']['city'] + "</td>"
-		if 'techDetails' in details:
-			if 'firmware' in details['techDetails'] and 'name' in details['techDetails']['firmware']:
-				htmlOutputContent += "<td>" + details['techDetails']['firmware']['name'] + "</td>"
-			else:
-				htmlOutputContent += "<td></td>"
-
-			if 'routing' in details['techDetails']:
-				routing = ""
-				if isinstance(details['techDetails']['routing'], list):
-					for r in details['techDetails']['routing']:
-						routing = routing + ", " + r
-					routing = routing[2:]
-				else:
-					routing = details['techDetails']['routing']
-				htmlOutputContent += "<td>" + routing + "</td>"
-			else:
-				htmlOutputContent += "<td></td>"
-		else:
-			htmlOutputContent += "<td></td><td></td>"
 	
-		if 'nodes' in details['state']:
-			htmlOutputContent += "<td>" + str(details['state']['nodes']) + "</td>"
-		else:
-			htmlOutputContent += "<td></td>"
 
 		if 'contact' in details:
 			details['contact'] = sanitizeContactUrls(details['contact'])
