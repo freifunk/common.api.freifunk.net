@@ -131,6 +131,8 @@ def geoJson(summary, geoJsonPath):
 				properties['nodeMaps'] = details['nodeMaps']
 		
 			properties['mtime'] = details['state']['lastchange']
+			if 'logo' in details['state']:
+				properties['logo'] = details['state']['logo']
 		except BaseException as e:
 			log(1, "There's something wrong with the JSON file: " + str(e))
 			continue
