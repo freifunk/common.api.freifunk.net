@@ -67,6 +67,13 @@ def summarizedJson(ffDir, path):
 		summaryFile = open(path, "w")
 	if summary is None:
 		summary = dict()
+	else:
+		#cleanup
+		copyOfSummary = summary.copy()
+		for sCommunity in copyOfSummary:
+			if not sCommunity in ffDir:
+				del summary[sCommunity]
+				log(0, sCommunity + " is not in our directory anymore and is now deleted from summary!")
 
 	for community in ffDir:
 		log(3, "working on community: " + ffDir[community])
@@ -173,7 +180,7 @@ def sanitizeContactUrls(contacts):
 def tableHtml(summary, HtmlTablePath):
 	htmlOutputHead = "<link rel=\"stylesheet\" href=\"" + htmlTableCommunityMapCss + "\" />"
 	htmlOutputHead += "<script src=\"" + htmlTableSorttableJs + "\"></script>"
-	htmlOutputHead += "<table class=\"sortable\"><tr><th>Name</th><th class=\"sorttable_sorted\">City/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Contact</th></tr>"
+	htmlOutputHead += "<table class=\"sortable community-table\"><tr><th>Name</th><th class=\"sorttable_sorted\">Stadt/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
 
 	htmlOutputFoot = "</table>"
 	htmlOutputContent = ""
