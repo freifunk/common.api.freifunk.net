@@ -12,9 +12,9 @@ from datetime import tzinfo, timedelta, datetime
 #please configure these constants for your needs
 #define some constants for output directories
 ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json"
-ffGeoJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffGeoJson.json"
-ffSummarizedJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffSummarizedDir.json"
-ffHtmlTable = "/home/user/freifunk/websites/www.freifunk.net/map/ffHtmlTable.html"
+ffGeoJson = "/var/www/vhosts/freifunk.net/httpdocs/map/ffGeoJson.json"
+ffSummarizedJson = "/var/www/vhosts/freifunk.net/httpdocs/map/ffSummarizedDir.json"
+ffHtmlTable = "/var/www/vhosts/freifunk.net/httpdocs/map/ffHtmlTable.html"
 #to propely display the html table we need our community map css
 htmlTableCommunityMapCss = "//www.freifunk.net/map/community_map.css"
 #to sort our table we need sorttable.js
@@ -69,10 +69,11 @@ def summarizedJson(ffDir, path):
 		summary = dict()
 	else:
 		#cleanup
-		for sCommunity in summary:
+		copyOfSummary = summary.copy()
+		for sCommunity in copyOfSummary:
 			if not sCommunity in ffDir:
 				del summary[sCommunity]
-				log(9, sCommunity + " is not in our directory anymore and is now deleted from summary!")
+				log(0, sCommunity + " is not in our directory anymore and is now deleted from summary!")
 
 	for community in ffDir:
 		log(3, "working on community: " + ffDir[community])
