@@ -16,9 +16,9 @@ ffGeoJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffGeoJson.json"
 ffSummarizedJson = "/home/user/freifunk/websites/www.freifunk.net/map/ffSummarizedDir.json"
 ffHtmlTable = "/home/user/freifunk/websites/www.freifunk.net/map/ffHtmlTable.html"
 #to propely display the html table we need our community map css
-htmlTableCommunityMapCss = "http://www.freifunk.net/map/community_map.css"
+htmlTableCommunityMapCss = "//www.freifunk.net/map/community_map.css"
 #to sort our table we need sorttable.js
-htmlTableSorttableJs = "http://www.freifunk.net/map/sorttable.js"
+htmlTableSorttableJs = "//www.freifunk.net/map/sorttable.js"
 
 #log helper function
 def log(logLevel, message):
