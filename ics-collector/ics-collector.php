@@ -9,6 +9,7 @@ $json = json_decode($api, true);
 // place our feeds in an arrayi
 // array structure: [0]: url, [1]: last change date, [2]: community, [3]: city, [4]: community name
 $feeds = array(
+        array('http://ics.freifunk.net/tags/freifunk-common.ics','2014-12-22', 'gemeinsam', 'Übetall', 'Freifunk.net - Communityübergreifend')
 );
 
 $oJson = array();
