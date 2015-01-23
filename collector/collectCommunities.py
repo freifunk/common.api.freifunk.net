@@ -67,6 +67,12 @@ def summarizedJson(ffDir, path):
 		summaryFile = open(path, "w")
 	if summary is None:
 		summary = dict()
+	else:
+		#cleanup
+		for sCommunity in summary:
+			if not sCommunity in ffDir:
+				del summary[sCommunity]
+				log(9, sCommunity + " is not in our directory anymore and is now deleted from summary!")
 
 	for community in ffDir:
 		log(3, "working on community: " + ffDir[community])
