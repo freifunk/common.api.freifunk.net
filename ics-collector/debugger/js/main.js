@@ -1,9 +1,28 @@
 calHeatmap = new CalHeatMap();
-function parseFromImported() {
+function sendParseRequest() {
 	var text = $('#icstext').val();
 	$.ajax({
 		url : 'ajax/icsprocessor.php',
-		data : {text : text},
+		data : {text : text, dest : 'parser' },
+		method: 'POST',
+	}).done(function(msg) {
+		var json = JSON.parse(msg);
+		$('#full-calendar').fullCalendar('removeEvents');
+		$('#full-calendar').fullCalendar('addEventSource', json.fullCalendar);
+		updateInfoPanel(json.metainfo);
+		console.log(json.calHeatmap);
+		calHeatmap.update(json.calHeatmap, true);
+		// persist change
+		calHeatmap.options.data = json.calHeatmap;
+	});
+}
+
+function sendMergeRequest() {
+	var text0 = $('#icstext-0').val();
+	var text1 = $('#icstext-1').val();
+	$.ajax({
+		url : 'ajax/icsprocessor.php',
+		data : {text0 : text0, text1 : text1, dest : 'merger' },
 		method: 'POST',
 	}).done(function(msg) {
 		var json = JSON.parse(msg);
@@ -66,18 +85,33 @@ $(document).ready(function() {
 
 	$('#parseBtn').click(function(e) {
 		e.preventDefault();
+		$('#mergePanel').addClass('hidden');
 		$('#parserPanel').toggleClass('hidden');
 		return false;
 	});
+	$('#mergeBtn').click(function(e) {
+		e.preventDefault();
+		$('#parserPanel').addClass('hidden');
+		$('#mergePanel').toggleClass('hidden');
+	});
 
-	$('#examplesPanel select').click(function(e) {
-		console.log(e.target.value);
+	$('#examplesPanel select#parseSelect').click(function(e) {
 		$.ajax({
 			url : 'ajax/geticscontent.php',
 			data : {filename : e.target.value},
 			method: 'POST',
 		}).done(function(msg) {
 			$('#icstext').val(msg);
+		});
+	});
+
+	$('#examplesPanel select#mergeSelect').click(function(e) {
+		$.ajax({
+			url : 'ajax/geticscontent.php',
+			data : {filename : e.target.value},
+			method: 'POST',
+		}).done(function(msg) {
+			$('#icstext-' + e.target.dataset.id).val(msg);
 		});
 	});
 });
