@@ -228,7 +228,7 @@ class ICal
      *
      * @return {int}
      */
-    public function iCalDateToUnixTimestamp($icalDate)
+    public static function iCalDateToUnixTimestamp($icalDate)
     {
         $icalDate = str_replace('T', '', $icalDate);
         $icalDate = str_replace('Z', '', $icalDate);
@@ -289,8 +289,8 @@ class ICal
                 // Get frequency
                 $frequency = $rrules['FREQ'];
                 // Get Start timestamp
-                $start_timestamp = $this->iCalDateToUnixTimestamp($anEvent['DTSTART']);
-                $end_timestamp = $this->iCalDateToUnixTimestamp($anEvent['DTEND']);
+                $start_timestamp = self::iCalDateToUnixTimestamp($anEvent['DTSTART']);
+                $end_timestamp = self::iCalDateToUnixTimestamp($anEvent['DTEND']);
                 $event_timestmap_offset = $end_timestamp - $start_timestamp;
                 // Get Interval
                 $interval = (isset($rrules['INTERVAL']) && $rrules['INTERVAL'] != '') ? $rrules['INTERVAL'] : 1;
@@ -318,7 +318,7 @@ class ICal
 
                 if (isset($rrules['UNTIL'])) {
                     // Get Until
-                    $until = $this->iCalDateToUnixTimestamp($rrules['UNTIL']);
+                    $until = self::iCalDateToUnixTimestamp($rrules['UNTIL']);
                 } else if (isset($rrules['COUNT'])) {
                     $frequency_conversion = array('DAILY' => 'day', 'WEEKLY' => 'week', 'MONTHLY' => 'month', 'YEARLY' => 'year');
                     $count_orig = (is_numeric($rrules['COUNT']) && $rrules['COUNT'] > 1) ? $rrules['COUNT'] : 0;
@@ -343,7 +343,7 @@ class ICal
 
                     unset($offset);
                 } else {
-                    $until = $this->iCalDateToUnixTimestamp($until_default);
+                    $until = self::iCalDateToUnixTimestamp($until_default);
                 }
 
                 // Decide how often to add events and do so
@@ -409,7 +409,7 @@ class ICal
                                 foreach ($monthdays as $monthday) {
                                     // Add event
                                     $anEvent['DTSTART'] = date('Ym' . sprintf('%02d', $monthday) . '\THis', $recurring_timestamp);
-                                    $anEvent['DTEND'] = date('Ymd\THis', $this->iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
+                                    $anEvent['DTEND'] = date('Ymd\THis', self::iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
                                     if ((!isset($anEvent['EXDATE_array'])) || (!in_array($anEvent['DTSTART'], $anEvent['EXDATE_array']))) {
                                         $events[] = $anEvent;
                                     }
@@ -424,7 +424,7 @@ class ICal
                                 $event_start_timestamp = strtotime($event_start_desc);
                                 if ($event_start_timestamp > $start_timestamp && $event_start_timestamp < $until) {
                                     $anEvent['DTSTART'] = date('Ymd\T', $event_start_timestamp) . $start_time;
-                                    $anEvent['DTEND'] = date('Ymd\THis', $this->iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
+                                    $anEvent['DTEND'] = date('Ymd\THis', self::iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
                                     if ((!isset($anEvent['EXDATE_array'])) || (!in_array($anEvent['DTSTART'], $anEvent['EXDATE_array']))) {
                                         $events[] = $anEvent;
                                     }
@@ -447,7 +447,7 @@ class ICal
                                 $event_start_timestamp = strtotime($event_start_desc);
                                 if ($event_start_timestamp > $start_timestamp && $event_start_timestamp < $until) {
                                     $anEvent['DTSTART'] = date('Ymd\T', $event_start_timestamp) . $start_time;
-                                    $anEvent['DTEND'] = date('Ymd\THis', $this->iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
+                                    $anEvent['DTEND'] = date('Ymd\THis', self::iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
                                     if ((!isset($anEvent['EXDATE_array'])) || (!in_array($anEvent['DTSTART'], $anEvent['EXDATE_array']))) {
                                         $events[] = $anEvent;
                                     }
@@ -463,7 +463,7 @@ class ICal
                                 $event_start_timestamp = strtotime($event_start_desc);
                                 if ($event_start_timestamp > $start_timestamp && $event_start_timestamp < $until) {
                                     $anEvent['DTSTART'] = date('Ymd\T', $event_start_timestamp) . $start_time;
-                                    $anEvent['DTEND'] = date('Ymd\THis', $this->iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
+                                    $anEvent['DTEND'] = date('Ymd\THis', self::iCalDateToUnixTimestamp($anEvent['DTSTART']) + $event_timestmap_offset);
                                     if ((!isset($anEvent['EXDATE_array'])) || (!in_array($anEvent['DTSTART'], $anEvent['EXDATE_array']))) {
                                         $events[] = $anEvent;
                                     }
@@ -565,7 +565,7 @@ class ICal
 
         // loop through all events by adding two new elements
         foreach ($events as $anEvent) {
-            $timestamp = $this->iCalDateToUnixTimestamp($anEvent['DTSTART']);
+            $timestamp = self::iCalDateToUnixTimestamp($anEvent['DTSTART']);
             if ($timestamp >= $rangeStart && $timestamp <= $rangeEnd) {
                 $extendedEvents[] = $anEvent;
             }
@@ -590,7 +590,7 @@ class ICal
         // loop through all events by adding two new elements
         foreach ($events as $anEvent) {
             if (!array_key_exists('UNIX_TIMESTAMP', $anEvent)) {
-                $anEvent['UNIX_TIMESTAMP'] = $this->iCalDateToUnixTimestamp($anEvent['DTSTART']);
+                $anEvent['UNIX_TIMESTAMP'] = self::iCalDateToUnixTimestamp($anEvent['DTSTART']);
             }
 
             if (!array_key_exists('REAL_DATETIME', $anEvent)) {

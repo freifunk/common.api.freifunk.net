@@ -31,14 +31,14 @@
 require 'lib/class.iCalReader.php';
 
 
-$datafiles = scandir('../data');
+$datafiles = scandir('data');
 $json = array();
 
 foreach ($datafiles as $file) {
     if ($file === '.' || $file === '..') {
         continue;
     }
-    $ical   = new ICal('../data/' . $file, true);
+    $ical   = new ICal('data/' . $file, true);
     $events = $ical->events();
     echo '<h3>File : ' . $file . '</h3><br/>';
     $date = $events[0]['DTSTART'];

@@ -1,3 +1,17 @@
+<?php
+function generateDataOptions() {
+	$str = '';
+	$datafiles = scandir('data');	
+	foreach ($datafiles as $file) {
+	    if ($file === '.' || $file === '..') {
+	        continue;
+	    }
+ 		$str .= "<option value='$file'>$file</option>";
+	}
+ 	return $str;
+}
+$dataOpts = generateDataOptions();
+?>
 <head>
 	<script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
 	<link rel="stylesheet" href="ext/cal-heatmap/cal-heatmap.css" />
@@ -18,23 +32,24 @@
 	</div>
 	<div id="parserPanel">
 		<div id="examplesPanel">Example files 
-		<select>
-		<?php
-			$datafiles = scandir('data');	
-			foreach ($datafiles as $file) {
-			    if ($file === '.' || $file === '..') {
-			        continue;
-			    }
-			    echo "<option value='$file'>$file</option>";
-		}
-		?>
+		<select id="parseSelect">
+			<?php echo $dataOpts; ?>
 		</select>
 		</div>
-		<textarea id="icstext" placeholder="Copy your ics / iCal text here"></textarea> 
-		<button id="importConfirmBtn" onclick="parseFromImported();">Feed me !</button>
+		<textarea id="icstext" placeholder="Copy your ics / iCal text here" class="largeArea"></textarea> 
+		<button id="importConfirmBtn" onclick="sendParseRequest();">Feed me !</button>
 	</div>
 	<div id="mergePanel" class="hidden">
-
+		<?php 
+		for ($i = 0; $i < 2; $i++) { ?>
+			<div id="examplesPanel">Example files
+			<select id="mergeSelect" data-id="<?php echo $i ?>">
+				<?php echo $dataOpts; ?>
+			</select>
+			</div>
+			<textarea id="icstext-<?php echo $i;?>" placeholder="Copy your ics / iCal text here" class="smallArea"></textarea> 
+		<?php } ?>
+		<button id="mergeSendBtn" onclick="sendMergeRequest();">Merge me !</button>
 	</div>
 	<hr/>
 	<h2>Info</h2>
@@ -70,14 +85,18 @@
 	 .hidden {
 	 	display: none;
 	 }
-	 #parserPanel {
-	 	margin-top : 20px;
+	 #examplesPanel {
+	 	margin-top : 10px;
 	 }
-	 #icstext {
+	 .largeArea {
 	 	min-width: 500px;
 	 	min-height: 100px;
 	 }
-	 #importConfirmBtn {
+	 .smallArea {
+	 	min-width: 500px;
+	 	min-height: 60px;
+	 }
+	 #importConfirmBtn, #mergeSendBtn {
 	  	vertical-align: bottom;
 	 	margin: 4px;
 	 	height: 30px;
