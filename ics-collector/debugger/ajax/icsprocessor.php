@@ -74,10 +74,11 @@ switch ($_POST['dest']) {
       'Number of events' => count($ics['VEVENTS']),
       /* not available 'Number of recurrent events' => $ics->recurrent_event_count, */
       );
+    $json['rawText'] = IcsMerger::getRawText($ics);
     $json['fullCalendar'] = array();
     $json['calHeatmap'] = array();
     foreach ($events as $event) {
-      $cell = array(title => $event['SUMMARY'], description => $event['DESCRIPTION']);
+      $cell = array('title' => $event['SUMMARY'], 'description' => $event['DESCRIPTION']);
       if (array_key_exists('DTSTART', $event)) {
             $cell['start'] = convertTimeToFullCalendar($event['DTSTART']);
         }
@@ -98,9 +99,6 @@ switch ($_POST['dest']) {
   default:
     break;
 }
-
-
-
 
 function convertTimeToFullCalendar($time) {
     return substr($time, 0, 4) . '-' . substr($time, 4, 2) . '-' . substr($time, 6, 5) . ':' . substr($time, 11, 2) . ':' . substr($time, 13, 2); 
