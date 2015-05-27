@@ -15,6 +15,7 @@
  * UPDATE NOTES : @zyzo (htto://www.github.com/zyzo)
  *   - Add recurrence event counter
  *   - Add option disable recurrent events
+ *   - Return more details for DATE/DATE-TIME property
  * 
  */
 
@@ -158,8 +159,10 @@ class ICal
      */
     public function addCalendarComponentWithKeyAndValue($component, $keyword, $value)
     {
+        $explodedKeyword = null;
         if (strstr($keyword, ';')) {
             // Ignore everything in keyword after a ; (things like Language, etc)
+            $explodedKeyword = explode(';', $keyword);
             $keyword = substr($keyword, 0, strpos($keyword, ';'));
         }
         if ($keyword == false) {
@@ -178,8 +181,27 @@ class ICal
         }
 
         if (stristr($keyword, 'DTSTART') or stristr($keyword, 'DTEND') or stristr($keyword, 'EXDATE')) {
-            $keyword = explode(';', $keyword);
-            $keyword = $keyword[0];
+            //$keyword = $keyword[0];
+            $meta = array();
+            if (strlen($value) === 8) {
+                // DATE format 19970714
+                $meta['type'] = 'DATE';
+            } else {
+                // DATE-TIME format
+                $meta['type'] = 'DATE-TIME';
+                if (strstr('T', $value)) {
+                    // format 2 : DATE with UTC time 19980119T070000Z
+                    $meta['format'] = 'UTC-TIME';
+                } else {
+                    // format 1 : DATE with local time 19980118T230000
+                    $meta['format'] = 'LOCAL-TIME';
+                    if (count($explodedKeyword) === 2 && stristr($explodedKeyword[1], 'TZID=')) {
+                        // timezone specification exists
+                        $meta['tzid'] = explode('=', $explodedKeyword[1])[1]; 
+                    }
+                }
+            }
+            $value = array('meta' => $meta, 'value' => $value);
         }
 
         switch ($component) {
