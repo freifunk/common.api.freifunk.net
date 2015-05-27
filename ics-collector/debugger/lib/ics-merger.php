@@ -5,10 +5,12 @@ class IcsMerger {
 
 	private $inputs = array();
 	private $config = array();
+	private $defaultTimezone;
 	const CONFIG_FILENAME = 'ics-merger-config.ini';
 
 	public function __construct() {
 		$this->config = parse_ini_file(IcsMerger::CONFIG_FILENAME);
+		$this->defaultTimezone = new DateTimeZone($this->config['DEFAULT_TIME_ZONE']);
 	}
 
 	public function add($text) {
@@ -19,19 +21,19 @@ class IcsMerger {
 		$result = array(
 			'VCALENDAR' => array(),
 			'VEVENTS' => array()
-		); 
+		);
 		foreach ($this->inputs as $icsText) {
 			$ical = new ICal(explode("\n", $icsText), true);
+			//var_dump($ical);
 			foreach($ical->cal as $key => $value) {
 				switch($key) {
 				case 'VCALENDAR' :
 					$result['VCALENDAR'] = array_merge($result['VCALENDAR'], $value);
 					break;
 				case 'VEVENT' :
-					$result['VEVENTS'] = array_merge($result['VEVENTS'], $value);
+					$result['VEVENTS'] = array_merge($result['VEVENTS'], $this->processEvents($value));
 					break;
 				default : 
-					// ignore others
 					break;
 				}
 			}
@@ -45,6 +47,39 @@ class IcsMerger {
 		// flatten array
 		$result['VEVENTS'] = array_map($callback, $result['VEVENTS']);
 		return $result;
+	}
+
+	private function processEvents($events) {
+		foreach($events as &$event) {
+			//echo "$key hahdsad" . PHP_EOL;
+			foreach ($event as $key => &$value) {
+				switch($key) {
+				// properties of type DATE / DATE-TIME
+				case 'DTSTART':
+				case 'DTEND' :
+				case 'RDATE' :
+					// only local datime needs conversion
+					if ($value['meta']['type'] == 'DATE-TIME' && $value['meta']['format'] == 'LOCAL-TIME') {
+						if (array_key_exists('tzid', $value['meta'])) {
+							$tz = new DateTimeZone($value['meta']['tzid']);
+							try {
+								$time = new DateTime($value['value'], $tz);
+							} catch (Exception $e) {
+								echo $e->getMessage();
+								exit(1);
+							}
+							$time->setTimezone($this->defaultTimezone);
+							$value['value'] =  $time->format('Ymd\THis');
+						}
+					}
+					break;
+				default : 
+					// ignore others
+					break;
+				}
+			}
+		}
+		return $events;
 	}
 
 	public static function getRawText($icsMergerResult) {

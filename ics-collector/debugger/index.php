@@ -37,7 +37,7 @@ $dataOpts = generateDataOptions();
 		</select>
 		</div>
 		<textarea id="icstext" placeholder="Copy your ics / iCal text here" class="largeArea"></textarea> 
-		<button id="importConfirmBtn" onclick="sendParseRequest();">Parse me !</button>
+		<button id="importConfirmBtn" onclick="sendParseRequest();">Feed me !</button>
 	</div>
 	<div id="mergePanel" class="hidden">
 		<textarea id="mergedIcsText" class="hidden" disabled></textarea>
