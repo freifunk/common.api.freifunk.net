@@ -33,6 +33,8 @@ function sendMergeRequest() {
 		calHeatmap.update(json.calHeatmap, true);
 		// persist change
 		calHeatmap.options.data = json.calHeatmap;
+		$('#mergedIcsText').text(json.rawText);
+		$('#mergedIcsText').removeClass('hidden');
 	});
 }
 

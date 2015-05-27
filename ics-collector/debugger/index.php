@@ -37,9 +37,10 @@ $dataOpts = generateDataOptions();
 		</select>
 		</div>
 		<textarea id="icstext" placeholder="Copy your ics / iCal text here" class="largeArea"></textarea> 
-		<button id="importConfirmBtn" onclick="sendParseRequest();">Feed me !</button>
+		<button id="importConfirmBtn" onclick="sendParseRequest();">Parse me !</button>
 	</div>
 	<div id="mergePanel" class="hidden">
+		<textarea id="mergedIcsText" class="hidden" disabled></textarea>
 		<?php 
 		for ($i = 0; $i < 2; $i++) { ?>
 			<div id="examplesPanel">Example files
@@ -110,6 +111,15 @@ $dataOpts = generateDataOptions();
 	}
 	th, td {
 	    padding: 5px;
+	}
+	#mergedIcsText {
+		float: right; 
+		min-width: 500px; 
+		min-height: 185px;  
+		width: 500px;
+		margin-right : 50px;
+		resize : vertical;
+		overflow-x: scroll; 
 	}
 	</style>
 </body>
