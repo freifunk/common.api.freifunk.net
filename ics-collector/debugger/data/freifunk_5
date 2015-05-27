@@ -1,0 +1,227 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Freifunk Westpfalz
+X-WR-TIMEZONE:Europe/Berlin
+X-WR-CALDESC:Dies ist der öffentliche Kalender für Events im Freifunk Westp
+ falz
+BEGIN:VTIMEZONE
+TZID:Europe/Berlin
+X-LIC-LOCATION:Europe/Berlin
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Berlin:20150529T190000
+DTEND;TZID=Europe/Berlin:20150529T210000
+DTSTAMP:20150519T213317Z
+UID:dc7fa6op7ih21ju4eidgjc21uc@google.com
+RECURRENCE-ID;TZID=Europe/Berlin:20150605T190000
+CREATED:20150202T095624Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen b
+ esprechen\, was sich seit dem letzten Treffen getan hat und für die nächste
+  Zeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sic
+ h in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+ r Ort\, die direkt mitgenommen werden können.\n\nMitmach-Agenda unter:\nhtt
+ p://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funkt fr
+ ei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150517T173054Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150509T090000Z
+DTEND:20150509T160000Z
+DTSTAMP:20150519T213317Z
+UID:9q1pllf8eepbcn3iktbl0p6324@google.com
+CREATED:20150211T222442Z
+DESCRIPTION:Das Stadteilfest findet am 09.05.2015 im Stadtpark Kasierslaute
+ rn von 11-18 Uhr statt.\n\nFreifunk Westpfalz wird am Infostand von Chaos-i
+ nKL mit dabei sein und Freifunk vorstellen.\n\nGeplant ist auch den Stadtpa
+ rk mit mehreren Event-Knoten zu versehen um die bereits vorhandene Ausleuch
+ tung zu verbessern.\n\nPlanung und Details auf:\nhttps://www.chaos-inkl.de/
+ wiki/event:stadtteilfest
+LAST-MODIFIED:20150502T152735Z
+LOCATION:Stadtpark\, Deutschland
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Stadtteilfest im Stadtpark Kaiserslautern
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150427T170000Z
+DTEND:20150427T183000Z
+DTSTAMP:20150519T213317Z
+UID:3v4aio0gp5pgmr0mqphtg78mrs@google.com
+CREATED:20150414T122801Z
+DESCRIPTION:Am 27.04.2015 findet um 19 Uhr ein offener Informationsabend zu
+  Freifunk-Westpfalz im Café Banhof in der Bahnhofstraße 1 in Kirchheimbolan
+ den statt.\n\nEingeladen sind alle\, die anderen Menschen offenes WLAN anbi
+ eten möchten. Die Freifunk-Community macht dies einfach\, sicher und kosten
+ günstig möglich.\n\n    + Was braucht man\, um beim Freifunk-Netzwerk mitzu
+ machen?\n    + Gibt es Risiken für mich als Betreiber eines Freifunk-Knoten
+ s?\n    + Was ist der Unterschied zu kommerziellen Hotspot-Anbietern?\n\nDi
+ ese Fragen und mehr werden beim Info-Abend beantwortet.
+LAST-MODIFIED:20150414T122801Z
+LOCATION:Bahnhofstraße 1\, 67292 Kirchheimbolanden\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Informationsabend zu Freifunk-Westpfalz
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Berlin:20150410T190000
+DTEND;TZID=Europe/Berlin:20150410T210000
+DTSTAMP:20150519T213317Z
+UID:dc7fa6op7ih21ju4eidgjc21uc@google.com
+RECURRENCE-ID;TZID=Europe/Berlin:20150403T190000
+CREATED:20150202T095624Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen b
+ esprechen\, was sich seit dem letzten Treffen getan hat und für die nächste
+  Zeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sic
+ h in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+ r Ort\, die direkt mitgenommen werden können.\n\nMitmach-Agenda unter:\nhtt
+ p://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funkt fr
+ ei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150306T210541Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150317T170000Z
+DTEND:20150317T190000Z
+DTSTAMP:20150519T213317Z
+UID:hkam60s6s5lbph1ef38uj5hpgk@google.com
+CREATED:20150211T222006Z
+DESCRIPTION:Am 17.03.2015 findet um 18 Uhr ein offener Informationsabend zu
+  Freifunk-Westpfalz in den Räumen von Chaos inKL. e.V. (Rudolf-Breitscheid-
+ Str. 65\, Eingang in der Ziegelstraße) statt.\n\nEingeladen sind alle\, die
+  anderen Menschen offenes WLAN anbieten möchten. Die Freifunk-Community mac
+ ht dies einfach\, sicher und kostengünstig möglich.\n\n    + Was braucht ma
+ n\, um beim Freifunk-Netzwerk mitzumachen?\n    + Gibt es Risiken für mich 
+ als Betreiber eines Freifunk-Knotens?\n    + Was ist der Unterschied zu kom
+ merziellen Hotspot-Anbietern?\n\nDiese Fragen und mehr werden beim Info-Abe
+ nd beantwortet.\n\nBitte melden Sie sich kurz mit einer Mail an info@freifu
+ nk-westpfalz.de an. Sagen Sie uns mit wie vielen Personen Sie kommen werden
+ \, damit wir sicherstellen können\, dass genug Platz für alle Besucher ist.
+LAST-MODIFIED:20150306T120913Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67655 Kaiserslautern\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Informationsabend zu Freifunk-Westpfalz
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Berlin:20150206T190000
+DTEND;TZID=Europe/Berlin:20150206T210000
+RRULE:FREQ=MONTHLY;BYDAY=1FR
+DTSTAMP:20150519T213317Z
+UID:dc7fa6op7ih21ju4eidgjc21uc@google.com
+CREATED:20150202T095624Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen b
+ esprechen\, was sich seit dem letzten Treffen getan hat und für die nächste
+  Zeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sic
+ h in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+ r Ort\, die direkt mitgenommen werden können.\n\nMitmach-Agenda unter:\nhtt
+ p://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funkt fr
+ ei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150202T095624Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150116T180000Z
+DTEND:20150116T200000Z
+DTSTAMP:20150519T213317Z
+UID:bnf67mkm2ic8ostdlep619oh1k@google.com
+CREATED:20150112T152313Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen b
+ esprechen\, was sich seit dem letzten Treffen getan hat und für die nächste
+  Zeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sic
+ h in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+ r Ort\, die direkt mitgenommen werden können.\n\nAgenda demnächst unter:\nh
+ ttp://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funkt 
+ frei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150112T152313Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: 3. Freifunk Treffen
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141114T180000Z
+DTEND:20141114T200000Z
+DTSTAMP:20150519T213317Z
+UID:kl7iui6sbn029k4202id3rb44k@google.com
+CREATED:20141029T091444Z
+DESCRIPTION:
+LAST-MODIFIED:20141204T105243Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67655 Kaiserslautern\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Erstes Treffen
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141206T160000Z
+DTEND:20141206T180000Z
+DTSTAMP:20150519T213317Z
+UID:7hhtls562budrct349pb8oobuc@google.com
+CREATED:20141203T233552Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nAm Samstag\,
+  den 6.12. findet um 17 Uhr das 2. Treffen von Freifunk Westpfalz im Raum d
+ es Chaos-inKL (Rudolf-Breitscheid-Straße 65\, Kaiserslautern) statt.\n\nWir
+  wollen besprechen\, was sich seit dem letzten Treffen getan hat und für di
+ e nächste Zeit planen. Des weiteren sind alle Interessierten herzlich einge
+ laden sich in lockerer Runde über Freifunk zu informieren\, wir haben auch 
+ Knoten vor Ort\, die direkt mitgenommen werden können.\n\nWir freuen uns au
+ f euch und funkt frei!\n\nhttps://www.freifunk-westpfalz.de/2014/12/2-treff
+ en/
+LAST-MODIFIED:20141204T105229Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141111T180000Z
+DTEND:20141111T200000Z
+DTSTAMP:20150519T213317Z
+UID:fno25hruk7hi7seu1f8ipo9chg@google.com
+CLASS:PUBLIC
+CREATED:20141029T092354Z
+DESCRIPTION:https://www.chaos-inkl.de/wiki/vortrag:freifunk
+LAST-MODIFIED:20141029T093555Z
+LOCATION:Rudolf-Breitscheid-Straß​e 65\, 67655 Kaiserslautern\, Deutschland
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk - was ist das eigentlich? (Vortrag bei chaos-inkl.de
+ )
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR
