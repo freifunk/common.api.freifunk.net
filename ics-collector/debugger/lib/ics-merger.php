@@ -56,6 +56,7 @@ class IcsMerger {
 				// google calendar
 				case 'X-WR-TIMEZONE':
 					$timezone = $value;
+					$calendarHead[$key] = $this->config['DEFAULT_TIMEZONE']; 
 					break;
 				
 				default:

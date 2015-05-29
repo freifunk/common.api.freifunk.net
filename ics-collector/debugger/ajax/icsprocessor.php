@@ -66,7 +66,7 @@ switch ($_POST['dest']) {
     $ics = $merger->getResult();
     $json = array();
     $events = $ics['VEVENTS'];
-    $date = $events[0]['DTSTART'];
+    $date = $events[0]['DTSTART']['value'];
     $json['metainfo'] = array(
       'PRODID' => $ics['VCALENDAR']['PRODID'],
       'First event date' => $date,
