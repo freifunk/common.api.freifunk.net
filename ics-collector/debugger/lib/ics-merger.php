@@ -10,7 +10,7 @@ class IcsMerger {
 
 	public function __construct() {
 		$this->config = parse_ini_file(IcsMerger::CONFIG_FILENAME);
-		$this->defaultTimezone = new DateTimeZone($this->config['DEFAULT_TIME_ZONE']);
+		$this->defaultTimezone = new DateTimeZone($this->config['DEFAULT_TIMEZONE']);
 	}
 
 	public function add($text) {
@@ -25,13 +25,14 @@ class IcsMerger {
 		foreach ($this->inputs as $icsText) {
 			$ical = new ICal(explode("\n", $icsText), true);
 			//var_dump($ical);
+			$timezone = null;
 			foreach($ical->cal as $key => $value) {
 				switch($key) {
 				case 'VCALENDAR' :
-					$result['VCALENDAR'] = array_merge($result['VCALENDAR'], $value);
+					$result['VCALENDAR'] = array_merge($result['VCALENDAR'], $this->processCalendarHead($value, $timezone));
 					break;
 				case 'VEVENT' :
-					$result['VEVENTS'] = array_merge($result['VEVENTS'], $this->processEvents($value));
+					$result['VEVENTS'] = array_merge($result['VEVENTS'], $this->processEvents($value, $timezone));
 					break;
 				default : 
 					break;
@@ -49,9 +50,23 @@ class IcsMerger {
 		return $result;
 	}
 
-	private function processEvents($events) {
+	private function processCalendarHead($calendarHead, &$timezone) {
+		foreach ($calendarHead as $key => $value) {
+			switch ($key) {
+				// google calendar
+				case 'X-WR-TIMEZONE':
+					$timezone = $value;
+					break;
+				
+				default:
+					# code...
+					break;
+			}
+		}
+		return $calendarHead;
+	}
+	private function processEvents($events, $timezone = null) {
 		foreach($events as &$event) {
-			//echo "$key hahdsad" . PHP_EOL;
 			foreach ($event as $key => &$value) {
 				switch($key) {
 				// properties of type DATE / DATE-TIME
@@ -60,8 +75,13 @@ class IcsMerger {
 				case 'RDATE' :
 					// only local datime needs conversion
 					if ($value['meta']['type'] == 'DATE-TIME' && $value['meta']['format'] == 'LOCAL-TIME') {
+						$tz = null;
 						if (array_key_exists('tzid', $value['meta'])) {
 							$tz = new DateTimeZone($value['meta']['tzid']);
+						} else if ($timezone != null) {
+							$tz = new DateTimeZone($timezone);
+						}
+						if ($tz != null) {
 							try {
 								$time = new DateTime($value['value'], $tz);
 							} catch (Exception $e) {
@@ -83,20 +103,25 @@ class IcsMerger {
 	}
 
 	public static function getRawText($icsMergerResult) {
-
 		$callback = function ($v, $k) {
 			if (is_array($v)) {
-				return '';
+				if (array_key_exists('value', $v)) {
+					return $k . ':' . $v['value'] . PHP_EOL;
+				} else {
+					return '';
+				}
 			} else {
-				return $k . ':' . $v . "\n"; 
+				return $k . ':' . $v . PHP_EOL; 
 			}
 		};
-		$str = implode('', array_map($callback, $icsMergerResult['VCALENDAR'], array_keys($icsMergerResult['VCALENDAR'])));
+		$str = 'BEGIN:VCALENDAR' . PHP_EOL;
+		$str .= implode('', array_map($callback, $icsMergerResult['VCALENDAR'], array_keys($icsMergerResult['VCALENDAR'])));
 		foreach ($icsMergerResult['VEVENTS'] as $event) {
-			$str .= 'BEGIN:VEVENT' . "\n"; 
+			$str .= 'BEGIN:VEVENT' . PHP_EOL; 
 			$str .= implode('', array_map($callback, $event, array_keys($event)));
-			$str .= 'END:VEVENT' . "\n";
+			$str .= 'END:VEVENT' . PHP_EOL;
 		}
+		$str .= 'END:VCALENDAR';
 		return $str;
 	}
 }
