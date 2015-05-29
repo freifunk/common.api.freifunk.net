@@ -23,7 +23,7 @@ switch ($_POST['dest']) {
     $ics = new ICal(explode("\n", $icsText));
     $json = array();
     $events = $ics->events();
-    $date = $events[0]['DTSTART'];
+    $date = $events[0]['DTSTART']['value'];
     $json['metainfo'] = array(
       'PRODID' => $ics->cal['VCALENDAR']['PRODID'],
       'First event date' => $date,
@@ -37,14 +37,14 @@ switch ($_POST['dest']) {
     foreach ($events as $event) {
       $cell = array('title' => $event['SUMMARY'], 'description' => $event['DESCRIPTION']);
       if (array_key_exists('DTSTART', $event)) {
-            $cell['start'] = convertTimeToFullCalendar($event['DTSTART']);
+            $cell['start'] = convertTimeToFullCalendar($event['DTSTART']['value']);
         }
          if (array_key_exists('DTEND', $event)) {
-            $cell['end'] = convertTimeToFullCalendar($event['DTEND']);
+            $cell['end'] = convertTimeToFullCalendar($event['DTEND']['value']);
         }
         array_push($json['fullCalendar'], $cell);
 
-        $unixTimestamp = ICal::iCalDateToUnixTimestamp($event['DTSTART']);
+        $unixTimestamp = ICal::iCalDateToUnixTimestamp($event['DTSTART']['value']);
         if (array_key_exists($unixTimestamp, $json['calHeatmap'])) {
           $json['calHeatmap'][$unixTimestamp] += 1;
         } else {
@@ -80,14 +80,14 @@ switch ($_POST['dest']) {
     foreach ($events as $event) {
       $cell = array('title' => $event['SUMMARY'], 'description' => $event['DESCRIPTION']);
       if (array_key_exists('DTSTART', $event)) {
-            $cell['start'] = convertTimeToFullCalendar($event['DTSTART']);
+            $cell['start'] = convertTimeToFullCalendar($event['DTSTART']['value']);
         }
          if (array_key_exists('DTEND', $event)) {
-            $cell['end'] = convertTimeToFullCalendar($event['DTEND']);
+            $cell['end'] = convertTimeToFullCalendar($event['DTEND']['value']);
         }
         array_push($json['fullCalendar'], $cell);
 
-        $unixTimestamp = ICal::iCalDateToUnixTimestamp($event['DTSTART']);
+        $unixTimestamp = ICal::iCalDateToUnixTimestamp($event['DTSTART']['value']);
         if (array_key_exists($unixTimestamp, $json['calHeatmap'])) {
           $json['calHeatmap'][$unixTimestamp] += 1;
         } else {

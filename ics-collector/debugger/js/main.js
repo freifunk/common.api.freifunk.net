@@ -10,7 +10,6 @@ function sendParseRequest() {
 		$('#full-calendar').fullCalendar('removeEvents');
 		$('#full-calendar').fullCalendar('addEventSource', json.fullCalendar);
 		updateInfoPanel(json.metainfo);
-		console.log(json.calHeatmap);
 		calHeatmap.update(json.calHeatmap, true);
 		// persist change
 		calHeatmap.options.data = json.calHeatmap;
