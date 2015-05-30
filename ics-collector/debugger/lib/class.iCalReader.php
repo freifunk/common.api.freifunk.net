@@ -181,7 +181,6 @@ class ICal
         }
 
         if (stristr($keyword, 'DTSTART') or stristr($keyword, 'DTEND') or stristr($keyword, 'EXDATE')) {
-            //$keyword = $keyword[0];
             $meta = array();
             if (strlen($value) === 8) {
                 // DATE format 19970714
@@ -234,7 +233,7 @@ class ICal
      */
     public function keyValueFromString($text)
     {
-        preg_match('/([A-Za-z-\/;=^:]+)[:]([\w\W]*)/', $text, $matches);
+        preg_match('/([A-Za-z-\/;=_^:]+)[:]([\w\W]*)/', $text, $matches);
         if (count($matches) == 0) {
             return false;
         }
@@ -311,8 +310,8 @@ class ICal
                 // Get frequency
                 $frequency = $rrules['FREQ'];
                 // Get Start timestamp
-                $start_timestamp = self::iCalDateToUnixTimestamp($anEvent['DTSTART']);
-                $end_timestamp = self::iCalDateToUnixTimestamp($anEvent['DTEND']);
+                $start_timestamp = self::iCalDateToUnixTimestamp($anEvent['DTSTART']['value']);
+                $end_timestamp = self::iCalDateToUnixTimestamp($anEvent['DTEND']['value']);
                 $event_timestmap_offset = $end_timestamp - $start_timestamp;
                 // Get Interval
                 $interval = (isset($rrules['INTERVAL']) && $rrules['INTERVAL'] != '') ? $rrules['INTERVAL'] : 1;
