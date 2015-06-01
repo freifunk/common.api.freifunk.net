@@ -4,13 +4,14 @@ require_once 'class.iCalReader.php';
 class IcsMerger {
 
 	private $inputs = array();
-	private $config = array();
+	private $defaultHeader = array();
 	private $defaultTimezone;
 	const CONFIG_FILENAME = 'ics-merger-config.ini';
 
 	public function __construct() {
-		$this->config = parse_ini_file(IcsMerger::CONFIG_FILENAME);
-		$this->defaultTimezone = new DateTimeZone($this->config['DEFAULT_TIMEZONE']);
+		$configs = parse_ini_file(IcsMerger::CONFIG_FILENAME, true);
+		$this->defaultHeader = $configs['ICS_HEADER'];
+		$this->defaultTimezone = new DateTimeZone($this->defaultHeader['X-WR-TIMEZONE']);
 	}
 
 	public function add($text) {
@@ -40,7 +41,9 @@ class IcsMerger {
 			}
 		}
 
-		$result['VCALENDAR']['PRODID'] = $this->config['DEFAULT_PRODID'];
+		foreach ($this->defaultHeader as $key => $value) {
+			$result['VCALENDAR'][$key] = $this->defaultHeader[$key];
+		}
 
 		$callback = function($value) {
 			return $value;
@@ -50,22 +53,24 @@ class IcsMerger {
 		return $result;
 	}
 
+	// traverse calendar header to extract important informations : default timezone, etc.
 	private function processCalendarHead($calendarHead, &$timezone) {
 		foreach ($calendarHead as $key => $value) {
 			switch ($key) {
 				// google calendar
 				case 'X-WR-TIMEZONE':
 					$timezone = $value;
-					$calendarHead[$key] = $this->config['DEFAULT_TIMEZONE']; 
 					break;
-				
 				default:
-					# code...
 					break;
 			}
 		}
 		return $calendarHead;
 	}
+
+
+	// traverse calendar events to perform modifications
+	// e.g : convert datetime to default timezone
 	private function processEvents($events, $timezone = null) {
 		foreach($events as &$event) {
 			foreach ($event as $key => &$value) {
