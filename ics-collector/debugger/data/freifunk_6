@@ -1,0 +1,311 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//My Company//Cool Calendar App//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VTIMEZONE
+TZID:Europe/Berlin
+BEGIN:STANDARD
+DTSTART:19691231T230000
+TZOFFSETTO:+0100
+TZOFFSETFROM:+0100
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:122-weimarer-freifunktreffen
+DTSTART:20150519T180000Z
+DTEND:20150519T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:127-weimarer-freifunktreffen
+DTSTART:20150526T180000Z
+DTEND:20150526T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:130-weimarer-freifunktreffen
+DTSTART:20150602T180000Z
+DTEND:20150602T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:132-weimarer-freifunktreffen
+DTSTART:20150609T180000Z
+DTEND:20150609T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:135-weimarer-freifunktreffen
+DTSTART:20150616T180000Z
+DTEND:20150616T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:139-weimarer-freifunktreffen
+DTSTART:20150623T180000Z
+DTEND:20150623T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:143-weimarer-freifunktreffen
+DTSTART:20150630T180000Z
+DTEND:20150630T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:147-weimarer-freifunktreffen
+DTSTART:20150707T180000Z
+DTEND:20150707T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:150-weimarer-freifunktreffen
+DTSTART:20150714T180000Z
+DTEND:20150714T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:154-weimarer-freifunktreffen
+DTSTART:20150721T180000Z
+DTEND:20150721T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:160-weimarer-freifunktreffen
+DTSTART:20150728T180000Z
+DTEND:20150728T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:162-weimarer-freifunktreffen
+DTSTART:20150804T180000Z
+DTEND:20150804T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:165-weimarer-freifunktreffen
+DTSTART:20150811T180000Z
+DTEND:20150811T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:167-weimarer-freifunktreffen
+DTSTART:20150818T180000Z
+DTEND:20150818T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:173-weimarer-freifunktreffen
+DTSTART:20150825T180000Z
+DTEND:20150825T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:175-weimarer-freifunktreffen
+DTSTART:20150901T180000Z
+DTEND:20150901T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:178-weimarer-freifunktreffen
+DTSTART:20150908T180000Z
+DTEND:20150908T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:181-weimarer-freifunktreffen
+DTSTART:20150915T180000Z
+DTEND:20150915T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:185-weimarer-freifunktreffen
+DTSTART:20150922T180000Z
+DTEND:20150922T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:191-weimarer-freifunktreffen
+DTSTART:20150929T180000Z
+DTEND:20150929T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:194-weimarer-freifunktreffen
+DTSTART:20151006T180000Z
+DTEND:20151006T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:196-weimarer-freifunktreffen
+DTSTART:20151013T180000Z
+DTEND:20151013T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:210-weimarer-freifunktreffen
+DTSTART:20151020T180000Z
+DTEND:20151020T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:213-weimarer-freifunktreffen
+DTSTART:20151027T190000Z
+DTEND:20151027T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:216-weimarer-freifunktreffen
+DTSTART:20151103T190000Z
+DTEND:20151103T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:218-weimarer-freifunktreffen
+DTSTART:20151110T190000Z
+DTEND:20151110T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+BEGIN:VEVENT
+UID:221-weimarer-freifunktreffen
+DTSTART:20151117T190000Z
+DTEND:20151117T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen I
+ nteressenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+END:VEVENT
+END:VCALENDAR

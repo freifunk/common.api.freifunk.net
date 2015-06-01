@@ -1,0 +1,15 @@
+{
+    "name": "zyzo/ics-tools",
+    "description": "Set of tools to deal with ics formats",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zyzo",
+            "email": "zyzo@github.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.6.*"
+    }
+}

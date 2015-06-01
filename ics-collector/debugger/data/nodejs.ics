@@ -1,0 +1,307 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//lanyrd.com//Lanyrd//EN
+X-ORIGINAL-URL:http://lanyrd.com/topics/nodejs/nodejs.ics
+X-WR-CALNAME;CHARSET=utf-8:Node.js conferences
+METHOD:PUBLISH
+X-MS-OLK-FORCEINSPECTOROPEN:TRUE
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Production Node.js Systems
+LOCATION;CHARSET=utf-8:Dublin\, Ireland
+URL:http://lanyrd.com/2015/nearforms-building-production-nodejs-systems-2-may/
+UID:f865220709c70163a253ad16ddb63200d8e4ec57
+DESCRIPTION:Node.js Systems Want to expand your JavaScript skills and learn how to develop reliable\, scalable Node.js systems? Join David Mark Clements for this highly practical\, intensive 2-day course!\n\nhttp://lanyrd.com/cchhzm
+DTSTART;VALUE=DATE:20150518
+DTEND;VALUE=DATE:20150520
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:Anglebrackets Conference 2015
+LOCATION;CHARSET=utf-8:Fairmont Scottsdale Princess Hotel\, 7575 East Princess Drive Scottsdale\, Arizona\, 85255
+URL:http://lanyrd.com/2015/anglebrackets-conference/
+UID:0711760dc080fb88671876c94ccae35e0a91e102
+DESCRIPTION:The conference for lovers of the Open Web\n\nhttp://lanyrd.com/cfkbdz
+DTSTART;VALUE=DATE:20150518
+DTEND;VALUE=DATE:20150522
+GEO:33.644831;-111.9165924
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:Dublin\, Ireland
+URL:http://lanyrd.com/2015/nearforms-building-mobile-apps-with-nodejs-cloud-3/
+UID:e65438996a9a0c79f3c1f7c87350df73b74536c5
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhpp
+DTSTART;VALUE=DATE:20150520
+DTEND;VALUE=DATE:20150522
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:[CANCELLED] Web Applications in Trend
+LOCATION;CHARSET=utf-8:Manchester Conference Centre\, Sackville Street\, Manchester
+URL:http://lanyrd.com/2015/wait2015/
+UID:f3cb991dd0e93e1ab79f3e15b766540df7ae7041
+DESCRIPTION:http://lanyrd.com/ccddmb
+DTSTART;VALUE=DATE:20150604
+DTEND;VALUE=DATE:20150606
+GEO:53.4761043316;-2.23554699708
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Production Node.js Systems
+LOCATION;CHARSET=utf-8:New York\, United States
+URL:http://lanyrd.com/2015/nearforms-building-production-nodejs-systems-3/
+UID:1bc45ee643d3f585746d70deac253585393521dc
+DESCRIPTION:Want to expand your JavaScript skills and learn how to develop reliable\, scalable Node.js systems? Join David Mark Clements for this highly practical\, intensive 2-day course!\n\nhttp://lanyrd.com/cchhzp
+DTSTART;VALUE=DATE:20150608
+DTEND;VALUE=DATE:20150610
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:[CANCELLED] NodeConf 2015
+LOCATION;CHARSET=utf-8:Fox Theater\, 1807 Telegraph Avenue\, Oakland\, 94612
+URL:http://lanyrd.com/2015/nodeconf/
+UID:f7fa00eb2f6fd6aaccdf3ee1aa0a1800e77ea24d
+DESCRIPTION:Daytime talks in the historic Fox Theater\, Fun evenings all around Oakland\, CA.\n\nhttp://lanyrd.com/cchmpk
+DTSTART;VALUE=DATE:20150608
+DTEND;VALUE=DATE:20150610
+GEO:37.8080988;-122.2704481
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:New York\, United States
+URL:http://lanyrd.com/2015/skillsmatter-4-june/
+UID:a4cc4ced5915f8b0f992f2b995a9d7c54a13f00f
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhpt
+DTSTART;VALUE=DATE:20150610
+DTEND;VALUE=DATE:20150612
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NodeConf Adventure
+LOCATION;CHARSET=utf-8:Walker Creek Ranch\, 1700 Marshall-Petaluma Road\, Petaluma\, CA\, 94952
+URL:http://lanyrd.com/2015/nodeconf-adventure/
+UID:e4b9a1e6d5dc0ab56b4e5eef105f6ac9572fe113
+DESCRIPTION:Hands-on sessions and evenings around the campfire at Walker Creek Ranch.\n\nhttp://lanyrd.com/cchmpm
+DTSTART;VALUE=DATE:20150611
+DTEND;VALUE=DATE:20150615
+GEO:38.1768682566;-122.815961775
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:jQuerySF 2015
+LOCATION;CHARSET=utf-8:The Regency Center\, 1300 Van Ness Avenue\, San Francisco\, 94109
+URL:http://lanyrd.com/2015/jquerysf/
+UID:bb8b3d3070d308f6ff734108881b70cfea3ebd37
+DESCRIPTION:a new type of conference\n\nhttp://lanyrd.com/cfmfdy
+DTSTART;VALUE=DATE:20150622
+DTEND;VALUE=DATE:20150624
+GEO:37.7877732785;-122.421609727
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:MediterráneaJS
+LOCATION;CHARSET=utf-8:El Born CC\, Plaça Comercial\, 12\, Barcelona\, 08003
+URL:http://lanyrd.com/2015/mediterraneajs/
+UID:cedafc6bedb00fda229680dd718aec4f62dfe804
+DESCRIPTION:JavaScript. Mediterranean style.\n\nhttp://lanyrd.com/cchtbt
+DTSTART;VALUE=DATE:20150622
+DTEND;VALUE=DATE:20150624
+GEO:41.38591;2.1837
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:Solid North America
+LOCATION;CHARSET=utf-8:Fort Mason Center\, Marina Blvd\, San Francisco\, CA\, 94123
+URL:http://lanyrd.com/2015/solidcon/
+UID:c4ed6c9eddce5369324b4c57b04b782f15216285
+DESCRIPTION:Hardware\, Software & the Internet of Things\n\nhttp://lanyrd.com/cfkygf
+DTSTART;VALUE=DATE:20150623
+DTEND;VALUE=DATE:20150626
+GEO:37.8063374615;-122.431606061
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Production Node.js Systems
+LOCATION;CHARSET=utf-8:The Skills Matter eXchange\, 116-120 Goswell Road\, London\, EC1V 7DP
+URL:http://lanyrd.com/2015/nearforms-building-production-nodejs-systems-4/
+UID:bbe34a09fef1486aab682bef9447822385da388c
+DESCRIPTION:Want to expand your JavaScript skills and learn how to develop reliable\, scalable Node.js systems? Join David Mark Clements for this highly practical\, intensive 2-day course!\n\nhttp://lanyrd.com/cchhzq
+DTSTART;VALUE=DATE:20150623
+DTEND;VALUE=DATE:20150625
+GEO:51.5246791533;-0.099152612381
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:The Skills Matter eXchange\, 116-120 Goswell Road\, London\, EC1V 7DP
+URL:http://lanyrd.com/2015/nearforms-building-mobile-apps-with-nodejs-cloud-4/
+UID:8915c0f0ca7051d210e9e859f1bbb22abd07cf40
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhpx
+DTSTART;VALUE=DATE:20150629
+DTEND;VALUE=DATE:20150701
+GEO:51.5246791533;-0.099152612381
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:Cascadia Fest 2015
+LOCATION;CHARSET=utf-8:Semiahmoo Resort\, 9565 Semiahmoo Pkwy\, Blaine\, WA\, 98230
+URL:http://lanyrd.com/2015/cjsfest15/
+UID:8750ae466ba0b3da5cf69bf15cacc14d19935a3d
+DESCRIPTION:An epic\, community-driven conference for web developers in the Pacific Northwest. \n\nhttp://lanyrd.com/cchttt
+DTSTART;VALUE=DATE:20150708
+DTEND;VALUE=DATE:20150711
+GEO:48.9895156153;-122.77534209
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:MidwestJS
+LOCATION;CHARSET=utf-8:Schulze Hall\, University of St. Thomas\, 46 S 11th St Minneapolis\, MN\, 55403
+URL:http://lanyrd.com/2015/midwestjs/
+UID:ff317771e52fa6afb3cdc33e6af0558cf864acea
+DESCRIPTION:Midwest JS is a premier technology conference focused on the JavaScript ecosystem. \n\nhttp://lanyrd.com/cckrbb
+DTSTART;VALUE=DATE:20150812
+DTEND;VALUE=DATE:20150815
+GEO:44.9742921006;-93.27764615
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Production Node.js Systems
+LOCATION;CHARSET=utf-8:New York\, United States
+URL:http://lanyrd.com/2015/nearforms-building-production-nodejs-systems-5/
+UID:4aa1210622b0a90dc26f9c6641157386c8b1ae52
+DESCRIPTION:Want to expand your JavaScript skills and learn how to develop reliable\, scalable Node.js systems? Join David Mark Clements for this highly practical\, intensive 2-day course!\n\nhttp://lanyrd.com/cchhzr
+DTSTART;VALUE=DATE:20150921
+DTEND;VALUE=DATE:20150923
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:New York\, United States
+URL:http://lanyrd.com/2015/skillsmatter-3-september/
+UID:bc0c2f0e2003b096366d0258c559392a6ec3a733
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhpz
+DTSTART;VALUE=DATE:20150923
+DTEND;VALUE=DATE:20150925
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:GothamGo 2015
+LOCATION;CHARSET=utf-8:The NYIT Auditorium on Broadway\, 1871 Broadway\, New York\, NY\, 10023
+URL:http://lanyrd.com/2015/gothamgo/
+UID:94aef522ee734b5ea87c781f02147152936944c0
+DESCRIPTION:Gophers on Broadway!\n\nhttp://lanyrd.com/cfhyth
+DTSTART:20151002T130000Z
+DTEND:20151002T220000Z
+GEO:40.7695065608;-73.9823931249
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Production Node.js Systems
+LOCATION;CHARSET=utf-8:The Skills Matter eXchange\, 116-120 Goswell Road\, London\, EC1V 7DP
+URL:http://lanyrd.com/2015/skillsmatter-6-october/
+UID:1e5c4e29c0038bcba89f0a212fe00271183e87a3
+DESCRIPTION:Want to expand your JavaScript skills and learn how to develop reliable\, scalable Node.js systems? Join David Mark Clements for this highly practical\, intensive 2-day course!\n\nhttp://lanyrd.com/cchhzt
+DTSTART;VALUE=DATE:20151005
+DTEND;VALUE=DATE:20151007
+GEO:51.5246791533;-0.099152612381
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:Italian Node.js Conference
+LOCATION;CHARSET=utf-8:Desenzano del garda\, viale cavour 40\, Desenzano del Garda\, Brescia\, 25015
+URL:http://lanyrd.com/2015/nodejsconfit/
+UID:b6009a16a93f0f11e26b89eec0cacc4ac5438a8d
+DESCRIPTION:noders italian conference\n\nhttp://lanyrd.com/cckprb
+DTSTART;VALUE=DATE:20151010
+DTEND;VALUE=DATE:20151011
+GEO:45.4640222806;10.5365852299
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:FullStack 2015
+LOCATION;CHARSET=utf-8:London\, England
+URL:http://lanyrd.com/2015/fullstack/
+UID:0d9b1c97d8be203db63a9a95a501d1a977d8abf6
+DESCRIPTION:Europe's premier conference on all things JavaScript\, Node.JS\, and Electronics.\n\nhttp://lanyrd.com/cchwxm
+DTSTART;VALUE=DATE:20151026
+DTEND;VALUE=DATE:20151029
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:The Skills Matter eXchange\, 116-120 Goswell Road\, London\, EC1V 7DP
+URL:http://lanyrd.com/2015/skillsmatter-3-november/
+UID:fa549ebff9833ebb17bf6b11528c38d2db4966fc
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhqb
+DTSTART;VALUE=DATE:20151102
+DTEND;VALUE=DATE:20151104
+GEO:51.5246791533;-0.099152612381
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:Thunder Plains
+LOCATION;CHARSET=utf-8:Cox Convention Center\, 1 Myriad Gardens Oklahoma City\, OK\, 73102-9219
+URL:http://lanyrd.com/2015/thunderplains/
+UID:691c396ad5733835c3f088d15f591fb8a62f96bc
+DESCRIPTION:http://lanyrd.com/cchfrk
+DTSTART;VALUE=DATE:20151103
+DTEND;VALUE=DATE:20151104
+GEO:35.4649723743;-97.5149239259
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Production Node.js Systems
+LOCATION;CHARSET=utf-8:Dublin\, Ireland
+URL:http://lanyrd.com/2015/skillsmatter-6-november/
+UID:0ec39cd19fa02b27d23146593c86df64ad713bcc
+DESCRIPTION:Want to expand your JavaScript skills and learn how to develop reliable\, scalable Node.js systems? Join David Mark Clements for this highly practical\, intensive 2-day course!\n\nhttp://lanyrd.com/cchhzw
+DTSTART;VALUE=DATE:20151109
+DTEND;VALUE=DATE:20151111
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:Dublin\, Ireland
+URL:http://lanyrd.com/2015/skillsmatter-4-november/
+UID:f25bf0cc25f6e3db832f5cd511c13482c8976e8a
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhqf
+DTSTART;VALUE=DATE:20151111
+DTEND;VALUE=DATE:20151113
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NationJS
+LOCATION;CHARSET=utf-8:Silver Spring Civic Building at Veterans Plaza\, 1 Veterans Place\, Silver Spring\, MD\, 20910
+URL:http://lanyrd.com/2015/nationjs/
+UID:932c0217ffaf800fca0be72dcfd39392eff97a99
+DESCRIPTION:JavaScript in the Mid-Atlantic\n\nhttp://lanyrd.com/cckprf
+DTSTART;VALUE=DATE:20151112
+DTEND;VALUE=DATE:20151114
+GEO:38.9974405007;-77.0245447
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Production Node.js Systems
+LOCATION;CHARSET=utf-8:New York\, United States
+URL:http://lanyrd.com/2015/skillsmatter-6-december/
+UID:695b4caca67aee1671db86151ab611f916ee99af
+DESCRIPTION:Want to expand your JavaScript skills and learn how to develop reliable\, scalable Node.js systems? Join David Mark Clements for this highly practical\, intensive 2-day course!\n\nhttp://lanyrd.com/cchhzx
+DTSTART;VALUE=DATE:20151207
+DTEND;VALUE=DATE:20151209
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:New York\, United States
+URL:http://lanyrd.com/2015/skillsmatter-3-december/
+UID:bd42c7ab24c7ccd52d53c3fe257f4bce32a83752
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhqg
+DTSTART;VALUE=DATE:20151209
+DTEND;VALUE=DATE:20151211
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:NearForm's Building Mobile Apps with Node.js Clouds
+LOCATION;CHARSET=utf-8:The Skills Matter eXchange\, 116-120 Goswell Road\, London\, EC1V 7DP
+URL:http://lanyrd.com/2015/skillsmatter-4-december/
+UID:232fa658990a453d3cef75298729a42719bdfafa
+DESCRIPTION:Join this 2-day course and learn to create reliable\, enterprise-grade mobile apps using Node.js\n\nhttp://lanyrd.com/cchhqh
+DTSTART;VALUE=DATE:20151216
+DTEND;VALUE=DATE:20151218
+GEO:51.5246791533;-0.099152612381
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:ConFoo 2016
+LOCATION;CHARSET=utf-8:Hotel Bonaventure Montreal\, 900 de La Gauchetiere W.\, Montreal\, Quebec\, Canada\, H5A 1E4\, H5A 1E4
+URL:http://lanyrd.com/2016/confoo/
+UID:db58860310a3bccec5b9976993d83625d5feda17
+DESCRIPTION:http://lanyrd.com/cfhygx
+DTSTART;VALUE=DATE:20160222
+DTEND;VALUE=DATE:20160227
+GEO:45.4992985;-73.5658033
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY;CHARSET=utf-8:O'Reilly Fluent Conference 2016
+LOCATION;CHARSET=utf-8:San Francisco Marriott Marquis\, 780 Mission Street\, San Francisco\, CA\, 94103
+URL:http://lanyrd.com/2016/fluentconf/
+UID:63eab17ff05b589b7c535681731e0e3b741fea1e
+DESCRIPTION:The Web Platform\n\nhttp://lanyrd.com/cfkdym
+DTSTART;VALUE=DATE:20160308
+DTEND;VALUE=DATE:20160311
+GEO:37.7850277;-122.4040455
+END:VEVENT
+END:VCALENDAR
