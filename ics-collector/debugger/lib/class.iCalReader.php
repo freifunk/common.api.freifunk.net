@@ -12,10 +12,10 @@
  * @link     https://github.com/MartinThoma/ics-parser/
  * @example  $ical = new ical('MyCal.ics'); print_r($ical->events());
  *
- * UPDATE NOTES : @zyzo (htto://www.github.com/zyzo)
+ * MODIFICATION NOTES : @zyzo (htto://www.github.com/zyzo)
  *   - Add recurrence event counter
  *   - Add option disable recurrent events
- *   - Return more details for DATE/DATE-TIME property
+ *   - Return more details for DATE/DATE-TIME property in form of array
  * 
  */
 
