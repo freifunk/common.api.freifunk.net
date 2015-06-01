@@ -8,16 +8,29 @@ class IcsMerger {
 	private $defaultTimezone;
 	const CONFIG_FILENAME = 'ics-merger-config.ini';
 
-	public function __construct() {
-		$configs = parse_ini_file(IcsMerger::CONFIG_FILENAME, true);
+    /**
+     * Initialize a new IcsMerger. This class requires an ini file. The name of the file could 
+     * be passed as parameter. If it is not specified, the constructor will automatically look for ics-merger-config.ini 
+     * @param null|string $iniFilename
+     */
+	public function __construct($iniFilename = IcsMerger::CONFIG_FILENAME) {
+		$configs = parse_ini_file($iniFilename, true);
 		$this->defaultHeader = $configs['ICS_HEADER'];
 		$this->defaultTimezone = new DateTimeZone($this->defaultHeader['X-WR-TIMEZONE']);
 	}
 
+	/**
+	 * Add text string in ics format to the merger
+	 * @param string $text
+	 */
 	public function add($text) {
 		array_push($this->inputs, $text);
 	}
 
+	/**
+	 * Return the result after parsing & merging inputs ics (added via IcsMerger::add)
+	 * @return array
+	 */
 	public function getResult() {
 		$result = array(
 			'VCALENDAR' => array(),
@@ -108,6 +121,11 @@ class IcsMerger {
 		return $events;
 	}
 
+	/**
+	 * Convert an array returned by IcsMerger::getResult() into valid ics string
+	 * @param array $icsMergerResult
+	 * @return string
+	 */
 	public static function getRawText($icsMergerResult) {
 		$callback = function ($v, $k) {
 			if (is_array($v)) {
