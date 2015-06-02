@@ -1,6 +1,6 @@
 <?php 
-require_once '../lib/class.iCalReader.php';
-require_once '../lib/ics-merger.php';
+require_once '../../lib/class.iCalReader.php';
+require_once '../../lib/ics-merger.php';
 
 function isAjaxRequest() {
     return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
