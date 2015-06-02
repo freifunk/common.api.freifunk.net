@@ -70,10 +70,32 @@ class IcsMergerTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetRawText() {
 		$this->config = parse_ini_file(realpath(dirname(__FILE__)) . '/../lib/' . IcsMerger::CONFIG_FILENAME);
-		$defaultTimezone = $this->config['DEFAULT_TIMEZONE']; 
+		$defaultTimezone = $this->config['X-WR-TIMEZONE']; 
 		$text = "BEGIN:VCALENDAR\nX-WR-TIMEZONE:$defaultTimezone\nPRODID:-//FOSSASIA//FOSSASIA Calendar//EN\nBEGIN:VEVENT\nDTSTART:20150527T213000\nSUMMARY:Event 1\nEND:VEVENT\nEND:VCALENDAR";
+		$text1 = "BEGIN:VCALENDAR\nX-WR-TIMEZONE:$defaultTimezone";
+		$text2 = "BEGIN:VEVENT\nDTSTART:20150527T213000\nSUMMARY:Event 1\nEND:VEVENT\nEND:VCALENDAR";
 		$this->merger->add($text);
 		$result = $this->merger->getResult();
-		$this->assertEquals(IcsMerger::getRawText($result), $text, 'Result must be equal to initial input');
+		$pos = strpos(IcsMerger::getRawText($result), $text1);
+		if ($pos === false) {
+			$this->fail("Result should contains $text1");
+		}
+		$pos = strpos(IcsMerger::getRawText($result), $text2);
+		if ($pos === false) {
+			$this->fail("Result should contains $text2");
+		}
+	}
+
+	public function testAddEventWithOption() {
+		$this->merger->add
+		("BEGIN:VCALENDAR
+		  X-WR-TIMEZONE:Asia/Saigon
+		  BEGIN:VEVENT
+		  DTSTART:20150527T213000
+		  SUMMARY:Event with option
+		  END:VEVENT
+		  END:VCALENDAR
+		", array("hi" => "lo"));
+		$this->assertEquals($this->merger->getResult()['VEVENTS']['0']['hi'], 'lo');
 	}
 }

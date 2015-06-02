@@ -9,21 +9,31 @@ class IcsMerger {
 	const CONFIG_FILENAME = 'ics-merger-config.ini';
 
     /**
-     * Initialize a new IcsMerger. This class requires an ini file. The name of the file could 
-     * be passed as parameter. If it is not specified, the constructor will automatically look for ics-merger-config.ini 
-     * @param null|string $iniFilename
+     * Initialize a new IcsMerger. Default header properties can be specified in the first parameter. 
+     * If not specified, the constructor will automatically look for default header in ./ics-merger-config.ini 
+     * @param null|array $defaultHeader
      */
-	public function __construct($iniFilename = IcsMerger::CONFIG_FILENAME) {
-		$configs = parse_ini_file($iniFilename, true);
-		$this->defaultHeader = $configs['ICS_HEADER'];
+	public function __construct($defaultHeader = null) {
+		$this->defaultHeader = $defaultHeader;
+		if ($this->defaultHeader === null) {
+			$configs = parse_ini_file(IcsMerger::CONFIG_FILENAME, true);
+			$this->defaultHeader = $configs['ICS_HEADER'];
+		}
+		
 		$this->defaultTimezone = new DateTimeZone($this->defaultHeader['X-WR-TIMEZONE']);
 	}
 
 	/**
 	 * Add text string in ics format to the merger
 	 * @param string $text
+	 * @param null|array $options
 	 */
-	public function add($text) {
+	public function add($text, $options = null) {
+		if ($options != null) {
+			$options = IcsMerger::arrayToIcs($options);
+			$insertPos = stripos($text, 'VEVENT') + strlen('VEVENT');
+			$text = substr_replace($text, "\n" . $options, $insertPos, 1);
+		}
 		array_push($this->inputs, $text);
 	}
 
@@ -127,6 +137,20 @@ class IcsMerger {
 	 * @return string
 	 */
 	public static function getRawText($icsMergerResult) {
+		
+		$str = 'BEGIN:VCALENDAR' . PHP_EOL;
+		$str .= IcsMerger::arrayToIcs($icsMergerResult['VCALENDAR']);
+		foreach ($icsMergerResult['VEVENTS'] as $event) {
+			$str .= 'BEGIN:VEVENT' . PHP_EOL; 
+			$str .= IcsMerger::arrayToIcs($event);
+			$str .= 'END:VEVENT' . PHP_EOL;
+		}
+		$str .= 'END:VCALENDAR';
+		return $str;
+	}
+
+	// convert an array of property name - property value into valid ics
+	private static function arrayToIcs($array) {
 		$callback = function ($v, $k) {
 			if (is_array($v)) {
 				if (array_key_exists('value', $v)) {
@@ -138,14 +162,6 @@ class IcsMerger {
 				return $k . ':' . $v . PHP_EOL; 
 			}
 		};
-		$str = 'BEGIN:VCALENDAR' . PHP_EOL;
-		$str .= implode('', array_map($callback, $icsMergerResult['VCALENDAR'], array_keys($icsMergerResult['VCALENDAR'])));
-		foreach ($icsMergerResult['VEVENTS'] as $event) {
-			$str .= 'BEGIN:VEVENT' . PHP_EOL; 
-			$str .= implode('', array_map($callback, $event, array_keys($event)));
-			$str .= 'END:VEVENT' . PHP_EOL;
-		}
-		$str .= 'END:VCALENDAR';
-		return $str;
+		return implode('', array_map($callback, $array, array_keys($array)));
 	}
 }
