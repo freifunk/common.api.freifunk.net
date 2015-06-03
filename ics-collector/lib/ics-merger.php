@@ -29,12 +29,20 @@ class IcsMerger {
 	 * @param null|array $options
 	 */
 	public function add($text, $options = null) {
+		$ical = new ICal(explode("\n", $text), true);
 		if ($options != null) {
+			/*
 			$options = IcsMerger::arrayToIcs($options);
 			$insertPos = stripos($text, 'VEVENT') + strlen('VEVENT');
 			$text = substr_replace($text, "\n" . $options, $insertPos, 1);
+			*/
+			foreach ($options as $key => $value) {				
+				foreach ($ical->cal['VEVENT'] as &$event) {
+					$event[$key] = $value;
+				}
+			}
 		}
-		array_push($this->inputs, $text);
+		array_push($this->inputs, $ical);
 	}
 
 	/**
@@ -46,8 +54,7 @@ class IcsMerger {
 			'VCALENDAR' => array(),
 			'VEVENTS' => array()
 		);
-		foreach ($this->inputs as $icsText) {
-			$ical = new ICal(explode("\n", $icsText), true);
+		foreach ($this->inputs as $ical) {
 			//var_dump($ical);
 			$timezone = null;
 			foreach($ical->cal as $key => $value) {
