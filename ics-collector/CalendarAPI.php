@@ -119,6 +119,14 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 			continue;
 		}
 	}
+	if (array_key_exists('to', $parameters)) {
+		$to = new DateTime($parameters['to']);
+		$eventStart = new DateTime($value['DTSTART']['value']);
+		if ($eventStart > $to) {
+			unset($parsedIcs->cal['VEVENT'][$key]);
+			continue;
+		}
+	}
 }
 
 if ($parameters['format'] == 'json') {
