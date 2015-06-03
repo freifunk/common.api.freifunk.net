@@ -9,21 +9,52 @@ $supportedMethods = ['GET'];
  */
 $mandatory = ['source'];
 /**
- * Supported sets of values for some parameters
- */
-$supportedValues = array
-(
-	'format' => ['ics', 'json']
-);
-/**
  * If not specified, the parameters will take these default values
  */
 $defaultValues = array
 (
-	'format' => 'json'
+	'format' => 'json',
 );
-
-
+/**
+ * Ics properties of a VEVENT that will be converted & included in json result (if exist)
+ * $icsKey => [$jsonKey, $include]
+ * $icsKey : ics property name
+ * $jsonKey : json key name (null <=> copy ics property name as json key, lower case)
+ * $include : boolean indicating that if the field should be included by default in the result
+ */
+$jsonEventFields = array
+(
+	'DTSTART' => ['start', true],
+	'DTEND' => ['end', true],
+	'SUMMARY' => [null, true],
+	'DESCRIPTION' => [null, true],
+	'DTSTAMP' => ['stamp', false],
+	'CREATED' => [null, false],
+	'LAST_MODIFIED' => [null, false],
+	'LOCATION' => [null, true],
+	'GEO' => ['geolocation', false]
+);
+foreach ($jsonEventFields as $key => &$value) {
+	if ($value[0] === null) {
+		$value[0] = strtolower($key);
+	}
+}
+/**
+ * Supported sets of values for some parameters
+ */
+$supportedValues = array
+(
+	'format' => ['ics', 'json'],
+	'fields' => array_map(function($v) { return $v[0]; }, $jsonEventFields)
+);
+/**
+ * Supported formats (in regexp) for some parameters
+ */
+$supportedFormat = array 
+(
+	'from' => "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/", // date format, e.g. 1997-12-31 
+	'to' => "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/"
+);
 /**
  * Request validations
  */
@@ -48,6 +79,14 @@ foreach ($supportedValues as $key => $value) {
 		}
 	}
 }
+// Check parameter with constrained format
+foreach ($supportedFormat as $key => $value) {
+	if (array_key_exists($key, $parameters)) {
+		if (!preg_match($value, $parameters[$key])) {
+			throwAPIError('Format not supported for parameter \'' . $key . '\' : ' . $parameters[$key]);
+		}
+	}
+}
 /*
  * Prepare/convert parameter options
  */
@@ -62,35 +101,45 @@ $sources = explode(',', $parameters['source']);
 /*
  * Constructing response
  */
+$parsedIcs = new Ical('data/ffMerged.ics');
+foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
+	// this filter is to skip all events that don't match the criteria
+    // and shouldn't be added to the output result
+	if (!in_array('all', $sources)) {
+		if (!array_key_exists('X-WR-SOURCE', $value) || !in_array($value['X-WR-SOURCE'], $sources)) {
+			unset($parsedIcs->cal['VEVENT'][$key]);
+			continue;
+		}
+	}
+	if (array_key_exists('from', $parameters)) {
+		$from = new DateTime($parameters['from']);
+		$eventStart = new DateTime($value['DTSTART']['value']);
+		if ($eventStart < $from) {
+			unset($parsedIcs->cal['VEVENT'][$key]);
+			continue;
+		}
+	}
+}
+
 if ($parameters['format'] == 'json') {
 	header('Content-type: application/json; charset=UTF-8');
-	$parsedIcs = new Ical('data/ffMerged.ics');
-	$result = array();
+	$jsonResult = array();
 	foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
-		// this filter is to skip all events that don't match the criteria
-        // and shouldn't be added to the output result
-		if (!in_array('all', $sources)) {
-			if (!array_key_exists('X-WR-SOURCE', $value) || !in_array($value['X-WR-SOURCE'], $sources)) {
-				continue;
+		$event = array();
+		foreach ($value as $propertyKey => $propertyValue) {
+			if (isRequiredField($propertyKey, $jsonEventFields)) {
+				$event[$jsonEventFields[$propertyKey][0]] = is_array($propertyValue) ? $propertyValue['value'] : $propertyValue;
 			}
 		}
-		$event = array();
-		if (array_key_exists('SUMMARY', $value)) {
-			$event['summary'] = $value['SUMMARY'];
-		}
-		if (array_key_exists('DESCRIPTION', $value)) {
-			$event['description'] = $value['SUMMARY'];
-		}
-		$event['start'] = $value['DTSTART']['value'];
-		$result[$key] = $event;
+		$jsonResult[$key] = $event;
 	}
-	if (count(result0) === 0) {
-		throwAPIError('Result not found');
+	if (count($jsonResult) === 0) {
+		throwAPIError('No result found');
 	}
-	echo json_encode($result);
+	echo json_encode($jsonResult);
 } else {
 	header('Content-type: text/ics; charset=UTF-8');
-	echo file_get_contents('data/ffMerged.ics');
+	var_dump($parsedIcs);
 }
 
 function throwAPIError($errorMsg) {
@@ -102,4 +151,12 @@ function getRequestParameters($httpMethod) {
 	return $httpMethod === 'GET' ? $_GET :
            ($httpMethod === 'POST' ? $_POST :
            null);
+}
+
+function isRequiredField($propertyKey, $jsonEventFields) {
+	return array_key_exists($propertyKey, $jsonEventFields) && isDefaultJSONField($propertyKey, $jsonEventFields);
+}
+
+function isDefaultJSONField($icsKey, $jsonEventFields) {
+	return $jsonEventFields[$icsKey][1];
 }
