@@ -1,0 +1,2226 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//FOSSASIA//FOSSASIA Calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+URL:http:
+X-WR-CALNAME:MergedIcs
+X-WR-TIMEZONE:EUROPE/Berlin
+X-WR-CALDESC:A combined ics feed of FOSSASIA communities
+TRANSP:
+X-FROM-URL:http://freifunk.myriapod.de
+http://wordpress.org/extend/plugins/nginx-helper/faq/ for more details-->
+X-RADICALE-NAME:
+TRIGGER:
+X-FROM-URL:https://hamburg.freifunk.net
+URL:https:<!--Cached using Nginx-Helper on 2015-06-03 23:20:17. It took 32 queries executed in 0,300 seconds.-->
+BEGIN:VEVENT
+UID:138-freifunk-vernetzungsmumble
+DTSTART:20150623T180000Z
+DTEND:20150623T183000Z
+SUMMARY:Freifunk Vernetzungsmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client. Vernetzungsmumble ist immer am 23.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:140-freifunk-technikmumble
+DTSTART:20150625T180000Z
+DTEND:20150625T183000Z
+SUMMARY:Freifunk Technikmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client.Technikmumble ist immer am 25.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:155-freifunk-vernetzungsmumble
+DTSTART:20150723T180000Z
+DTEND:20150723T183000Z
+SUMMARY:Freifunk Vernetzungsmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client. Vernetzungsmumble ist immer am 23.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:156-freifunk-technikmumble
+DTSTART:20150725T180000Z
+DTEND:20150725T183000Z
+SUMMARY:Freifunk Technikmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client.Technikmumble ist immer am 25.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:battlemeshv8
+DTSTART:20150803T080000Z
+DTEND:20150809T160000Z
+SUMMARY:BattleMeshV8
+DESCRIPTION:The BattleMeshV8 will be held at Maribor, Slovenia. The testing / hacking / talks will take place in Dom Obrambe Pekre It features one large dining hall with an attached smaller hall for talks, a large lecture theater, several smaller classrooms and an outdoor auditorium. Expect to find nice community WiFi internet connection (open.wlan-si.net), video projectors, beverage and snack supplies and some curious hackers.
+LOCATION:Elhadj
+GEO:46.543218290626;15.592174530029
+URL:http://battlemesh.org/BattleMeshV8
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:169-freifunk-vernetzungsmumble
+DTSTART:20150823T180000Z
+DTEND:20150823T183000Z
+SUMMARY:Freifunk Vernetzungsmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client. Vernetzungsmumble ist immer am 23.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:172-freifunk-technikmumble
+DTSTART:20150825T180000Z
+DTEND:20150825T183000Z
+SUMMARY:Freifunk Technikmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client.Technikmumble ist immer am 25.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:188-freifunk-vernetzungsmumble
+DTSTART:20150923T180000Z
+DTEND:20150923T183000Z
+SUMMARY:Freifunk Vernetzungsmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client. Vernetzungsmumble ist immer am 23.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:189-freifunk-technikmumble
+DTSTART:20150925T180000Z
+DTEND:20150925T183000Z
+SUMMARY:Freifunk Technikmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client.Technikmumble ist immer am 25.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:211-freifunk-technikmumble
+DTSTART:20151025T190000Z
+DTEND:20151025T193000Z
+SUMMARY:Freifunk Technikmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client.Technikmumble ist immer am 25.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:226-freifunk-technikmumble
+DTSTART:20151125T190000Z
+DTEND:20151125T193000Z
+SUMMARY:Freifunk Technikmumble
+DESCRIPTION:IRC und Mumble ermöglichen Gesprächsrunden mit einer beliebigen Anzahl von Teilnehmern. Du benötigst einen IRC- bzw. Mumble-Client.Technikmumble ist immer am 25.
+URL:http://mumble.freifunk.net
+X-WR-SOURCE:gemeinsam
+END:VEVENT
+BEGIN:VEVENT
+UID:253-26
+LOCATION:Holzturm (Ausnahmen werden angekündigt) ggüber Holzstraße 34 Rheinstraße/Holzstraße Mainz  55116
+SUMMARY:Allgemeines Freifunk-Treffen
+DTSTAMP:20150610T170000Z
+ORGANIZER:hallmann@partenheim.de
+DTSTART:20150610T170000Z
+DTEND:20150610T200000Z
+URL://blog.freifunk-mainz.de/termine
+DESCRIPTION:Wir treffen uns zum allgemeinen Austausch. Das Treffen findet meist im Holzturm über den Dächern der Mainzer Altstadt statt. Ja, ganz oben unterm Dach im Clubraum der Mainzer Amateurfunker :-)Inhalt: Die Arbeitsgruppen berichten über ihre Aktivitäten, neue Knoten werden vorgestellt. Neue Freifunker sind herzlich willkommen.Im Anschluss können Infos untereinander getauscht werden und wenn noch Zeit bleibt, können auch noch Router geflasht werden. Wenn nicht: Das nächste Basteltreffen findet immer eine Woche später statt, siehe Kalender!
+CATEGORIES:Treffen
+X-WR-SOURCE:mainz
+END:VEVENT
+BEGIN:VEVENT
+UID:52-25
+LOCATION:pengland (Hartenberg) Am Judensand 76  Mainz  55122
+SUMMARY:Freifunk-Treffen zum Basteln und Plaudern
+DTSTAMP:20150618T170000Z
+ORGANIZER:hallmann@partenheim.de
+DTSTART:20150618T170000Z
+DTEND:20150618T200000Z
+URL://blog.freifunk-mainz.de/termine
+DESCRIPTION:Ganz zwanglos treffen sich diejenigen, die einfach mal zusammen kommen wollen, um an irgendwas zu basteln oder einfach nur plaudern möchten.Hier bekommt man auch Hilfe bei der Installation und Konfiguration von Freifunk-Routern, beim Retten verkonfigurierter Geräte oder beim Löten von Teilen u.v.m. . Bei komplizierten Problemen sagt am Besten vorher kurz Bescheid, damit wir das notwendige Werkzeug und ggf. KnowHow mitbringen können ;-)
+CATEGORIES:Treffen
+X-WR-SOURCE:mainz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141121T180000
+DTEND:20141122T000000
+RRULE:FREQ=MONTHLY;WKST=MO;BYDAY=3FR
+DTSTAMP:20150603T212007Z
+UID:l1idfhalko35k11klp1ejvgd0c@google.com
+CREATED:20150509T165403Z
+DESCRIPTION:Regelmäßiger Stammtisch\; neue Leute herzlich willkommen :) \n!!Freifunk vorhanden!!
+LAST-MODIFIED:20150509T165403Z
+LOCATION:Cynthia Reißmann & Max Wohlfart Meehäusle GbR\, Am Hafen 6\, 97437Haßfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Stammtisch haßberge.franken.freifunk.net
+TRANSP:OPAQUE
+X-WR-SOURCE:hassberge
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150529T190000
+DTEND:20150529T210000
+DTSTAMP:20150603T212008Z
+UID:dc7fa6op7ih21ju4eidgjc21uc@google.com
+RECURRENCE-ID:20150605T190000
+CREATED:20150202T095624Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen besprechen\, was sich seit dem letzten Treffen getan hat und für die nächsteZeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sich in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+unter:\nhtt
+p://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funkt frei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150517T173054Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150509T110000
+DTEND:20150509T180000
+DTSTAMP:20150603T212008Z
+UID:9q1pllf8eepbcn3iktbl0p6324@google.com
+CREATED:20150211T222442Z
+DESCRIPTION:Das Stadteilfest findet am 09.05.2015 im Stadtpark Kasierslautern von 11-18 Uhr statt.\n\nFreifunk Westpfalz wird am Infostand von Chaos-inKL mit dabei sein und Freifunk vorstellen.\n\nGeplant ist auch den Stadtpark mit mehreren Event-Knoten zu versehen um die bereits vorhandene Ausleuch
+auf:\nhttps://www.chaos-inkl.de/
+wiki/event:stadtteilfest
+LAST-MODIFIED:20150502T152735Z
+LOCATION:Stadtpark\, Deutschland
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Stadtteilfest im Stadtpark Kaiserslautern
+TRANSP:TRANSPARENT
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150427T190000
+DTEND:20150427T203000
+DTSTAMP:20150603T212008Z
+UID:3v4aio0gp5pgmr0mqphtg78mrs@google.com
+CREATED:20150414T122801Z
+DESCRIPTION:Am 27.04.2015 findet um 19 Uhr ein offener Informationsabend zuFreifunk-Westpfalz im Café Banhof in der Bahnhofstraße 1 in Kirchheimbolanden statt.\n\nEingeladen sind alle\, die anderen Menschen offenes WLAN anbieten möchten. Die Freifunk-Community macht dies einfach\, sicher und kostengünstig möglich.\n\n    + Was braucht man\, um beim Freifunk-Netzwerk mitzumachen?\n    + Gibt es Risiken für mich als Betreiber eines Freifunk-Knotens?\n    + Was ist der Unterschied zu kommerziellen Hotspot-Anbietern?\n\nDiese Fragen und mehr werden beim Info-Abend beantwortet.
+LAST-MODIFIED:20150414T122801Z
+LOCATION:Bahnhofstraße 1\, 67292 Kirchheimbolanden\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Informationsabend zu Freifunk-Westpfalz
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150410T190000
+DTEND:20150410T210000
+DTSTAMP:20150603T212008Z
+UID:dc7fa6op7ih21ju4eidgjc21uc@google.com
+RECURRENCE-ID:20150403T190000
+CREATED:20150202T095624Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen besprechen\, was sich seit dem letzten Treffen getan hat und für die nächsteZeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sich in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+unter:\nhtt
+p://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funkt frei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150306T210541Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150317T180000
+DTEND:20150317T200000
+DTSTAMP:20150603T212008Z
+UID:hkam60s6s5lbph1ef38uj5hpgk@google.com
+CREATED:20150211T222006Z
+DESCRIPTION:Am 17.03.2015 findet um 18 Uhr ein offener Informationsabend zuFreifunk-Westpfalz in den Räumen von Chaos inKL. e.V. (Rudolf-Breitscheid-Str. 65\, Eingang in der Ziegelstraße) statt.\n\nEingeladen sind alle\, dieanderen Menschen offenes WLAN anbieten möchten. Die Freifunk-Community macht dies einfach\, sicher und kostengünstig möglich.\n\n    + Was braucht man\, um beim Freifunk-Netzwerk mitzumachen?\n    + Gibt es Risiken für michals Betreiber eines Freifunk-Knotens?\n    + Was ist der Unterschied zu kommerziellen Hotspot-Anbietern?\n\nDiese Fragen und mehr werden beim Info-Abend beantwortet.\n\nBitte melden Sie sich kurz mit einer Mail an info@freifunk-westpfalz.de an. Sagen Sie uns mit wie vielen Personen Sie kommen werden\, damit wir sicherstellen können\, dass genug Platz für alle Besucher ist.
+LAST-MODIFIED:20150306T120913Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67655 Kaiserslautern\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Informationsabend zu Freifunk-Westpfalz
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150206T190000
+DTEND:20150206T210000
+RRULE:FREQ=MONTHLY;BYDAY=1FR
+DTSTAMP:20150603T212008Z
+UID:dc7fa6op7ih21ju4eidgjc21uc@google.com
+CREATED:20150202T095624Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen besprechen\, was sich seit dem letzten Treffen getan hat und für die nächsteZeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sich in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+unter:\nhtt
+p://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funkt frei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150202T095624Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150116T190000
+DTEND:20150116T210000
+DTSTAMP:20150603T212008Z
+UID:bnf67mkm2ic8ostdlep619oh1k@google.com
+CREATED:20150112T152313Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nWir wollen besprechen\, was sich seit dem letzten Treffen getan hat und für die nächsteZeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sich in lockerer Runde über Freifunk zu informieren\, wir haben auch Knoten vo
+unter:\nh
+ttp://pad.freifunk.net/p/ffwp_treffen\n\nWir freuen uns auf euch und funktfrei!\nEuer Freifunk Westpfalz
+LAST-MODIFIED:20150112T152313Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: 3. Freifunk Treffen
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141114T190000
+DTEND:20141114T210000
+DTSTAMP:20150603T212008Z
+UID:kl7iui6sbn029k4202id3rb44k@google.com
+CREATED:20141029T091444Z
+DESCRIPTION:
+LAST-MODIFIED:20141204T105243Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67655 Kaiserslautern\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Erstes Treffen
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141206T170000
+DTEND:20141206T190000
+DTSTAMP:20150603T212008Z
+UID:7hhtls562budrct349pb8oobuc@google.com
+CREATED:20141203T233552Z
+DESCRIPTION:Für alle Freifunk-Interessierte und Neugierige:\n\nAm Samstag\,den 6.12. findet um 17 Uhr das 2. Treffen von Freifunk Westpfalz im Raum des Chaos-inKL (Rudolf-Breitscheid-Straße 65\, Kaiserslautern) statt.\n\nWirwollen besprechen\, was sich seit dem letzten Treffen getan hat und für die nächste Zeit planen. Des weiteren sind alle Interessierten herzlich eingeladen sich in lockerer Runde über Freifunk zu informieren\, wir haben auchKnoten vor Ort\, die direkt mitgenommen werden können.\n\nWir freuen uns au
+nhttps://www.freifunk-westpfalz.de/2014/12/2-treffen/
+LAST-MODIFIED:20141204T105229Z
+LOCATION:Rudolf-Breitscheid-Straße 65\, 67657 Kaiserslautern
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk Treffen
+TRANSP:OPAQUE
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141111T190000
+DTEND:20141111T210000
+DTSTAMP:20150603T212008Z
+UID:fno25hruk7hi7seu1f8ipo9chg@google.com
+CLASS:PUBLIC
+CREATED:20141029T092354Z
+DESCRIPTION:https://www.chaos-inkl.de/wiki/vortrag:freifunk
+LAST-MODIFIED:20141029T093555Z
+LOCATION:Rudolf-Breitscheid-Straß​e 65\, 67655 Kaiserslautern\, Deutschland
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:ffwp: Freifunk - was ist das eigentlich? (Vortrag bei chaos-inkl.de)
+TRANSP:TRANSPARENT
+X-WR-SOURCE:westpfalz
+END:VEVENT
+BEGIN:VEVENT
+UID:132-weimarer-freifunktreffen
+DTSTART:20150609T180000Z
+DTEND:20150609T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:135-weimarer-freifunktreffen
+DTSTART:20150616T180000Z
+DTEND:20150616T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:139-weimarer-freifunktreffen
+DTSTART:20150623T180000Z
+DTEND:20150623T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:143-weimarer-freifunktreffen
+DTSTART:20150630T180000Z
+DTEND:20150630T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:147-weimarer-freifunktreffen
+DTSTART:20150707T180000Z
+DTEND:20150707T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:150-weimarer-freifunktreffen
+DTSTART:20150714T180000Z
+DTEND:20150714T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:154-weimarer-freifunktreffen
+DTSTART:20150721T180000Z
+DTEND:20150721T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:160-weimarer-freifunktreffen
+DTSTART:20150728T180000Z
+DTEND:20150728T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:162-weimarer-freifunktreffen
+DTSTART:20150804T180000Z
+DTEND:20150804T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:165-weimarer-freifunktreffen
+DTSTART:20150811T180000Z
+DTEND:20150811T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:167-weimarer-freifunktreffen
+DTSTART:20150818T180000Z
+DTEND:20150818T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:173-weimarer-freifunktreffen
+DTSTART:20150825T180000Z
+DTEND:20150825T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:175-weimarer-freifunktreffen
+DTSTART:20150901T180000Z
+DTEND:20150901T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:178-weimarer-freifunktreffen
+DTSTART:20150908T180000Z
+DTEND:20150908T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:181-weimarer-freifunktreffen
+DTSTART:20150915T180000Z
+DTEND:20150915T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:185-weimarer-freifunktreffen
+DTSTART:20150922T180000Z
+DTEND:20150922T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:191-weimarer-freifunktreffen
+DTSTART:20150929T180000Z
+DTEND:20150929T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:194-weimarer-freifunktreffen
+DTSTART:20151006T180000Z
+DTEND:20151006T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:196-weimarer-freifunktreffen
+DTSTART:20151013T180000Z
+DTEND:20151013T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:210-weimarer-freifunktreffen
+DTSTART:20151020T180000Z
+DTEND:20151020T183000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:213-weimarer-freifunktreffen
+DTSTART:20151027T190000Z
+DTEND:20151027T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:216-weimarer-freifunktreffen
+DTSTART:20151103T190000Z
+DTEND:20151103T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:218-weimarer-freifunktreffen
+DTSTART:20151110T190000Z
+DTEND:20151110T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:221-weimarer-freifunktreffen
+DTSTART:20151117T190000Z
+DTEND:20151117T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:225-weimarer-freifunktreffen
+DTSTART:20151124T190000Z
+DTEND:20151124T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:719-weimarer-freifunktreffen
+DTSTART:20151201T190000Z
+DTEND:20151201T193000Z
+SUMMARY:Weimarer Freifunktreffen
+DESCRIPTION:Wir treffen uns wöchentlich und lösen Probleme, helfen Interessenten oder bieten Vorträge an.
+LOCATION:Maschinenraum, Marienstr. 18, Weimar
+GEO:50.974984401582;11.329435676325
+URL:http://wireless.subsignal.org/index.php?title=Treffen
+X-WR-SOURCE:weimarnetz
+END:VEVENT
+BEGIN:VEVENT
+UID:ai1ec-65@freifunk.myriapod.de
+DTSTAMP:20150603T212013Z
+CATEGORIES:
+CONTACT:Lorenz Wenner\; lorenz.wenner@posteo.de
+DESCRIPTION:/*  */
+DTSTART:20150609T190000
+DTEND:20150609T203000
+GEO:+54.09635;+13.37821
+LOCATION:Initiativenbüro @ Lange Straße 60\, 17489 Greifswald\, Deutschland
+RRULE:FREQ=WEEKLY;BYDAY=TU;WKST=MO
+SEQUENCE:0
+SUMMARY:Communitytreffen
+URL:http://freifunk.myriapod.de/?ai1ec_event=communitytreffen
+X-ALT-DESC:<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 3.2//EN'>\\n<HTML>\\n<HEAD>\\n<TITLE></TITLE>\\n</HEAD>\\n<BODY><div class='twoclick_social_bookmarks_post_215 social_share_privacy clearfix 1.6.4 locale-de_DE sprite-de_DE'></div><div class='twoclick-js'><script type='text/javascript'>/* <![CDATA[ */\njQuery(document).ready(function($){if($('.twoclick_social_bookmarks_post_215')){$('.twoclick_social_bookmarks_post_215').socialSharePrivacy({'services':{'flattr':{'uid':'freifunk-greifswald'\,'status':'on'\,'the_title':'Willkommenskultur%202.0'\,'the_excerpt':''\,'txt_in
+Datenschutz: Erst wenn Sie hier klicken\, wird der Button aktiv und Sie k\\u00f6nnen Ihre Empfehlung an Flattr senden.Schon beim Aktivieren werden Daten an Dritte \\u00fcbertragen - siehe <em>i<\\/em>.'\,'perma_option':'off'}}\,'txt_help':'Wenn Sie diese Felder durch einen Klick aktivieren\, werden Informationen an Facebook\, Twitter\, Flattr\, Xing\, t3n\, LinkedIn\, Pinterest oder Google eventuell ins Ausland\\u00fcbertragen und unter Umst\\u00e4nden auch dort gespeichert. N\\u00e4heres erfahren Sie durch einen Klick auf das <em>i<\\/em>.'\,'settings_pe
+zustimmen:'\,'info_
+http:\\/\\/freifunk.myriapod.de\\/?p=215'\,'post_id':215\,'post_title_referrer_track':'Willkommenskultur+2.0'\,'display_infobox':'on'})\;}})\;\n/* ]]> */</script></div></BODY></HTML>
+X-WR-SOURCE:greifswald
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150526T180000
+DTEND:20150526T200000
+DTSTAMP:20150603T212010Z
+UID:30arl5nlrd3onj46nou284r1vs@google.com
+CREATED:20150521T082015Z
+DESCRIPTION:
+LAST-MODIFIED:20150521T082039Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Gluon-VPN-Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150527T210000
+DTEND:20150527T220000
+DTSTAMP:20150603T212010Z
+UID:trsop86ch23c9p8b2v3qje8t4g@google.com
+CREATED:20150126T185104Z
+DESCRIPTION:
+LAST-MODIFIED:20150518T072453Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Kennenlern-Abend
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150414T210000
+DTEND:20150414T230000
+DTSTAMP:20150603T212010Z
+UID:f6uea2t6elvu9t8k4fspi55oig@google.com
+CREATED:20150126T184943Z
+DESCRIPTION:
+LAST-MODIFIED:20150407T152207Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150414T190000
+DTEND:20150414T203000
+DTSTAMP:20150603T212010Z
+UID:sma76u7f3iiupb9fdgrfo2i410@google.com
+CREATED:20150323T121925Z
+DESCRIPTION:
+LAST-MODIFIED:20150403T010429Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, 99085 Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk-Gespräch mit Netzpolitikern
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150331T200000
+DTEND:20150331T220000
+DTSTAMP:20150603T212010Z
+UID:9v62mqf06v3ihbt80681hhbs9g@google.com
+CREATED:20150323T121852Z
+DESCRIPTION:
+LAST-MODIFIED:20150323T131150Z
+LOCATION:Maschinenraum\, Marienstraße 18\, Weimar\, Deutschland
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Koordinationstreffen Erfurt-Weimar-Jena
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150223T200000
+DTEND:20150223T220000
+DTSTAMP:20150603T212010Z
+UID:0frglrl3d4j7v1k48a807uskl0@google.com
+CREATED:20150203T172115Z
+DESCRIPTION:am 23.02. findet um 20-22 h wieder ein Vernetzungsmumble statt\, diesmal mit Steffen von der MABB als Gast.\n\nWir wollen über die aktuellen Förderprojekte mit der MABB sprechen und ausloten inwiefern sich dieserPilot auf andere Medienanstalten übertragen lässt.\nDazu werden wir Hintergründe\, Rahmenbedingungen und Erfahrungen mit Euch teilen. Darüber hinaus kann Steffen Einblicke geben\, wie ein mögliches Vorgehen aussehen kann undwelche nächsten Schritte geplant sind.\n\nAußerdem bietet sich die Gelegenheit über weitere Kooperationen mit öffentlichen Einrichtungen zu sprechen.\
+sammeln:\nhttps://pad.freifunk.net/p/Vernetzungsmumble_MABB\n\nWie mumble funktioniert steht aufmumble.freifunk.net
+LAST-MODIFIED:20150203T172115Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Vernetzungsmumble
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150208T150000
+DTEND:20150208T170000
+DTSTAMP:20150603T212010Z
+UID:1ekotcn8nbvd5r84bldeveu1ak@google.com
+CREATED:20150202T141130Z
+DESCRIPTION:https://tif-it.org/dokuwiki/doku.php?id=pages:open_houres_20150208
+LAST-MODIFIED:20150202T141138Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:TIF-IT Gotha
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150722T200000
+DTEND:20150722T210000
+DTSTAMP:20150603T212010Z
+UID:dbvq0qu868jb0kncffcrv4im04@google.com
+CREATED:20150126T185307Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185704Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Kennenlern-Abend
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150707T190000
+DTEND:20150707T220000
+DTSTAMP:20150603T212010Z
+UID:pq0plo2n86jhki5pai4ie2iu7s@google.com
+CREATED:20150126T185238Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185635Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150609T190000
+DTEND:20150609T220000
+DTSTAMP:20150603T212010Z
+UID:127r394gaombe38cmjalshekd8@google.com
+CREATED:20150126T185125Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185623Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150512T190000
+DTEND:20150512T220000
+DTSTAMP:20150603T212010Z
+UID:20l1id1fkt6gj42mrll1nuvm24@google.com
+CREATED:20150126T185024Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185612Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150819T200000
+DTEND:20150819T210000
+DTSTAMP:20150603T212010Z
+UID:nbj0t5v01jtpkn94rpgsrb5c44@google.com
+CREATED:20150126T185353Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185400Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Kennenlern-Abend
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150804T190000
+DTEND:20150804T200000
+DTSTAMP:20150603T212010Z
+UID:a5qa2rhvoiesf579aheam7qm5g@google.com
+CREATED:20150126T185335Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185340Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150624T200000
+DTEND:20150624T210000
+DTSTAMP:20150603T212010Z
+UID:cejqcs1a40rr7f9jvpm84b0asg@google.com
+CREATED:20150126T185145Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185154Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Kennenlern-Abend
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150429T200000
+DTEND:20150429T210000
+DTSTAMP:20150603T212010Z
+UID:huootspsk1a4dkr495fpau6pso@google.com
+CREATED:20150126T185003Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T185008Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Kennenlern-Abend
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150401T200000
+DTEND:20150401T210000
+DTSTAMP:20150603T212010Z
+UID:s0dtb5ga4c9br4vm03p0p9ihbg@google.com
+CREATED:20150126T184915Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T184922Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Kennenlern-Abend
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150317T190000
+DTEND:20150317T220000
+DTSTAMP:20150603T212010Z
+UID:48kr8gpkpgg5hv2p2v7fog3hm0@google.com
+CREATED:20150126T184848Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T184848Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150217T190000
+DTEND:20150217T220000
+DTSTAMP:20150603T212010Z
+UID:d92r7vr9it9ndb3i6c5bgcoia4@google.com
+CREATED:20150126T184517Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T184802Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Arbeitstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150304T200000
+DTEND:20150304T210000
+DTSTAMP:20150603T212010Z
+UID:0k1krhj4f4crnerm7alv53c338@google.comATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Freifu
+:mailto:rf5q98fcbko91vf886mnn72g6s@group.calendar.google.com
+CREATED:20150126T184723Z
+DESCRIPTION:
+LAST-MODIFIED:20150126T184750Z
+LOCATION:Bytespeicher\, Liebknechtstraße 8\, Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Kennenlern-Abend
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150120T190000
+DTEND:20150120T220000
+DTSTAMP:20150603T212010Z
+UID:tv7aftg6nmrc0s4g1ihhf4rgp0@google.com
+CREATED:20150112T114259Z
+DESCRIPTION:
+LAST-MODIFIED:20150112T114259Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Treffen
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141126T190000
+DTEND:20141126T220000
+DTSTAMP:20150603T212010Z
+UID:5qiec21glm7ssc75adauc65vu0@google.com
+CREATED:20141029T213301Z
+DESCRIPTION:
+LAST-MODIFIED:20141029T213324Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt November
+TRANSP:TRANSPARENT
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140926T200000
+DTEND:20140926T220000
+DTSTAMP:20150603T212010Z
+UID:bvt5ujrgomi22rouu8vbnr2elo@google.com
+CREATED:20140925T112520Z
+DESCRIPTION:
+LAST-MODIFIED:20140925T112520Z
+LOCATION:Liebknechtstraße 8\, 99085 Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Arbeitstreffen Freifunk Routing\, DN42\, VPN
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141015T190000
+DTEND:20141015T220000
+DTSTAMP:20150603T212010Z
+UID:7hgasl9pgvse4p4v4e87931014@google.com
+CREATED:20140925T100147Z
+DESCRIPTION:
+LAST-MODIFIED:20140925T100200Z
+LOCATION:Liebknechtstraße 8\, 99085 Erfurt\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Erfurt Oktober
+TRANSP:OPAQUE
+X-WR-SOURCE:erfurt
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141205T190000
+DTEND:20141205T230000
+DTSTAMP:20150603T212011Z
+UID:E28FDCF6-0DD4-42CB-B031-B529F0689252
+CREATED:20140205T181846Z
+DESCRIPTION:
+LAST-MODIFIED:20141207T123939Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141001T190000
+DTEND:20141001T230000
+DTSTAMP:20150603T212011Z
+UID:B4AD3917-0225-4B6A-88A7-F973DB4CACDF
+CREATED:20140205T181830Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181830Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140903T190000
+DTEND:20140903T230000
+DTSTAMP:20150603T212011Z
+UID:DE6EE2DC-7AD1-4203-8857-956240F189B4
+CREATED:20140205T181818Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181822Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140806T190000
+DTEND:20140806T230000
+DTSTAMP:20150603T212011Z
+UID:305138B1-4BC4-41A2-B07F-6BB7A04FE908
+CREATED:20140205T181745Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181745Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140702T190000
+DTEND:20140702T230000
+DTSTAMP:20150603T212011Z
+UID:E53C0E89-77AC-4083-B55A-222139E66443
+CREATED:20140205T181734Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181734Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140604T190000
+DTEND:20140604T230000
+DTSTAMP:20150603T212011Z
+UID:449551F9-8A99-4115-908D-7164023860B5
+CREATED:20140205T181727Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181727Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140507T190000
+DTEND:20140507T230000
+DTSTAMP:20150603T212011Z
+UID:987D8003-B17B-444E-B2A4-D397CBBE1F29
+CREATED:20140205T181720Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181720Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140402T190000
+DTEND:20140402T230000
+DTSTAMP:20150603T212011Z
+UID:C1A349DF-4C88-4CC4-B1CB-227C6909317F
+CREATED:20140205T181711Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181711Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140305T190000
+DTEND:20140305T230000
+DTSTAMP:20150603T212011Z
+UID:C51DF67C-1945-4777-BDF6-A9A77F682D81
+CREATED:20140205T181703Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181703Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140205T190000
+DTEND:20140205T230000
+DTSTAMP:20150603T212011Z
+UID:747F180E-18E6-4B59-8F3C-A05C075DD25F
+CREATED:20140205T181609Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181619Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20131002T190000
+DTEND:20131002T230000
+DTSTAMP:20150603T212011Z
+UID:6DF0F41E-58E7-4570-814B-167524F41BFF
+CREATED:20140205T181548Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181549Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140108T190000
+DTEND:20140108T230000
+DTSTAMP:20150603T212011Z
+UID:040F8DA5-7B8D-4F57-A8BE-88946C899186
+CREATED:20140205T181545Z
+DESCRIPTION:
+LAST-MODIFIED:20140205T181545Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130928
+DTEND:20130929
+DTSTAMP:20150603T212011Z
+UID:B1E03B5F-A977-4EF9-9F30-8F8659240550
+CREATED:20130807T193037Z
+DESCRIPTION:
+LAST-MODIFIED:20130807T193037Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunktag in Wuppertal
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20200123T200000
+DTEND:20200123T230000
+DTSTAMP:20150603T212011Z
+UID:EC6B4E09-22CC-4F95-B943-E606EFEE6070
+CREATED:20130109T225936Z
+DESCRIPTION:
+LAST-MODIFIED:20130109T225956Z
+LOCATION:
+SEQUENCE:5
+STATUS:CONFIRMED
+SUMMARY:Vernetzungstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130108T200000
+DTEND:20130108T220000
+DTSTAMP:20150603T212011Z
+UID:BCB7912A-4322-4CFE-9FEF-F64F7328F60C
+CREATED:20130106T002403Z
+DESCRIPTION:
+LAST-MODIFIED:20130106T002403Z
+LOCATION:Mumble
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Vernetzungstreffen
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20131204T190000
+DTEND:20131204T230000
+DTSTAMP:20150603T212011Z
+UID:E313F7C3-7830-44D2-A6AD-D4FECC508B17
+CREATED:20121201T124213Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124213Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20131106T190000
+DTEND:20131106T230000
+DTSTAMP:20150603T212011Z
+UID:3A4901AE-5671-447C-81E4-40DC2849634E
+CREATED:20121201T124207Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124207Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20131002T190000
+DTEND:20131002T230000
+DTSTAMP:20150603T212011Z
+UID:5DC8B7C9-346E-44EE-AA71-E1B749401FDB
+CREATED:20121201T124203Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124203Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130904T190000
+DTEND:20130904T230000
+DTSTAMP:20150603T212011Z
+UID:5A44D4D9-36BA-4A17-A459-13BCC77652B7
+CREATED:20121201T124159Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124159Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130807T190000
+DTEND:20130807T230000
+DTSTAMP:20150603T212011Z
+UID:A4A941DA-4E70-407B-A437-90BFAE4EEC56
+CREATED:20121201T124156Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124156Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130703T190000
+DTEND:20130703T230000
+DTSTAMP:20150603T212011Z
+UID:1BA3B6CC-81C9-4859-98F4-70B60097DA71
+CREATED:20121201T124152Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124152Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130605T190000
+DTEND:20130605T230000
+DTSTAMP:20150603T212011Z
+UID:F55CD2A7-AEBE-46A0-ADE0-8439943CEC60
+CREATED:20121201T124148Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124148Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130501T190000
+DTEND:20130501T230000
+DTSTAMP:20150603T212011Z
+UID:B94A2E47-7575-4831-87C5-7D853356F947
+CREATED:20121201T124144Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124144Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130403T190000
+DTEND:20130403T230000
+DTSTAMP:20150603T212011Z
+UID:C6AE8250-276C-4A87-8A4F-A1274D520DE1
+CREATED:20121201T124140Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124140Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130306T190000
+DTEND:20130306T230000
+DTSTAMP:20150603T212011Z
+UID:3E8FFBF8-3B7C-4AEA-BDF6-1A6ECFA93633
+CREATED:20121201T124135Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124135Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130206T190000
+DTEND:20130206T230000
+DTSTAMP:20150603T212011Z
+UID:41B965E0-EDAB-4BD4-BBC8-A5089006365E
+CREATED:20121201T124129Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124129Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130102T190000
+DTEND:20130102T230000
+DTSTAMP:20150603T212011Z
+UID:805584E0-E6E2-42A5-A1D2-B1851AC3B767
+CREATED:20121201T124121Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124121Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20121205T190000
+DTEND:20121205T230000
+DTSTAMP:20150603T212011Z
+UID:1E191810-ADD6-422F-B1A7-4CBEE20D9352
+CREATED:20121201T124052Z
+DESCRIPTION:
+LAST-MODIFIED:20121201T124052Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120317T153000
+DTEND:20120317T163000
+DTSTAMP:20150603T212011Z
+UID:18C4F0D7-998A-45CB-8880-6AB2571D0CB1
+CREATED:20120313T182615Z
+DESCRIPTION:
+LAST-MODIFIED:20120313T182615Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Test Radevormwald
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20121107T190000
+DTEND:20121107T230000
+DTSTAMP:20150603T212011Z
+UID:itfuh1jod6d4pkuel5hsg569t8@google.com
+CREATED:20111129T182437Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201601Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20121003T190000
+DTEND:20121003T230000
+DTSTAMP:20150603T212011Z
+UID:806fcd3lg68266oj6u9760ar9k@google.com
+CREATED:20111129T182417Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201600Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120905T190000
+DTEND:20120905T230000
+DTSTAMP:20150603T212011Z
+UID:g2gmore84ujeg2an4v86iirf1c@google.com
+CREATED:20111129T182405Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201518Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120801T190000
+DTEND:20120801T230000
+DTSTAMP:20150603T212011Z
+UID:d1a39ui0b0cjlr7sbcre4nj16k@google.com
+CREATED:20111129T182354Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201516Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120704T190000
+DTEND:20120704T230000
+DTSTAMP:20150603T212011Z
+UID:7hadkgrllj8hi1rir7u5ditse4@google.com
+CREATED:20111129T182341Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201444Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120606T190000
+DTEND:20120606T230000
+DTSTAMP:20150603T212011Z
+UID:3gh5dtb6b6pcgjb5egtrpmv018@google.com
+CREATED:20111129T182328Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201443Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120502T190000
+DTEND:20120502T230000
+DTSTAMP:20150603T212011Z
+UID:5lrho1buf0e8guh9qhi9d5j3ug@google.com
+CREATED:20111129T182313Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201429Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120404T190000
+DTEND:20120404T230000
+DTSTAMP:20150603T212011Z
+UID:1gsetl20svq7uul14nokrkbueo@google.com
+CREATED:20111129T182300Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201428Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120307T190000
+DTEND:20120307T230000
+DTSTAMP:20150603T212011Z
+UID:95tm927d1ue5js0ci3em10gd5k@google.com
+CREATED:20111129T182246Z
+DESCRIPTION:
+LAST-MODIFIED:20120203T201356Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120127T190000
+DTEND:20120127T230000
+DTSTAMP:20150603T212011Z
+UID:h5k0pvd3e8sn4902oqtvimcqro@google.com
+CREATED:20111129T182208Z
+DESCRIPTION:
+LAST-MODIFIED:20120115T104200Z
+LOCATION:L-O-G-E\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20111028T190000
+DTEND:20111028T230000
+DTSTAMP:20150603T212011Z
+UID:ni7jluarcegs99mp5uu5nuvp3c@google.com
+CREATED:20110808T115040Z
+DESCRIPTION:http://www.facebook.com/event.php?eid=203415099700289
+LAST-MODIFIED:20111023T114911Z
+LOCATION:Wuppertaler Dartcenter\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20111005T190000
+DTEND:20111005T230000
+DTSTAMP:20150603T212011Z
+UID:lk3i0oelp8o0psv0q5fm2264dk@google.com
+CREATED:20111001T185008Z
+DESCRIPTION:Wir installieren 3 Freifunkrouter im WDC. Das vorhandene Gästenetzwerk wird abgeschaltet. Unsere Router nutzen das vorhandene Kabelnetzwerk für OLSR.
+LAST-MODIFIED:20111001T185008Z
+LOCATION:Wuppertaler Dartcenter\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Routeraufbau im WDC
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110901T180000
+DTEND:20110901T230000
+DTSTAMP:20150603T212011Z
+UID:ehp4cuuha7128k23oqs7stor7c@google.com
+CREATED:20110831T113441Z
+DESCRIPTION:
+LAST-MODIFIED:20110831T113441Z
+LOCATION:Jäger 90\, Bartholomäusstraße 25\, Wuppertal
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunktreffen Jäger90
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20111125T190000
+DTEND:20111125T230000
+DTSTAMP:20150603T212011Z
+UID:r5uij5lf3t68ihap3spkr57do4@google.com
+CREATED:20110808T115134Z
+DESCRIPTION:http://www.facebook.com/event.php?eid=175755219145467
+LAST-MODIFIED:20110816T190844Z
+LOCATION:Wuppertaler Dartcenter\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110930T190000
+DTEND:20110930T230000
+DTSTAMP:20150603T212011Z
+UID:7vubp8hn1fm62p8jdsera6bbk8@google.com
+CREATED:20110808T114952Z
+DESCRIPTION:http://www.facebook.com/event.php?eid=174386985953121
+LAST-MODIFIED:20110816T190826Z
+LOCATION:Wuppertaler Dartcenter\, Alter Markt 28\, Wuppertal-Barmen
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110826T190000
+DTEND:20110826T230000
+DTSTAMP:20150603T212011Z
+UID:ph168ooadu14dspeeflr0hhebo@google.com
+CREATED:20110808T114833Z
+DESCRIPTION:http://www.facebook.com/event.php?eid=193237710722583
+LAST-MODIFIED:20110816T190604Z
+LOCATION:Jäger 90\, Bartholomäusstr. 25\, Wuppertal
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch (Jäger 90)
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110628T190000
+DTEND:20110628T230000
+RRULE:FREQ=MONTHLY;INTERVAL=1;BYDAY=-1TU;UNTIL=20110726T170000Z
+DTSTAMP:20150603T212011Z
+UID:ovfkpic4t7g0dlmuspmnvcvb38@google.com
+CREATED:20110529T181751Z
+DESCRIPTION:
+LAST-MODIFIED:20110808T114627Z
+LOCATION:WDC\, Alter Markt 28\, Wuppertal
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110808T170000
+DTEND:20110808T190000
+DTSTAMP:20150603T212011Z
+UID:9hckkp7gueforvs02ofmo4ah8k@google.com
+CREATED:20110726T201302Z
+DESCRIPTION:
+LAST-MODIFIED:20110726T201303Z
+LOCATION:
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:Wuppertal: Freifunktreffen
+TRANSP:OPAQUE
+CATEGORIES:http://schemas.google.com/g/2005#event
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110719T193000
+DTEND:20110719T230000
+DTSTAMP:20150603T212011Z
+UID:aqi4u35o0d88ju67llqrpq30es@google.com
+CREATED:20110707T172152Z
+DESCRIPTION:
+LAST-MODIFIED:20110709T082134Z
+LOCATION:WDC\, Alter Markt 28\, Wuppertal
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:Wuppertal: Freifunkstammtisch
+TRANSP:OPAQUE
+CATEGORIES:http://schemas.google.com/g/2005#event
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110704T200000
+DTEND:20110704T201500
+DTSTAMP:20150603T212011Z
+UID:ej49iku7bbdo7decbh4srqri8c@google.com
+CREATED:20110621T155905Z
+DESCRIPTION:Freifunk Rheinland e.V. i.G. Vorstellung\, und "was hat Freifun
+nhttp://www.coworkingwuppertal.de
+LAST-MODIFIED:20110621T155953Z
+LOCATION:Das Haus der Jugend\, Geschwister-Scholl-Platz 2\, Wuppertal-Barmen
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Wuppertal: JellyWeek - Kurzvorstellung Freifunk
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110916T180000
+DTEND:20110917T150000
+DTSTAMP:20150603T212011Z
+UID:9bra2ufg08i2o6bbc442gtnp3k@google.com
+CREATED:20110620T224548Z
+DESCRIPTION:
+LAST-MODIFIED:20110620T224548Z
+LOCATION:Wuppertaler Dartcenter\, Altermarkt 28\, Wuppertal-Barmen
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Wuppertal 24h live
+TRANSP:OPAQUE
+X-WR-SOURCE:wuppertal
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150611T190000
+DTEND:20150611T220000
+DTSTAMP:20150603T212011Z
+UID:D949184B-FDA5-4707-A030-47081201CFDB
+CREATED:20150330T095939Z
+DESCRIPTION:Mitglieder Hauptversammlung des Freifunk Dreiländereck e.V.\n\n
+unter: http://www.chläbi.de
+LAST-MODIFIED:20150515T071936Z
+LOCATION:Eisenbahnstraße 9\n79576 Weil am Rhein\nDeutschland
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:ff3l Hauptversammlung
+TRANSP:OPAQUEX-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="Eisenbahnstraße 9\\n79576Weil am Rhein\\nDeutschland";X-APPLE-RADIUS=49.9130592178708;X-TITLE="Eisen
+:geo:47.591270,7.634905
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150709T190000
+DTEND:20150709T220000
+DTSTAMP:20150603T212011Z
+UID:2784EBC0-FF6A-4166-9CFA-E0A3FFE2C1D8
+CREATED:20150330T095946Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck (ff3l)\n\nM
+unter: http://www.chläbi.de
+LAST-MODIFIED:20150330T095947Z
+LOCATION:Eisenbahnstraße 9\n79576 Weil am Rhein\nDeutschland
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:ff3l Stammtisch
+TRANSP:OPAQUEX-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="Eisenbahnstraße 9\\n79576Weil am Rhein\\nDeutschland";X-APPLE-RADIUS=49.9130592178708;X-TITLE="Eisen
+:geo:47.591270,7.634905
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150514T190000
+DTEND:20150514T220000
+DTSTAMP:20150603T212011Z
+UID:BD5B4230-DFFD-48A3-B671-A5EB1D8FF3F9
+CREATED:20150330T095905Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck (ff3l)\n\nM
+unter: http://www.chläbi.de
+LAST-MODIFIED:20150330T095905Z
+LOCATION:Eisenbahnstraße 9\n79576 Weil am Rhein\nDeutschland
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:ff3l Stammtisch
+TRANSP:OPAQUEX-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="Eisenbahnstraße 9\\n79576Weil am Rhein\\nDeutschland";X-APPLE-RADIUS=49.9130592178708;X-TITLE="Eisen
+:geo:47.591270,7.634905
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150416T190000
+DTEND:20150416T220000
+DTSTAMP:20150603T212011Z
+UID:1C2FAFD1-4493-4ADB-9A82-48F701F3D0A1
+CREATED:20150303T100447Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck (ff3l)\n\nM
+unter: http://www.chläbi.de
+LAST-MODIFIED:20150326T204552Z
+LOCATION:Eisenbahnstraße 9\n79576 Weil am Rhein\nDeutschland
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:ff3l Stammtisch
+TRANSP:OPAQUEX-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="Eisenbahnstraße 9\\n79576Weil am Rhein\\nDeutschland";X-APPLE-RADIUS=49.9130592178708;X-TITLE="Eisen
+:geo:47.591270,7.634905
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150326T190000
+DTEND:20150326T220000
+DTSTAMP:20150603T212011Z
+UID:3F3946FF-AEBE-46E4-8D24-40459992C2A0
+CREATED:20150319T231245Z
+DESCRIPTION:Gründungsversammlung des Freifunk Dreiländereck e.V. (ff3l)\n\nAm Donnerstag\, dem 26. März\, werden die Freifunker des Dreiländerecks\nCH-DE-FR in der Grenzacher Post (Hauptstrasse 46\, 79639 Grenzach-Wyhlen)\nab19 Uhr zusammenkommen\, um den gemeinnützigen Verein "Freifunk\nDreiländereck e.V." zu gründen.\n\nMit der Vereinsgründug geben wir uns eine geordnete Struktur und\nminimieren gleichzeitig das Haftungsrisiko einzelner. Nebender\nallgemeinen Förderung freier Netzwerke in der Region wird der Vereinin\nZukunft die notwendige Grundinfrastruktur (Backbone) betreiben. Die\nFinanzierung soll durch moderate Mitgliedsbeiträge und Spenden erfolgen.\nWeiterhin wird der Verein Gewerbetreibenden und Kommunen als\nAnsprechpartnerdienen.\n\nEingeladen sind alle\, die sich der Idee von Freifunk verbunden
+vorgesehen:\n\n1. Begrüßung\n2. Feststellung der Anzahl der stimmberechtigten Teilnehmer\n3. Genehmigung der Tagesordnung\n4. Aussprache über die Gründung des Vereins "Freifunk Dreiländereck e.V."\n5. Beratung und Verabschiedung einer Satzung\n6. Wahlen des Vorstandes\n7. Wahlen der Kassenprüfer\n8. Weitere Vorgehensweise\n9. Verschiedenes\n\nDen Entwurf einer Vereinssatzung ist in unserem Wiki [1] hinterlegt.\nWir
+http://wiki.freifunk-3laendereck.net/Satzung
+LAST-MODIFIED:20150324T171052Z
+LOCATION:Hauptstrasse 46\, 79639 Grenzach-Wyhlen
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:ff3l Vereinsgründung
+TRANSP:OPAQUE
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150319T190000
+DTEND:20150319T220000
+DTSTAMP:20150603T212011Z
+UID:sficvbq4mgtba7trh3mc9ort74@google.com
+CLASS:PUBLIC
+CREATED:20150128T192536Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck (ff3l)\n\nM
+unter: http://www.chläbi.de
+LAST-MODIFIED:20150319T231236Z
+LOCATION:Eisenbahnstraße 9\n79576 Weil am Rhein\nDeutschland
+SEQUENCE:1
+STATUS:TENTATIVE
+SUMMARY:ff3l Stammtisch
+TRANSP:OPAQUEX-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS="Eisenbahnstraße 9\\n79576Weil am Rhein\\nDeutschland";X-APPLE-RADIUS=49.9130592178708;X-TITLE="Eisen
+:geo:47.591270,7.634905
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150219T193000
+DTEND:20150219T223000
+DTSTAMP:20150603T212011Z
+UID:ucj5ltjcb3fu6sii6m3abknl18@google.com
+CLASS:PUBLIC
+CREATED:20150128T192340Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck (ff3l)\n\nA
+CHTUNG: der monatliche Stammtisch findet diesesmal am 19.02. Um 19:30 Uhr in der "Post" Hauptstrasse 46in 79639 Grenzach-Wyhlen statt.
+LAST-MODIFIED:20150215T172426Z
+LOCATION:"Post" Hauptstrasse 46 79639 Grenzach-Wyhlen
+SEQUENCE:2
+STATUS:TENTATIVE
+SUMMARY:ff3l Stammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150122T190000
+DTEND:20150122T220000
+DTSTAMP:20150603T212011Z
+UID:mv5oeqpt59min4sjl81hhujm7k@google.comATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;X-NUM-GUE
+:mailto:oo9pbv0jel0mg2ngt7e0age90c@group.calendar.google.com
+CLASS:PUBLIC
+CREATED:20141219T110623Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck (ff3l)\n\nM
+unter: http://www.chläbi.de
+LAST-MODIFIED:20141219T110654Z
+LOCATION:Chläbi\, Eisenbahnstraße 9\, 79576 Weil am Rhein\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ff3l Stammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141127T190000
+DTEND:20141127T220000
+DTSTAMP:20150603T212011Z
+UID:9cugjd9g09gm8dqc9584k61cbg@google.com
+CREATED:20141031T000214Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck (ff3l)\n\nM
+unter: http://www.chläbi.de
+LAST-MODIFIED:20141031T000214Z
+LOCATION:Chläbi\, Eisenbahnstraße 9\, 79576 Weil am Rhein\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ff3l Stammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20141030T190000
+DTEND:20141030T220000
+DTSTAMP:20150603T212011Z
+UID:i6jhvmrmg8igqu8iq1418gjnao@google.com
+CREATED:20140930T151659Z
+DESCRIPTION:Monatlicher Stammtisch der Freifunker Dreiländereck\n\nMehr Inf
+unter: http://www.chläbi.de
+LAST-MODIFIED:20140930T151659Z
+LOCATION:Chläbi\, Eisenbahnstraße 9\, Weil am Rhein\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Freifunk Dreiländereck Stammtisch
+TRANSP:OPAQUE
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20140929T190000
+DTEND:20140929T220000
+DTSTAMP:20150603T212011Z
+UID:vj0pddna7fava4eafahhi8jnr4@google.comATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;X-NUM-GUE
+:mailto:oo9pbv0jel0mg2ngt7e0age90c@group.calendar.google.com
+CLASS:PUBLIC
+CREATED:20140910T032238Z
+DESCRIPTION:Location Webseite: www.zum-wilden-mann.com\n
+LAST-MODIFIED:20140924T224043Z
+LOCATION:Zum Wilden Mann Lörrach GmbH\, Basler Straße 172\, Lörrach\, Deutschland
+SEQUENCE:2
+STATUS:TENTATIVE
+SUMMARY:Stammtisch Freifunk Dreiländereck
+TRANSP:OPAQUE
+X-WR-SOURCE:dreilaendereck
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150504T221151Z
+CREATED:20150504T221151Z
+UID:8a2f421a-408a-48e6-b55b-49ed33ab8632
+LAST-MODIFIED:20150504T221151Z
+SUMMARY:FreifunkFFM@MakeRhein-Main/Bended Realities
+DTSTART:20150530
+DTEND:20150531
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150504T221232Z
+CREATED:20150504T221232Z
+UID:88a71030-f4ea-4689-b8be-c329bba67a5f
+LAST-MODIFIED:20150504T221232Z
+SUMMARY:FreifunkFFM@MakeRhein-Main/Bended Realities
+DTSTART:20150531
+DTEND:20150601
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150504T221628Z
+CREATED:20150504T221628Z
+UID:ba93e636-f6d2-4d25-aff7-fa49b6abbbf7
+LAST-MODIFIED:20150504T221628Z
+DESCRIPTION:Das Protokoll liegt\, wie immer auf http://dl.ffm.freifunk.net/public/Protokolle/
+SUMMARY:ffffm:Freifunk-Mumble
+LOCATION:Mumble im Raum \"Frankfurt (Main)\" auf dem Server mumble.freifunk-ruhrgebiet.de auf Port 64738
+DTSTART:20150511T193000
+DTEND:20150511T203000
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150504T222318Z
+CREATED:20150504T222318Z
+UID:ae019269-8555-43a3-82b6-0858bc112e65
+LAST-MODIFIED:20150504T222318Z
+SUMMARY:ffffm:Vorstandsmumble
+LOCATION:Mumble im Raum \"Frankfurt (Main)\" auf dem Server mumble.freifunk-ruhrgebiet.de auf Port 64738
+DTSTART:20150601T194500
+DTEND:20150601T204500
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150504T222715Z
+CREATED:20150504T222418Z
+UID:599bf707-ff34-4ea0-8cfb-4b499e3b4846
+SEQUENCE:1
+LAST-MODIFIED:20150504T222715Z
+DESCRIPTION:Am 8. Juni treffen wir uns das nächste Mal zu unserem monatlichen Stammtisch. Freifunker und Interessierte sind herzlich willkommen.
+SUMMARY:ffffm:Freifunk Stammtisch
+LOCATION:Kanonesteppl\, Textorstraße 20
+DTSTART:20150608T193000
+DTEND:20150608T220000
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150601T213943Z
+X-RADICALE-NAME:1433194766.R299.ics
+CREATED:20150601T213924Z
+UID:676e7855-dd05-4d80-ae70-27007c3a1c5c
+SEQUENCE:2
+LAST-MODIFIED:20150601T213943Z
+DESCRIPTION:Event/Termin\nIn Frankfurt Bockenheim findet die dritte Freifunk-Frankfurt-Flashparty statt. \nAlle Freifundenden und InteressentInnen sind herzlich eingeladen.\n\nWann:\nSonntag\, 14.06.2015 von 15 bis 18 Uhr\n\nWo: \nCCC-ffm / Hackquarter\nHäuser Gasse 2\n60487 Frankfurt am Main\n\nKartenlink\nhttp://osm.org/go/0D0YYUak9?node=3342079613\nLocation: https://ccc-ffm.de\n\nWarum?\nWeil wir ein freies\, selbstverwaltetes Netz wollen\, ohne Nutzerregistrierungen und Logfiles. \nWeil wir unser Netz daheim mit Freunden\, Bekannten und Nachbarn teilen möchten\, ohne deswegen gleich schlecht schlafen zu müssen. \nWeil wir uns freuen\, wenn andere auch Internet haben\, die sich das vielleicht nicht leisten können. Oder zumindest nicht per Mobilfunk überall und ohne Volumendrossel. \nOder schlicht weil 125 Router in Frankfurt nicht \"alles\" gewesen sein können\, wenn es in Mainz mehr als 200 und in Aachen fast 400 gibt.\n\nOrganisatorisches: \nBitte vorbestellen!\nWie üblich werden auf der Mailinglisteuser@wifi-frankfurt.de Vormerkungen für eine Router-Sammelbestellung entgegen genommen.\nAlternativ hier mail an info@wifi-frankfurt.deoder im Forum.\n\n
+SUMMARY:Ffffm: Flashparty in Bockenheim
+LOCATION:CCC-ffm / Hackquarter\nHäuser Gasse 2\n60487 Frankfurt am Main\n\nKartenlink\nhttp://osm.org/go/0D0YYUak9?node=3342079613\nLocation: https://ccc-ffm.de
+STATUS:CONFIRMED
+DTSTART:20150614T150000
+DTEND:20150614T180000
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150601T214007Z
+X-RADICALE-NAME:1433194798.R836.ics
+CREATED:20150601T213955Z
+UID:2fa837ef-b888-430a-9ca9-d1ce5afbdddc
+SEQUENCE:2
+LAST-MODIFIED:20150601T214007Z
+DESCRIPTION:Das Protokoll liegt\, wie immer auf http://dl.ffm.freifunk.net/public/Protokolle/
+SUMMARY:ffffm:Freifunk-Mumble
+LOCATION:Mumble im Raum \"Frankfurt (Main)\" auf dem Server mumble.freifunk-ruhrgebiet.de auf Port 64738
+DTSTART:20150615T193000
+DTEND:20150615T203000
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150810T194500
+SUMMARY:Ffffm: Vorstandsmumble
+LOCATION:Mumble.freifunk-ruhrgebiet.de im Raum Frankfurt
+TRANSP:OPAQUE
+STATUS:CONFIRMED
+DTEND:20150810T204500
+LAST-MODIFIED:20150603T193137Z
+DTSTAMP:20150603T193137Z
+CREATED:20150603T193137Z
+UID:82a859b9-fac4-4ea1-ab6d-ee2ed217fe7d
+X-RADICALE-NAME:82a859b9-fac4-4ea1-ab6d-ee2ed217fe7d.ics
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+CREATED:20150426T231955Z
+X-RADICALE-NAME:8e45250d-e89e-4c39-a4ca-51b2e12c9bd3.ics
+DTSTART:20150504T193000
+SUMMARY:Freifunk Stammtisch
+LOCATION:Kanonesteppl\, Textorstraße 20
+TRANSP:OPAQUE
+STATUS:CONFIRMED
+DESCRIPTION:Am 4. Mai treffen wir uns das nächste Mal zu unserem monatlichen Stammtisch. Freifunker und Interessierte sind herzlich willkommen.
+DTEND:20150504T223000
+LAST-MODIFIED:20150427T003036Z
+DTSTAMP:20150427T003036Z
+SEQUENCE:1
+UID:8e45250d-e89e-4c39-a4ca-51b2e12c9bd3
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20150418T100435Z
+X-RADICALE-NAME:901eb97a-abf1-4a70-9add-b22f38c25da1.ics
+CREATED:20150417T110815Z
+UID:901eb97a-abf1-4a70-9add-b22f38c25da1
+SEQUENCE:4
+LAST-MODIFIED:20150418T100435Z
+DESCRIPTION:Ziel des Treffens ist es\, uns in Form eines Projektstatus auf dem aktuellen Stand zu halten. Das geht bei Stammtischen nicht gut\, daher das Experiment dieses Formats.\nDas Protokoll wird im Libreoffice-Format unter http://dl.ffm.freifunk.net/public/Protokolle/Protokoll-Arbeitstreffen-Freifunk.ods veröffentlicht
+SUMMARY:Freifunk mumble
+LOCATION:mumble.freifunk-ruhrgebiet.de Port 64738 in Raum Frankfurt (Main)
+CATEGORIES:Freifunk Frankfurt Treffen
+DTSTART:20150420T193000
+DTEND:20150420T203000
+TRANSP:OPAQUE
+X-WR-SOURCE:frankfurt_am_main
+END:VEVENT
+BEGIN:VEVENT
+UID:20150603T232012CEST-7865LfUxS2@freifunk-halle.org
+DTSTAMP:20150603T212012Z
+DESCRIPTION:Einladung zum halleschen Freifunktreffen.\nDetails siehe: <a hr
+https://www.freifunk-halle.org/forum/viewforum.php?f=37' >https://www.freifunk-halle.org/forum/viewforum.php?f=37
+DTSTART:20150603T190000
+DTEND:20150603T220000
+LOCATION:<a target=_blank href='http://www.eigenbaukombinat.de'>Eigenbaukom
+http://maps.google.de/maps?q=eigenbaukombinat+julius-ebeling-str.+9+halle+deutschland&oe=utf-8&ie=UTF-8&output=embed&z=15&t=h&msa=0'>Julius-Ebeling-Str. 9</a>\n
+RRULE:FREQ=MONTHLY;BYDAY=1WE
+SUMMARY:@HAL Freifunktreffen
+X-WR-SOURCE:halle
+END:VEVENT
+BEGIN:VEVENT
+UID:20150603T232012CEST-7924pwFvbM@freifunk-halle.org
+DTSTAMP:20150603T212012Z
+DESCRIPTION:Einladung zum halleschen Freifunktreffen.\nDetails siehe: <a hr
+https://www.google.de/maps/place/Rollercaf%C3%A9/@51.4873\,11.9677\,17z/data=!3m1!4b1!4m2!3m1!1s0x47a66353a6c0c609:0xe3e2267e1371d826?hl=de'>Universitätsring 8</a>\n
+DTSTART:20150615T190000
+DTEND:20150615T220000
+LOCATION:<!--\n<a target=_blank href='http://mahns-chateau.de/'>MahnS Chate
+http://www.rollercafe.de/'>
+RRULE:FREQ=MONTHLY;BYDAY=3MO
+SUMMARY:@HAL Freifunktreffen
+X-WR-SOURCE:halle
+END:VEVENT
+BEGIN:VEVENT
+UID:20150603T232012CEST-7943Lk9PvO@freifunk-halle.org
+DTSTAMP:20150603T212012Z
+DESCRIPTION:Einladung zum halleschen Freifunktreffen.\nDetails siehe: <a hr
+https://www.freifunk-halle.org/forum/viewforum.php?f=37' >https://www.freifunk-halle.org/forum/viewforum.php?f=37
+DTSTART:20140719T150000
+DTEND:20140720T000000
+LOCATION:<a href='ihttps://maps.google.de/maps?f=q&ll=51.462082\,12.024686&output=embed&z=16&q=tauchclub+orca+halle+ev&hnear=Schkeuditzer+Stra%C3%9Fe+70\,+06116+Halle+%28Saale%29&t=h' >Schkeuditzer Str. 70</a>
+SUMMARY:@HAL Freifunktreffen
+X-WR-SOURCE:halle
+END:VEVENT
+BEGIN:VEVENT
+UID:ai1ec-2272@hamburg.freifunk.net
+DTSTAMP:20150603T212017Z
+CATEGORIES:Freifunktreffen\,Veranstaltung
+CONTACT:https://events.ccc.de/category/camp2015/
+DESCRIPTION:
+DTSTART:20150813
+DTEND:20150818
+GEO:+53.03089;+13.30998
+LOCATION:Ziegeleipark Mildenberg @ Ziegelei 10\, 16792 Zehdenick\, Deutschland
+SEQUENCE:0
+SUMMARY:Chaos Communication Camp 2015
+URL:https://hamburg.freifunk.net/event/chaos-communication-camp-2015
+X-WR-SOURCE:hamburg
+END:VEVENT
+BEGIN:VEVENT
+UID:ai1ec-2280@hamburg.freifunk.net
+DTSTAMP:20150603T212017Z
+CATEGORIES:Freifunktreffen\,Veranstaltung
+CONTACT:
+DESCRIPTION:Packt Getränke und was zum drauf tun ein und ab geht’s.
+DTSTART:20150605T180000
+DTEND:20150605T220000
+GEO:+53.55849;+9.94455
+LOCATION:FUX Innenhof @ Zeiseweg 9\, 22765 Hamburg\, Deutschland
+SEQUENCE:0
+SUMMARY:ffhh: Grillen
+URL:https://hamburg.freifunk.net/event/ffhh-grillen
+X-ALT-DESC:<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 3.2//EN'>\\n<HTML>\\n<HEAD>\\n<TITLE></TITLE>\\n</HEAD>\\n<BODY><p>Packt Getränke und was zum drauf tun ein und ab geht’s. </p>\n</BODY></HTML>
+X-WR-SOURCE:hamburg
+END:VEVENT
+BEGIN:VEVENT
+UID:ai1ec-1417@hamburg.freifunk.net
+DTSTAMP:20150603T212017Z
+CATEGORIES:Freifunktreffen
+CONTACT:kontakt@hamburg.freifunk.net\; https://www.hamburg.ccc.de
+DESCRIPTION:Jeden Montag steht freifunk allen Besucher_innen offen in den Clubräumen des CCC ab 19:00 Uhr.\nChaos Computer Club Hansestadt Hamburg e.V.\nZeiseweg 9\, Altona
+DTSTART:20150608T190000
+DTEND:20150608T210000
+EXDATE:20150914T190000
+GEO:+53.55849;+9.94455
+LOCATION:CCCHH e.V. @ Zeiseweg 9\, 22765 Hamburg\, Deutschland
+RRULE:FREQ=WEEKLY;BYDAY=MO;WKST=MO
+SEQUENCE:0
+SUMMARY:ffhh: Offener Montag
+URL:https://hamburg.freifunk.net/event/ffhh_offener_montag
+X-ALT-DESC:<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 3.2//EN'>\\n<HTML>\\n<HEAD>\\n<TITLE></TITLE>\\n</HEAD>\\n<BODY><p>Jeden Montagsteht freifunk allen Besucher_innen offen in den Clubräumen des CCC ab 19:00 Uhr.</p>\n<p>Chaos Computer Club Hansestadt Hamburg e.V.<br />\nZeiseweg 9\, Altona </p>\n</BODY></HTML>
+X-WR-SOURCE:hamburg
+END:VEVENT
+BEGIN:VEVENT
+UID:ai1ec-1423@hamburg.freifunk.net
+DTSTAMP:20150603T212017Z
+CATEGORIES:Freifunktreffen
+CONTACT:kontakt@hamburg.freifunk.net\; http://blog.attraktor.org
+DESCRIPTION:Freitags um 19:30 Uhr wird im attraktor gebastelt.\nattraktor e.V.\nEschelsweg 4\, Altona
+DTSTART:20150612T193000
+DTEND:20150612T234500
+EXDATE:20150911T193000
+GEO:+53.54988;+9.94637
+LOCATION:attraktor e.V. @ Eschelsweg 4\, 22767 Hamburg\, Deutschland
+RRULE:FREQ=WEEKLY;BYDAY=FR;WKST=MO
+SEQUENCE:0
+SUMMARY:ffhh: HandsOn – Techniktreffen
+URL:https://hamburg.freifunk.net/event/ffhh-handson-techniktreffen
+X-ALT-DESC:<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 3.2//EN'>\\n<HTML>\\n<HEAD>\\n<TITLE></TITLE>\\n</HEAD>\\n<BODY><p>Freitags um 19:30 Uhr wird im attraktor gebastelt.</p>\n<p>attraktor e.V.<br />\nEschelsweg 4\, Altona</p>\n</BODY></HTML>
+X-WR-SOURCE:hamburg
+END:VEVENT
+BEGIN:VEVENT
+UID:ai1ec-2270@hamburg.freifunk.net
+DTSTAMP:20150603T212017Z
+CATEGORIES:Geekend
+CONTACT:http://ffnord.net
+DESCRIPTION:
+DTSTART:20150911T200000
+DTEND:20150913T160000
+GEO:+53.54988;+9.94637
+LOCATION:Attraktor @ Eschelsweg 4\, 22767 Hamburg\, Deutschland
+SEQUENCE:0
+SUMMARY:geekend: ffnord: FFNord Con 2015.2
+URL:https://hamburg.freifunk.net/event/ffnord-con-2015-2
+X-WR-SOURCE:hamburg
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150428T193000
+DTEND:20150428T213000
+RRULE:FREQ=MONTHLY;BYDAY=4TU
+DTSTAMP:20150603T212017Z
+UID:8bftr52sdvfmo2dgqdrb8orpgo@google.com
+CREATED:20150402T130233Z
+DESCRIPTION:
+LAST-MODIFIED:20150402T130627Z
+LOCATION:Hackerspace Bamberg
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:FF Treffen
+TRANSP:TRANSPARENT
+X-WR-SOURCE:bamberg
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150324T183000
+DTEND:20150324T203000
+DTSTAMP:20150603T212017Z
+UID:hkarlufotkfrb1jgdm8rimhdsk@google.com
+CREATED:20150323T222220Z
+DESCRIPTION:
+LAST-MODIFIED:20150327T124646Z
+LOCATION:Hackerspace
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Treffen Freifunk
+TRANSP:OPAQUE
+X-WR-SOURCE:bamberg
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20150528T190000
+DTEND:20150528T220000
+RRULE:FREQ=MONTHLY;BYDAY=-1TH
+DTSTAMP:20150306T111045Z
+UID:20150301T111015Z@freifunk-wiesbaden.de
+CREATED:20150306T111015Z
+CONTACT:info@freifunk-wiesbaden.de\; http://wiesbaden.freifunk.net
+DESCRIPTION:Monatliches Treffen der Wiesbadener Freifunk-Community in den Raeumlichkeitendes CCC ab 19:00 Uhr.\nCCCMZ e.V.\nSedanplatz 7\, 65183 Wiesbaden
+LAST-MODIFIED:20150526T155856Z
+GEO:+50.08317;+8.22951
+LOCATION:CCCMZ e.V. @ Sedanplatz 7\, 65183 Wiesbaden\, Deutschland
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ffwi: Freifunk Treffen
+URL:http://wiesbaden.freifunk.net/treffen.html
+TRANSP:OPAQUE
+X-WR-SOURCE:wiesbaden
+END:VEVENT
+END:VCALENDAR
