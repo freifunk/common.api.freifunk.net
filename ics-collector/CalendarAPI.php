@@ -34,7 +34,7 @@ $jsonEventFields = array
 	'LAST_MODIFIED' => [null, false],
 	'LOCATION' => [null, true],
 	'GEO' => ['geolocation', false],
-	'X-WR-SOURCE' => ['source', true],
+	'X-WR-SOURCE' => ['source', false],
 );
 
 foreach ($jsonEventFields as $key => &$value) {
@@ -48,7 +48,13 @@ unset($value);
  */
 $supportedValues = array
 (
-	'format' => ['ics', 'json'],
+	'format' => ['ics', 'json']
+);
+/**
+ * Supported set of values for some parameters that could have multiple values, separated by commas
+ */
+$supportedMultipleValues = array
+(
 	'fields' => array_map(function($v) { return $v[0]; }, $jsonEventFields)
 );
 /**
@@ -102,6 +108,19 @@ foreach ($defaultValues as $key => $value) {
 }
 // source can have multiple values, separated by comma
 $sources = explode(',', $parameters['source']);
+
+$fieldsParameterExists = false;
+$fields = array();
+if (array_key_exists('fields', $parameters)) {
+	// fields can have multiple values, separated by comma
+	$fields = explode(',', $parameters['fields']);
+	foreach ($fields as $field) {
+		if (!in_array($field, $supportedMultipleValues['fields'])) {
+			throwAPIError('Field not supported : ' . $field);
+		}
+	}
+	$fieldsParameterExists = true;
+}
 /*
  * Constructing response
  */
@@ -139,7 +158,7 @@ if ($parameters['format'] == 'json') {
 	foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 		$event = array();
 		foreach ($value as $propertyKey => $propertyValue) {
-			if (isRequiredField($propertyKey, $jsonEventFields)) {
+			if (isRequiredField($propertyKey)) {
 				$event[$jsonEventFields[$propertyKey][0]] = is_array($propertyValue) ? $propertyValue['value'] : $propertyValue;
 			}
 		}
@@ -164,8 +183,11 @@ function getRequestParameters($httpMethod) {
            ($httpMethod === 'POST' ? $_POST :
            null);
 }
-
-function isRequiredField($propertyKey, $jsonEventFields) {
+function isRequiredField($propertyKey) {
+	global $jsonEventFields, $fieldsParameterExists, $fields;
+	if ($fieldsParameterExists) {
+		return array_key_exists($propertyKey, $jsonEventFields) && in_array($jsonEventFields[$propertyKey][0], $fields);
+	}
 	return array_key_exists($propertyKey, $jsonEventFields) && isDefaultJSONField($propertyKey, $jsonEventFields);
 }
 
