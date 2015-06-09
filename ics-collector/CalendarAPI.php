@@ -33,13 +33,16 @@ $jsonEventFields = array
 	'CREATED' => [null, false],
 	'LAST_MODIFIED' => [null, false],
 	'LOCATION' => [null, true],
-	'GEO' => ['geolocation', false]
+	'GEO' => ['geolocation', false],
+	'X-WR-SOURCE' => ['source', true],
 );
+
 foreach ($jsonEventFields as $key => &$value) {
 	if ($value[0] === null) {
 		$value[0] = strtolower($key);
 	}
 }
+unset($value);
 /**
  * Supported sets of values for some parameters
  */
