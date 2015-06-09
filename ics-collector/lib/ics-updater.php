@@ -1,11 +1,13 @@
 <?php
 
+const ICS_COLLECTOR_URL = "http://api.fossasia.net/ics-collector/ics-collector.php";
+
 require (realpath(dirname(__FILE__))  . '/ics-merger.php');
 
 $configs = parse_ini_file('api-config.ini', true);
 $mergedIcsHeader = $configs['MERGED_ICS_HEADER'];
 
-$summary = file_get_contents('http://localhost/fossasia/common.api.freifunk.net/ics-collector/ics-collector.php?format=json');
+$summary = file_get_contents(ICS_COLLECTOR_URL . '?format=json');
 $summary = json_decode($summary, true);
 $merger = new IcsMerger($configs['MERGED_ICS_HEADER']);
 foreach($summary as $key => $value) {
