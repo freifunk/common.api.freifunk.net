@@ -1,6 +1,6 @@
 <?php
-
-$communities = "./ffSummarizedDir.json";
+$configs = parse_ini_file(realpath(dirname(__FILE__))  .  '/api-config.ini', true);
+$communities = $configs['COMPONENT_URL']['SUMMARIZED_DIR_URL'];
 
 //load combined api file
 $api = file_get_contents($communities);
