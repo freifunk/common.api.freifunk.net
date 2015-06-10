@@ -71,6 +71,10 @@ $supportedFormat = array
 		[
 			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/",
 			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/"
+		],
+	'limit' =>
+		[
+			"/^[0-9]*$/"
 		]
 );
 /**
@@ -167,10 +171,15 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 	}
 }
 
+$includedEvents = $parsedIcs;
+if (array_key_exists('limit', $parameters) && count($parsedIcs->cal['VEVENT']) > $parameters['limit']) {
+	$includedEvents->cal['VEVENT'] = array_slice($parsedIcs->cal['VEVENT'], 0, $parameters['limit'], true);
+}
+
 if ($parameters['format'] == 'json') {
 	header('Content-type: application/json; charset=UTF-8');
 	$jsonResult = array();
-	foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
+	foreach ($includedEvents->cal['VEVENT'] as $key => $value) {
 		$event = array();
 		foreach ($value as $propertyKey => $propertyValue) {
 			if (isRequiredField($propertyKey)) {
