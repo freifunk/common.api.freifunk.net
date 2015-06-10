@@ -14,7 +14,8 @@ $mandatory = ['source'];
  */
 $defaultValues = array
 (
-	'format' => 'json'
+	'format' => 'json',
+	'from' => 'now'
 );
 /**
  * Ics properties of a VEVENT that will be converted & included in json result (if exist)
@@ -64,6 +65,7 @@ $supportedFormat = array
 (
 	'from' => 
 		[
+			"/^now$/",
 			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/", // date format, e.g. 1997-12-31 
 			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/" // datetime format, e.g. 2015-06-10T10:09:59
 		],
