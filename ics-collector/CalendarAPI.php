@@ -14,7 +14,7 @@ $mandatory = ['source'];
  */
 $defaultValues = array
 (
-	'format' => 'json',
+	'format' => 'json'
 );
 /**
  * Ics properties of a VEVENT that will be converted & included in json result (if exist)
@@ -75,6 +75,11 @@ $supportedFormat = array
 	'limit' =>
 		[
 			"/^[0-9]*$/"
+		],
+	'sort' =>
+		[
+			"/^asc-start$/",
+			"/^desc-start$/"
 		]
 );
 /**
@@ -155,7 +160,11 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 	}
 	if (array_key_exists('from', $parameters)) {
 		$from = new DateTime($parameters['from']);
-		$eventStart = new DateTime($value['DTSTART']['value']);
+		try {
+			$eventStart = new DateTime(getICSPropertyValue($value['DTSTART']));
+		} catch (Exception $e) {
+			throwAPIError('Parse \'DTSTART\' property error : ' . getICSPropertyValue($value['DTSTART']));
+		}
 		if ($eventStart < $from) {
 			unset($parsedIcs->cal['VEVENT'][$key]);
 			continue;
@@ -163,7 +172,11 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 	}
 	if (array_key_exists('to', $parameters)) {
 		$to = new DateTime($parameters['to']);
-		$eventStart = new DateTime($value['DTSTART']['value']);
+		try {
+			$eventStart = new DateTime(getICSPropertyValue($value['DTSTART']));
+		} catch (Exception $e) {
+			throwAPIError('Parse \'DTSTART\' property error : ' . getICSPropertyValue($value['DTSTART']));
+		}
 		if ($eventStart > $to) {
 			unset($parsedIcs->cal['VEVENT'][$key]);
 			continue;
@@ -171,9 +184,36 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 	}
 }
 
+function sortByStartDate($ev1, $ev2, $ascendant) {
+	$startDate1 = getICSPropertyValue($ev1['DTSTART']);
+	$startDate2 = getICSPropertyValue($ev2['DTSTART']);
+	if ($startDate1 > $startDate2) {
+		return $ascendant ? -1 : 1;
+	} else if ($startDate1 < $startDate2) {
+		return $ascendant ? 1 : -1;
+	}
+	return 0;
+}
+
 $includedEvents = $parsedIcs;
-if (array_key_exists('limit', $parameters) && count($parsedIcs->cal['VEVENT']) > $parameters['limit']) {
-	$includedEvents->cal['VEVENT'] = array_slice($parsedIcs->cal['VEVENT'], 0, $parameters['limit'], true);
+if (array_key_exists('sort', $parameters)) {
+	switch ($parameters['sort']) {
+		case 'asc-start':
+			usort($includedEvents->cal['VEVENT'], function($ev1, $ev2) {
+				return sortByStartDate($ev1, $ev2, true);
+			});
+			break;
+		case 'desc-start':
+			usort($includedEvents->cal['VEVENT'], function($ev1, $ev2) {
+				return sortByStartDate($ev1, $ev2, false);
+			});
+			break;
+		default:
+			break;
+	}
+}
+if (array_key_exists('limit', $parameters) && count($includedEvents->cal['VEVENT']) > $parameters['limit']) {
+	$includedEvents->cal['VEVENT'] = array_slice($includedEvents->cal['VEVENT'], 0, $parameters['limit'], true);
 }
 
 if ($parameters['format'] == 'json') {
@@ -183,7 +223,7 @@ if ($parameters['format'] == 'json') {
 		$event = array();
 		foreach ($value as $propertyKey => $propertyValue) {
 			if (isRequiredField($propertyKey)) {
-				$event[$jsonEventFields[$propertyKey][0]] = is_array($propertyValue) ? $propertyValue['value'] : $propertyValue;
+				$event[$jsonEventFields[$propertyKey][0]] = getICSPropertyValue($propertyValue);
 			}
 		}
 		$jsonResult[$key] = $event;
@@ -217,4 +257,8 @@ function isRequiredField($propertyKey) {
 
 function isDefaultJSONField($icsKey, $jsonEventFields) {
 	return $jsonEventFields[$icsKey][1];
+}
+
+function getICSPropertyValue($value) {
+	return is_array($value) ? $value['value'] : $value;
 }
