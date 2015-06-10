@@ -62,8 +62,16 @@ $supportedMultipleValues = array
  */
 $supportedFormat = array 
 (
-	'from' => "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/", // date format, e.g. 1997-12-31 
-	'to' => "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/"
+	'from' => 
+		[
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/", // date format, e.g. 1997-12-31 
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/" // datetime format, e.g. 2015-06-10T10:09:59
+		],
+	'to' => 
+		[
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/",
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/"
+		]
 );
 /**
  * Request validations
@@ -90,9 +98,16 @@ foreach ($supportedValues as $key => $value) {
 	}
 }
 // Check parameter with constrained format
-foreach ($supportedFormat as $key => $value) {
+foreach ($supportedFormat as $key => $patterns) {
 	if (array_key_exists($key, $parameters)) {
-		if (!preg_match($value, $parameters[$key])) {
+		$match = false;
+		foreach ($patterns as $pattern) {
+			if (preg_match($pattern, $parameters[$key])) {
+				$match = true;
+				break;
+			}
+		}
+		if (!$match) {
 			throwAPIError('Format not supported for parameter \'' . $key . '\' : ' . $parameters[$key]);
 		}
 	}
