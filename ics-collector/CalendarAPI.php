@@ -179,7 +179,7 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 		} catch (Exception $e) {
 			throwAPIError('Parse \'DTSTART\' property error : ' . getICSPropertyValue($value['DTSTART']));
 		}
-		if ($eventStart > $to) {
+		if ($eventStart >= $to) {
 			unset($parsedIcs->cal['VEVENT'][$key]);
 			continue;
 		}
