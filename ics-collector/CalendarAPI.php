@@ -35,6 +35,7 @@ $jsonEventFields = array
 	'LOCATION' => [null, true],
 	'GEO' => ['geolocation', false],
 	'X-WR-SOURCE' => ['source', false],
+	'URL' => [null, false]
 );
 
 foreach ($jsonEventFields as $key => &$value) {
