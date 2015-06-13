@@ -237,7 +237,7 @@ if ($parameters['format'] == 'json') {
 	echo json_encode($jsonResult);
 } else {
 	header('Content-type: text/ics; charset=UTF-8');
-	var_dump($parsedIcs);
+	echo $includedEvents->toString();
 }
 
 function throwAPIError($errorMsg) {
