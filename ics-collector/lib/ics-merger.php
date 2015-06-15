@@ -71,8 +71,14 @@ class IcsMerger {
 			}
 		}
 
-		foreach ($this->defaultHeader as $key => $value) {
-			$result['VCALENDAR'][$key] = $this->defaultHeader[$key];
+		foreach ($result['VCALENDAR'] as $key => $value) {
+			if (array_key_exists($key, $this->defaultHeader)) {
+				$result['VCALENDAR'][$key] = $this->defaultHeader[$key];
+				echo $key . 'aa' . PHP_EOL;
+			} else {
+				unset($result['VCALENDAR'][$key]);
+				echo $key . 'haze' .PHP_EOL;
+			}
 		}
 
 		$callback = function($value) {
