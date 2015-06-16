@@ -33,14 +33,6 @@ frisby.create('Get number of events')
   })
 .toss();
 
-frisby.create('Test source parameter required')
-  .get(testUrl + '?source=all&fields=start')
-  .expectStatus(200)
-  .afterJSON(function(data) {
-
-  })
-.toss();
-
 frisby.create('Test fields parameter')
   .get(testUrl + '?source=all&fields=url')
   .expectStatus(200)
