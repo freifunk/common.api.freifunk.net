@@ -79,7 +79,21 @@ sort | |`asc-date`<br/>`desc-date` | || Sort result in ascending or descending o
 
 ## Supported method
  Only `HTTP GET` is supported. This is a read-only API, meaning that users can not update events information with this API. It could be updated directly from ics sources.
- 
+
+## Testing
+  
+ To run API tests : 
+
+```sh
+cd common.api.fossasia.net/ics-collector/tests
+jasmine-node test_spec.js
+```
+
+*Requirement* : jasmine-node. To install jasmine-node globally, run this command :
+```sh
+npm install jasmine-node -g
+```
+
 ## Contribute
  We're happy to have reported issues and pull requests. Please clearly specify scenario, API call and API result.
  
