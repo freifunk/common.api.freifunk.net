@@ -6,8 +6,8 @@ Calendar API is a FOSSASIA open-source web service that provides events informat
 
 The API is backed by data retrieved from iCal feeds from FOSSASIA communities. Your community events are not here ? Please follow these simple steps :
 
-1. Get the link to your community iCal feed. [What is iCal](https://en.wikipedia.org/wiki/ICalendar) ?
-2. Add it to your community json file, under `feeds` section, category `ics` : 
+1. Get the link to your community iCal feed ([What is iCal ?](https://en.wikipedia.org/wiki/ICalendar))
+2. Add it to your community json file, under section `feeds`, category `ics` : 
 ```json
    "UELT": {
    "feeds": [

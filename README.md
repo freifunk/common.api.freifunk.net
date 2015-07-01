@@ -1,68 +1,18 @@
 FOSSASIA API Common Toolbox
 ===========
+Set of utility scripts to process, aggregrate, and extract information from FOSSASIA communities data
 
-## API Data Collector
+## Components
 
-[collector/collectCommunities.py](https://github.com/fossasia/common.api.fossasia.net/blob/master/collector/collectCommunities.py)
+* API data collector & aggregator [collector/collectCommunities.py](https://github.com/fossasia/common.api.fossasia.net/blob/master/collector/collectCommunities.py)
 
-----------------------
+* Set of tools to work with `.ics` format, including an ics collector, parser, merger and debugger ([live demo](http://api.fossasia.net/ics-collector/debugger/)).
 
-Generate some aggregated data from registered communities :
+* FOSSASIA Calendar API. Check out the details in [API wiki](https://github.com/fossasia/common.api.fossasia.net/blob/master/ics-collector/README.md)
 
-* `ffSummarizedDir.json`
-* `ffGeoJson.json`
-* `ffHtmlTable.html`
-
-**Requires** : community jsons list `directory.json`
-
-
-## API File Updater
-[contrib/ffapi-update-nodes.py](https://github.com/fossasia/common.api.fossasia.net/blob/master/contrib/ffapi-update-nodes.py)
-
-----------------------
-
-Eine Möglichkeit, die Anzahl der Knoten und die von OLSR angekündigten Services zu erneuern bietet das Python-Script unter https://github.com/fossasia/common.api.fossasia.net/blob/master/contrib/ffapi-update-nodes.py.
-
-Es kann beispielsweise per Cronjob regelmäßig ausgeführt werden und muss auf dem Server laufen, auf dem auch die API-Datei liegt. Außerdem benötigt das Script Zugriff auf eine Instanz des jsoninfo-Plugins von OLSR. Um auch die von OLSR angekündigten Services darstellen zu können, muss die Datei mit den Informationen lokal vorliegen. Idealerweise läuft ein OLSR-Client mit Verbindung zum restlichen Netz auf dem Server.
-
-Alle notwendigen Einstellungen können im Kopf des Scripts konfiguriert werden.
-
-## Community counter
-[contrib/counter.php](https://github.com/fossasia/common.api.fossasia.net/blob/master/contrib/counter.php)
-
-----------------------
-
-**Usage** : call `counter.php?count=nodes` or `counter.php?count=communities` or `counter.php` (counts communities)
-
-## ICS tools
-Set of tools to work with ics feeds
-
-----------------------
-
-* [ics-collector/CalendarAPI.php](https://github.com/fossasia/common.api.fossasia.net/blob/master/ics-collector/CalendarAPI.php)
-
-Calendar API endpoint for all communities events [api.fossasia.net/ics-collector/CalendarAPI.php/](http://api.fossasia.net/ics-collector/CalendarAPI.php/)
-
-* [ics-collector/ics-collector.php](https://github.com/fossasia/common.api.fossasia.net/blob/master/ics-collector/ics-collector.php)
-
-Complete list of available ics feeds provided by registered communities
-
-**Requires** : `ffSummarizedDir.json`
-
-* [ics-collector/lib/ics-merger.php](https://github.com/fossasia/common.api.fossasia.net/blob/master/ics-collector/lib/ics-merger.php)
-
-An ics merger library that could serve multiple purposes
-
-* [ics-collector/debugger](https://github.com/fossasia/common.api.fossasia.net/tree/master/ics-collector/debugger)
-
-A simple webapp to debug ics tools. 
-
-Link : [api.fossasia.net/ics-collector/debugger/](http://api.fossasia.net/ics-collector/debugger/)
-
-
-
-History
-=======
+* and more
+ 
+## History
 
 Our goal is to collect information about Open Source Communities and Hackspaces all over Asia. This information will be used to aggregate contact data, locations, news feeds and events.
 
@@ -70,4 +20,6 @@ The FOSSASIA Api is based on the Freifunk Api and the Hackerspaces API (http://h
 
 The FOSSASIA API is designed to collect metadata of communities in a decentral way and make it available to other users.
 
+## Contribute
 
+Most of the scripts are written in PHP and Python, and could be run from a terminal. Feel free to clone the repo, make changes and send us Pull Requests.
