@@ -22,6 +22,8 @@ The FOSSASIA Api is based on the Freifunk Api and the Hackerspaces API (http://h
 
 The FOSSASIA API is designed to collect metadata of communities in a decentral way and make it available to other users.
 
+[FOSSASIA API repo](https://github.com/fossasia/api.fossasia.net)
+
 ## Contribute
 
 Most of the scripts are written in PHP and Python, and could be run from a terminal. Feel free to clone the repo, make changes and send us Pull Requests.
