@@ -26,4 +26,12 @@ The FOSSASIA API is designed to collect metadata of communities in a decentral w
 
 ## Contribute
 
-Most of the scripts are written in PHP and Python, and could be run from a terminal. Feel free to clone the repo, make changes and send us Pull Requests.
+Most of the scripts are written in PHP and Python, and could be executed in a terminal. Feel free to clone the repo, make changes and send us Pull Requests.
+
+## Requirements
+
+* `directory.json` (collector/collectCommunities.py)
+* `ffSummarizedDir.json` (ics-collector/ics-collector.php)
+* Software version :
+  * PHP : >= 5.4
+  * Python : >= 3.4
