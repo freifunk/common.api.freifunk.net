@@ -628,5 +628,39 @@ class ICal
 
         return $extendedEvents;
     }
+
+    // convert an array of property name - property value into valid ics
+    private static function arrayToIcs($array) {
+        $callback = function ($v, $k) {
+            if (is_array($v)) {
+                if (array_key_exists('value', $v)) {
+                    return $k . ':' . $v['value'] . PHP_EOL;
+                } else {
+                    return '';
+                }
+            } else {
+                return $k . ':' . $v . PHP_EOL; 
+            }
+        };
+        return implode('', array_map($callback, $array, array_keys($array)));
+    }
+
+
+    /**
+     * Convert the ICal object into valid ics string
+     * @return string
+     */
+    public function toString() {
+        
+        $str = 'BEGIN:VCALENDAR' . PHP_EOL;
+        $str .= ICal::arrayToIcs($this->cal['VCALENDAR']);
+        foreach ($this->cal['VEVENT'] as $event) {
+            $str .= 'BEGIN:VEVENT' . PHP_EOL; 
+            $str .= ICal::arrayToIcs($event);
+            $str .= 'END:VEVENT' . PHP_EOL;
+        }
+        $str .= 'END:VCALENDAR';
+        return $str;
+    }
 }
 ?>
