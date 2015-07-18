@@ -1,16 +1,6 @@
 <?php
-/**
- * Community ICalendar feeds collector
- *  WHAT IT DOES : 
- *   provides the calendar feeds found in Freifunk API files either as xml sitemap or as structured json output.
- *  HOW IT WORKS :
- *   - place calcollect.php on your web server
- *   - adjust $commuities to your aggregated api file
- *   - maybe add some static feeds to the array
- *   - call http://yourserver.tld/yourpath/calcollect.php to get the xml sitemap or use calcollect.php?format=json to get the json output
- * 
- */
-$communities = "./ffSummarizedDir.json";
+$configs = parse_ini_file(realpath(dirname(__FILE__))  .  '/api-config.ini', true);
+$communities = $configs['COMPONENT_URL']['SUMMARIZED_DIR_URL'];
 
 //load combined api file
 $api = file_get_contents($communities);

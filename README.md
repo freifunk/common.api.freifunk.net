@@ -1,46 +1,37 @@
-Anwendungen
+FOSSASIA API Common Toolbox
 ===========
+Set of utility scripts to process, aggregrate, and extract information from FOSSASIA communities data
 
-FFAPI File Updater
-----------------------
+[![Join the chat at https://gitter.im/fossasia/api.fossasia.net](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fossasia/api.fossasia.net?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Eine Möglichkeit, die Anzahl der Knoten und die von OLSR angekündigten Services zu erneuern bietet das Python-Script unter https://github.com/freifunk/common.api.freifunk.net/blob/master/contrib/ffapi-update-nodes.py.
+## Components
 
-Es kann beispielsweise per Cronjob regelmäßig ausgeführt werden und muss auf dem Server laufen, auf dem auch die API-Datei liegt. Außerdem benötigt das Script Zugriff auf eine Instanz des jsoninfo-Plugins von OLSR. Um auch die von OLSR angekündigten Services darstellen zu können, muss die Datei mit den Informationen lokal vorliegen. Idealerweise läuft ein OLSR-Client mit Verbindung zum restlichen Netz auf dem Server.
+* API data collector & aggregator [collector/collectCommunities.py](https://github.com/fossasia/common.api.fossasia.net/blob/master/collector/collectCommunities.py)
 
-Alle notwendigen Einstellungen können im Kopf des Scripts konfiguriert werden.
+* Set of tools to work with `.ics` format, including an ics collector, parser, merger and debugger ([live demo](http://api.fossasia.net/ics-collector/debugger/)).
 
-Entstehung
-==========
+* FOSSASIA Calendar API. Check out the details in [API wiki](https://github.com/fossasia/common.api.fossasia.net/blob/master/ics-collector/README.md)
 
-Zum Wireless Community Weekend 2013 in Berlin fand ein ersten Treffen
-zum Relaunch unserer Website freifunk.net statt. Dabei kam auch die
-Frage auf, wie man die einzelnen Freifunkcommunities am besten
-präsentieren kann, ohne alle Daten zentral zu erfassen und zudem den
-Communities eine einfache Möglichkeit zu bieten, eigene Daten selbst
-aktuell zu halten.
+* and more
+ 
+## History
 
-In Anlehnung an die Hackerspaces API (http://hackerspaces.nl/spaceapi/)
-wurde die Idee einer Freifunk API geboren: Jede Community stellt ihre
-Daten in einem definierten Format an einer ihr zugänglichen Stelle
-(Webspace, Wiki, Webserver) bereit und trägt sich in das Verzeichnis
-ein. Das Verzeichnis besteht lediglich aus einer Zuordnung von
-Communitynamen und URL zu den den bereitgestellten Daten. Die erste
-Anwendung soll eine Karte mit darin angezeigten Freifunkcommunities
-sein, um Besuchern und Interessierten einen Überblick zu geben und
-lokale Ansprechpartner zu vermitteln.
+Our goal is to collect information about Open Source Communities and Hackspaces all over Asia. This information will be used to aggregate contact data, locations, news feeds and events.
 
-Die Freifunk API soll die Metadaten der Communities dezentral sammeln und anderen Nutzern zur Verfügung stellen. Die API ist nicht zu verwechseln mit einer Datenbank für Freifunkknoten oder als Verzeichnis von Firmwareeintellungen einzelner Communities.
+The FOSSASIA Api is based on the Freifunk Api and the Hackerspaces API (http://hackerspaces.nl/spaceapi/). Each community provides its data in a well defined format, hosted on their places (web space, wiki, web servers) and contributes a link to the directory. This directory only consists of the name and an url per community. First services supported by our freifunk API are the global community map and a community feed aggregator.
 
-Weitere Informationen zur API sind in einem Blogartikel unter http://blog.freifunk.net/2013/die-neue-freifunk-api-aufruf-zum-mitmachen zusammengefasst.
+The FOSSASIA API is designed to collect metadata of communities in a decentral way and make it available to other users.
 
-History
-=======
+[FOSSASIA API repo](https://github.com/fossasia/api.fossasia.net)
 
-At the Wireless Community Weekend 2013 in Berlin there was a first meeting to relaunch freifunk.net. To represent local communities without collecting and storing data centrally, a way had to be found. Another requirement was to enable local communities to keep their data up to date easily.
+## Contribute
 
-Based on the Hackerspaces API (http://hackerspaces.nl/spaceapi/) the idea of the freifunk API was born: Each community provides its data in a well defined format, hosted on their places (web space, wiki, web servers) and contributes a link to the directory. This directory only consists of the name and an url per community. First services supported by our freifunk API are the global community map and a community feed aggregator.
+Most of the scripts are written in PHP and Python, and could be executed in a terminal. Feel free to clone the repo, make changes and send us Pull Requests.
 
-The freifunk API is designed to collect metadata of communities in a decentral way and make it available to other users. It's not designated to be a freifunk node database or a directory of individual community firmware settings.
+## Requirements
 
-
+* `directory.json` (collector/collectCommunities.py)
+* `ffSummarizedDir.json` (ics-collector/ics-collector.php)
+* Software version :
+  * PHP : >= 5.4
+  * Python : >= 3.4

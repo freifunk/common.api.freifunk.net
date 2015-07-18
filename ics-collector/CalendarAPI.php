@@ -1,5 +1,6 @@
 <?php
 require_once 'lib/class.iCalReader.php';
+header('Access-Control-Allow-Origin: *');
 /*
  * Supported HTTP methods 
  */
@@ -13,7 +14,7 @@ $mandatory = ['source'];
  */
 $defaultValues = array
 (
-	'format' => 'json',
+	'format' => 'json'
 );
 /**
  * Ics properties of a VEVENT that will be converted & included in json result (if exist)
@@ -32,19 +33,29 @@ $jsonEventFields = array
 	'CREATED' => [null, false],
 	'LAST_MODIFIED' => [null, false],
 	'LOCATION' => [null, true],
-	'GEO' => ['geolocation', false]
+	'GEO' => ['geolocation', false],
+	'X-WR-SOURCE' => ['source', false],
+	'URL' => [null, false]
 );
+
 foreach ($jsonEventFields as $key => &$value) {
 	if ($value[0] === null) {
 		$value[0] = strtolower($key);
 	}
 }
+unset($value);
 /**
  * Supported sets of values for some parameters
  */
 $supportedValues = array
 (
-	'format' => ['ics', 'json'],
+	'format' => ['ics', 'json']
+);
+/**
+ * Supported set of values for some parameters that could have multiple values, separated by commas
+ */
+$supportedMultipleValues = array
+(
 	'fields' => array_map(function($v) { return $v[0]; }, $jsonEventFields)
 );
 /**
@@ -52,8 +63,27 @@ $supportedValues = array
  */
 $supportedFormat = array 
 (
-	'from' => "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/", // date format, e.g. 1997-12-31 
-	'to' => "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/"
+	'from' => 
+		[
+			"/^now$/",
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/", // date format, e.g. 1997-12-31 
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/" // datetime format, e.g. 2015-06-10T10:09:59
+		],
+	'to' => 
+		[
+			"/^now$/",
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/",
+			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/"
+		],
+	'limit' =>
+		[
+			"/^[0-9]*$/"
+		],
+	'sort' =>
+		[
+			"/^asc-start$/",
+			"/^desc-start$/"
+		]
 );
 /**
  * Request validations
@@ -80,9 +110,16 @@ foreach ($supportedValues as $key => $value) {
 	}
 }
 // Check parameter with constrained format
-foreach ($supportedFormat as $key => $value) {
+foreach ($supportedFormat as $key => $patterns) {
 	if (array_key_exists($key, $parameters)) {
-		if (!preg_match($value, $parameters[$key])) {
+		$match = false;
+		foreach ($patterns as $pattern) {
+			if (preg_match($pattern, $parameters[$key])) {
+				$match = true;
+				break;
+			}
+		}
+		if (!$match) {
 			throwAPIError('Format not supported for parameter \'' . $key . '\' : ' . $parameters[$key]);
 		}
 	}
@@ -98,6 +135,19 @@ foreach ($defaultValues as $key => $value) {
 }
 // source can have multiple values, separated by comma
 $sources = explode(',', $parameters['source']);
+
+$fieldsParameterExists = false;
+$fields = array();
+if (array_key_exists('fields', $parameters)) {
+	// fields can have multiple values, separated by comma
+	$fields = explode(',', $parameters['fields']);
+	foreach ($fields as $field) {
+		if (!in_array($field, $supportedMultipleValues['fields'])) {
+			throwAPIError('Field not supported : ' . $field);
+		}
+	}
+	$fieldsParameterExists = true;
+}
 /*
  * Constructing response
  */
@@ -113,7 +163,11 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 	}
 	if (array_key_exists('from', $parameters)) {
 		$from = new DateTime($parameters['from']);
-		$eventStart = new DateTime($value['DTSTART']['value']);
+		try {
+			$eventStart = new DateTime(getICSPropertyValue($value['DTSTART']));
+		} catch (Exception $e) {
+			throwAPIError('Parse \'DTSTART\' property error : ' . getICSPropertyValue($value['DTSTART']));
+		}
 		if ($eventStart < $from) {
 			unset($parsedIcs->cal['VEVENT'][$key]);
 			continue;
@@ -121,22 +175,58 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 	}
 	if (array_key_exists('to', $parameters)) {
 		$to = new DateTime($parameters['to']);
-		$eventStart = new DateTime($value['DTSTART']['value']);
-		if ($eventStart > $to) {
+		try {
+			$eventStart = new DateTime(getICSPropertyValue($value['DTSTART']));
+		} catch (Exception $e) {
+			throwAPIError('Parse \'DTSTART\' property error : ' . getICSPropertyValue($value['DTSTART']));
+		}
+		if ($eventStart >= $to) {
 			unset($parsedIcs->cal['VEVENT'][$key]);
 			continue;
 		}
 	}
 }
 
+function sortByStartDate($ev1, $ev2, $ascendant) {
+	$startDate1 = getICSPropertyValue($ev1['DTSTART']);
+	$startDate2 = getICSPropertyValue($ev2['DTSTART']);
+	if ($startDate1 > $startDate2) {
+		return $ascendant ? -1 : 1;
+	} else if ($startDate1 < $startDate2) {
+		return $ascendant ? 1 : -1;
+	}
+	return 0;
+}
+
+$includedEvents = $parsedIcs;
+if (array_key_exists('sort', $parameters)) {
+	switch ($parameters['sort']) {
+		case 'asc-start':
+			usort($includedEvents->cal['VEVENT'], function($ev1, $ev2) {
+				return sortByStartDate($ev1, $ev2, true);
+			});
+			break;
+		case 'desc-start':
+			usort($includedEvents->cal['VEVENT'], function($ev1, $ev2) {
+				return sortByStartDate($ev1, $ev2, false);
+			});
+			break;
+		default:
+			break;
+	}
+}
+if (array_key_exists('limit', $parameters) && count($includedEvents->cal['VEVENT']) > $parameters['limit']) {
+	$includedEvents->cal['VEVENT'] = array_slice($includedEvents->cal['VEVENT'], 0, $parameters['limit'], true);
+}
+
 if ($parameters['format'] == 'json') {
 	header('Content-type: application/json; charset=UTF-8');
 	$jsonResult = array();
-	foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
+	foreach ($includedEvents->cal['VEVENT'] as $key => $value) {
 		$event = array();
 		foreach ($value as $propertyKey => $propertyValue) {
-			if (isRequiredField($propertyKey, $jsonEventFields)) {
-				$event[$jsonEventFields[$propertyKey][0]] = is_array($propertyValue) ? $propertyValue['value'] : $propertyValue;
+			if (isRequiredField($propertyKey)) {
+				$event[$jsonEventFields[$propertyKey][0]] = getICSPropertyValue($propertyValue);
 			}
 		}
 		$jsonResult[$key] = $event;
@@ -147,7 +237,7 @@ if ($parameters['format'] == 'json') {
 	echo json_encode($jsonResult);
 } else {
 	header('Content-type: text/ics; charset=UTF-8');
-	var_dump($parsedIcs);
+	echo $includedEvents->toString();
 }
 
 function throwAPIError($errorMsg) {
@@ -160,11 +250,18 @@ function getRequestParameters($httpMethod) {
            ($httpMethod === 'POST' ? $_POST :
            null);
 }
-
-function isRequiredField($propertyKey, $jsonEventFields) {
+function isRequiredField($propertyKey) {
+	global $jsonEventFields, $fieldsParameterExists, $fields;
+	if ($fieldsParameterExists) {
+		return array_key_exists($propertyKey, $jsonEventFields) && in_array($jsonEventFields[$propertyKey][0], $fields);
+	}
 	return array_key_exists($propertyKey, $jsonEventFields) && isDefaultJSONField($propertyKey, $jsonEventFields);
 }
 
 function isDefaultJSONField($icsKey, $jsonEventFields) {
 	return $jsonEventFields[$icsKey][1];
+}
+
+function getICSPropertyValue($value) {
+	return is_array($value) ? $value['value'] : $value;
 }
