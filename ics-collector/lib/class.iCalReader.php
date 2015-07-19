@@ -315,7 +315,6 @@ class ICal
                 $event_timestmap_offset = $end_timestamp - $start_timestamp;
                 // Get Interval
                 $interval = (isset($rrules['INTERVAL']) && $rrules['INTERVAL'] != '') ? $rrules['INTERVAL'] : 1;
-
                 if (in_array($frequency, array('MONTHLY', 'YEARLY')) && isset($rrules['BYDAY']) && $rrules['BYDAY'] != '') {
                     // Deal with BYDAY
                     $day_number = intval($rrules['BYDAY']);
@@ -349,7 +348,7 @@ class ICal
                     $until = strtotime($offset, $start_timestamp);
 
                     if (in_array($frequency, array('MONTHLY', 'YEARLY')) && isset($rrules['BYDAY']) && $rrules['BYDAY'] != '') {
-                        $dtstart = date_create($anEvent['DTSTART']);
+                        $dtstart = date_create($anEvent['DTSTART']['value']);
                         for ($i = 1; $i <= $count; $i++) {
                             $dtstart_clone = clone $dtstart;
                             $dtstart_clone->modify('next ' . $frequency_conversion[$frequency]);
