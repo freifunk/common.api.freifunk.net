@@ -123,7 +123,8 @@ def geoJson(summary, geoJsonPath):
 			if 'metacommunity' in details:
 				properties['metacommunity'] = details['metacommunity']
 			properties['city'] = details['location']['city']
-			properties['country'] = details['location']['country']
+			if 'country' in details['location']:
+				properties['country'] = details['location']['country']
 			if 'address' in details['location']:
 				properties['address'] = details['location']['address']
 			properties['url'] = details['url']
