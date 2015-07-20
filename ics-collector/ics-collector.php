@@ -52,6 +52,7 @@ $oXMLWriter->startElement('urlset');
 					$oJson[$name]['lastchange'] = $community['mtime'];
 					$oJson[$name]['city'] = $community['location']['city'];
 					$oJson[$name]['communityname'] = $community['name'];
+					$oJson[$name]['communityurl'] = $community['url'];
 					$oXMLWriter->startElement('url');
 						$oXMLWriter->startElement('loc');
 							$oXMLWriter->text($feed['url']);
