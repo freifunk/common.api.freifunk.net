@@ -14,10 +14,18 @@ foreach($summary as $key => $value) {
 	$fp = fopen(realpath(dirname(__FILE__)) . '/../data/' . $key . '.ics' , 'w+');
 	fwrite($fp, $ics);
 	fclose($fp);
-	$merger->add($ics, array($configs['CUSTOM_PROPERTY_NAME']['SOURCE_PROPERTY'] => $key));
+	$customParams = array($configs['CUSTOM_PROPERTY_NAME']['SOURCE_PROPERTY'] => $key);
+	if (array_key_exists('communityurl', $value))
+			$customParams[$configs['CUSTOM_PROPERTY_NAME']['SOURCE_URL_PROPERTY']] = removeProtocolFromURL($value['communityurl']);
+	$merger->add($ics, $customParams);
 }
 
 echo 'Merge all ics files..' . PHP_EOL;
 $fp = fopen((realpath(dirname(__FILE__))  . '/../data/ffMerged.ics'), 'w+');
 fwrite($fp, IcsMerger::getRawText($merger->getResult()));
 fclose($fp);
+
+function removeProtocolFromURL($value)
+{
+	return str_replace('http://', '', str_replace('https://', '', $value));
+}

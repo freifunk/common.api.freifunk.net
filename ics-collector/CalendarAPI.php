@@ -35,7 +35,8 @@ $jsonEventFields = array
 	'LOCATION' => [null, true],
 	'GEO' => ['geolocation', false],
 	'X-WR-SOURCE' => ['source', false],
-	'URL' => [null, false]
+	'URL' => [null, false],
+	'X-WR-SOURCE-URL' => ['sourceurl', false]
 );
 
 foreach ($jsonEventFields as $key => &$value) {
@@ -89,6 +90,7 @@ $supportedFormat = array
  * Request validations
  */
 // Check HTTP method
+header('Content-type: application/json; charset=UTF-8');
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 if (!in_array($httpMethod, $supportedMethods)) {
 	throwAPIError('Unsupported HTTP method : ' . $httpMethod);
@@ -220,7 +222,6 @@ if (array_key_exists('limit', $parameters) && count($includedEvents->cal['VEVENT
 }
 
 if ($parameters['format'] == 'json') {
-	header('Content-type: application/json; charset=UTF-8');
 	$jsonResult = array();
 	foreach ($includedEvents->cal['VEVENT'] as $key => $value) {
 		$event = array();
