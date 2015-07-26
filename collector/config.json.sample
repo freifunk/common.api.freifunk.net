@@ -1,0 +1,8 @@
+{
+  "ffDirUrl" : "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json",
+  "ffGeoJson" : "/var/www/vhosts/freifunk.net/httpdocs/map/ffGeoJson.json",
+  "ffSummarizedJson" : "/var/www/vhosts/freifunk.net/httpdocs/map/ffSummarizedDir.json",
+  "ffHtmlTable" : "/var/www/vhosts/freifunk.net/httpdocs/map/ffHtmlTable.html",
+  "htmlTableCommunityMapCss" : "//www.freifunk.net/map/community_map.css",
+  "htmlTableSorttableJs" : "//www.freifunk.net/map/sorttable.js"
+}
