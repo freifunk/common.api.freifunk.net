@@ -263,7 +263,7 @@ def tableHtml(summary, HtmlTablePath):
 #read some command line arguments
 parser = OptionParser()
 parser.add_option("-l", "--loglevel", dest="logLevel", default=1, type=int, help="define loglevel")
-parser.add_option("-g", "--geojson", dest="geoJSON", default=False action="store_false", help="Output format: geoJSON")
+parser.add_option("-g", "--geojson", dest="geoJSON", default=False, action="store_false", help="Output format: geoJSON")
 parser.add_option("-t", "--tableHtml", dest="tableHtml", default=False, action="store_false", help="Output format: HTML table")
 (options, args) = parser.parse_args()
 
