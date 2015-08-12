@@ -131,7 +131,8 @@ def geoJson(summary, geoJsonPath):
 			properties['name'] = details['name']
 			if 'metacommunity' in details:
 				properties['metacommunity'] = details['metacommunity']
-			properties['city'] = details['location']['city']
+			if 'city' in details['location']:
+				properties['city'] = details['location']['city']
 			if 'country' in details['location']:
 				properties['country'] = details['location']['country']
 			if 'address' in details['location']:
@@ -262,8 +263,8 @@ def tableHtml(summary, HtmlTablePath):
 #read some command line arguments
 parser = OptionParser()
 parser.add_option("-l", "--loglevel", dest="logLevel", default=1, type=int, help="define loglevel")
-parser.add_option("-g", "--geojson", dest="geoJSON", default=True, action="store_true", help="Output format: geoJSON")
-parser.add_option("-t", "--tableHtml", dest="tableHtml", default=True, action="store_true", help="Output format: HTML table")
+parser.add_option("-g", "--geojson", dest="geoJSON", default=False action="store_false", help="Output format: geoJSON")
+parser.add_option("-t", "--tableHtml", dest="tableHtml", default=False, action="store_false", help="Output format: HTML table")
 (options, args) = parser.parse_args()
 
 
