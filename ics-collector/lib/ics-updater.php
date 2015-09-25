@@ -14,6 +14,9 @@ foreach($summary as $key => $value) {
 	$fp = fopen(realpath(dirname(__FILE__)) . '/../data/' . $key . '.ics' , 'w+');
 	fwrite($fp, $ics);
 	fclose($fp);
+	if ( empty($ics) ) {
+		continue;
+	}
 	$customParams = array($configs['CUSTOM_PROPERTY_NAME']['SOURCE_PROPERTY'] => $key);
 	if (array_key_exists('communityurl', $value))
 			$customParams[$configs['CUSTOM_PROPERTY_NAME']['SOURCE_URL_PROPERTY']] = removeProtocolFromURL($value['communityurl']);
