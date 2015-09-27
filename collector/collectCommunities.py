@@ -9,21 +9,30 @@ from optparse import OptionParser
 from urllib.request import urlopen, install_opener, build_opener, ProxyHandler
 from datetime import tzinfo, timedelta, datetime
 
-#please configure these constants for your needs
-#define some constants for output directories
-ffDirUrl = "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json"
-ffGeoJson = "/var/www/vhosts/freifunk.net/httpdocs/map/ffGeoJson.json"
-ffSummarizedJson = "/var/www/vhosts/freifunk.net/httpdocs/map/ffSummarizedDir.json"
-ffHtmlTable = "/var/www/vhosts/freifunk.net/httpdocs/map/ffHtmlTable.html"
-#to propely display the html table we need our community map css
-htmlTableCommunityMapCss = "//www.freifunk.net/map/community_map.css"
-#to sort our table we need sorttable.js
-htmlTableSorttableJs = "//www.freifunk.net/map/sorttable.js"
-
 #log helper function
 def log(logLevel, message):
 	if logLevel <= options.logLevel:
 		print("Message from engine room (level " + str(logLevel) + "): " + message)
+
+#load config
+def loadConfig():
+	global ffDirUrl, ffGeoJson, ffSummarizedJson, ffHtmlTable, htmlTableCommunityMapCss, htmlTableSorttableJs
+	try:
+		configFile = open("config.json", "r")
+	except BaseException as e:
+		log(0, "error opening config file " +str(e))
+		exit(1)
+
+	configContent = configFile.read()
+	config = json.loads(configContent)
+	configFile.close()
+
+	ffDirUrl = config['ffDirUrl'] if 'ffDirUrl' in config else "https://raw.github.com/freifunk/directory.api.freifunk.net/master/directory.json"
+	ffGeoJson = config['ffGeoJson'] if 'ffGeoJson' in config else "/var/www/vhosts/freifunk.net/httpdocs/map/ffGeoJson.json"
+	ffSummarizedJson = config['ffSummarizedJson'] if 'ffSummarizedJson' in config else "/var/www/vhosts/freifunk.net/httpdocs/map/ffSummarizedDir.json"
+	ffHtmlTable = config['ffHtmlTable'] if 'ffHtmlTable' in config else "/var/www/vhosts/freifunk.net/httpdocs/map/ffHtmlTable.html"
+	htmlTableCommunityMapCss = config['htmlTableCommunityMapCss'] if 'htmlTableCommunityMapCss' in config else "//www.freifunk.net/map/community_map.css"
+	htmlTableSorttableJs = config['htmlTableSorttableJs'] if 'htmlTableSorttableJs' in config else "//www.freifunk.net/map/sorttable.js"
 
 #load directory
 def loadDirectory(url):
@@ -122,7 +131,8 @@ def geoJson(summary, geoJsonPath):
 			properties['name'] = details['name']
 			if 'metacommunity' in details:
 				properties['metacommunity'] = details['metacommunity']
-			properties['city'] = details['location']['city']
+			if 'city' in details['location']:
+				properties['city'] = details['location']['city']
 			if 'country' in details['location']:
 				properties['country'] = details['location']['country']
 			if 'address' in details['location']:
@@ -253,14 +263,17 @@ def tableHtml(summary, HtmlTablePath):
 #read some command line arguments
 parser = OptionParser()
 parser.add_option("-l", "--loglevel", dest="logLevel", default=1, type=int, help="define loglevel")
-parser.add_option("-g", "--geojson", dest="geoJSON", default=True, action="store_true", help="Output format: geoJSON")
-parser.add_option("-t", "--tableHtml", dest="tableHtml", default=True, action="store_true", help="Output format: HTML table")
+parser.add_option("-g", "--geojson", dest="geoJSON", default=False, action="store_false", help="Output format: geoJSON")
+parser.add_option("-t", "--tableHtml", dest="tableHtml", default=False, action="store_false", help="Output format: HTML table")
 (options, args) = parser.parse_args()
 
 
 proxy_handler = ProxyHandler({})
 opener = build_opener(proxy_handler)
 install_opener(opener)
+
+#load config
+loadConfig()
 
 #first step: load directory
 ffDirectory = loadDirectory(ffDirUrl) 
