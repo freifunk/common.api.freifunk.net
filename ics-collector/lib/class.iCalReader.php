@@ -86,64 +86,72 @@ class ICal
         if (stristr($lines[0], 'BEGIN:VCALENDAR') === false) {
             return false;
         } else {
-            // TODO: Fix multiline-description problem (see http://tools.ietf.org/html/rfc2445#section-4.8.1.5)
             foreach ($lines as $line) {
-                $line = trim($line);
+                $line = rtrim($line); // Trim trailing whitespace
                 $add  = $this->keyValueFromString($line);
                 if ($add === false) {
-                    $this->addCalendarComponentWithKeyAndValue($type, false, $line);
+                    $this->addCalendarComponentWithKeyAndValue($component, false, $line);
                     continue;
                 }
-
-                list($keyword, $value) = $add;
-
-                switch ($line) {
-                    // http://www.kanzaki.com/docs/ical/vtodo.html
-                    case 'BEGIN:VTODO':
-                        $this->todo_count++;
-                        $type = 'VTODO';
-                        break;
-
-                    // http://www.kanzaki.com/docs/ical/vevent.html
-                    case 'BEGIN:VEVENT':
-                        $this->event_count++;
-                        $type = 'VEVENT';
-                        break;
-
-                    // http://www.kanzaki.com/docs/ical/vfreebusy.html
-                    case 'BEGIN:VFREEBUSY':
-                        $this->freebusy_count++;
-                        $type = 'VFREEBUSY';
-                        break;
-
-                    //all other special strings
-                    case 'BEGIN:VCALENDAR':
-                    case 'BEGIN:DAYLIGHT':
-                        // http://www.kanzaki.com/docs/ical/vtimezone.html
-                    case 'BEGIN:VTIMEZONE':
-                    case 'BEGIN:STANDARD':
-                    case 'BEGIN:VALARM':
-                        $type = $value;
-                        break;
-                    case 'END:VALARM':
-                    case 'END:VTODO': // end special text - goto VCALENDAR key
-                    case 'END:VEVENT':
-                    case 'END:VFREEBUSY':
-                    case 'END:VCALENDAR':
-                    case 'END:DAYLIGHT':
-                    case 'END:VTIMEZONE':
-                    case 'END:STANDARD':
-                        $type = 'VCALENDAR';
-                        break;
-                    default:
-                        $this->addCalendarComponentWithKeyAndValue($type, $keyword, $value);
-                        break;
+                $keyword = $add[0];
+                $values = $add[1]; // Could be an array containing multiple values
+                if (!is_array($values)) {
+                    if (!empty($values)) {
+                        $values = array($values); // Make an array as not already
+                        $blank_array = array(); // Empty placeholder array
+                        array_push($values, $blank_array);
+                    } else {
+                        $values = array(); // Use blank array to ignore this line
+                    }
+                } else if(empty($values[0])) {
+                    $values = array(); // Use blank array to ignore this line
+                }
+                $values = array_reverse($values); // Reverse so that our array of properties is processed first
+                foreach ($values as $value) {
+                    switch ($line) {
+                        // http://www.kanzaki.com/docs/ical/vtodo.html
+                        case 'BEGIN:VTODO':
+                            $this->todo_count++;
+                            $component = 'VTODO';
+                            break;
+                        // http://www.kanzaki.com/docs/ical/vevent.html
+                        case 'BEGIN:VEVENT':
+                            if (!is_array($value)) {
+                                $this->event_count++;
+                            }
+                            $component = 'VEVENT';
+                            break;
+                        // http://www.kanzaki.com/docs/ical/vfreebusy.html
+                        case 'BEGIN:VFREEBUSY':
+                            $this->freebusy_count++;
+                            $component = 'VFREEBUSY';
+                            break;
+                        // All other special strings
+                        case 'BEGIN:VCALENDAR':
+                        case 'BEGIN:DAYLIGHT':
+                            // http://www.kanzaki.com/docs/ical/vtimezone.html
+                        case 'BEGIN:VTIMEZONE':
+                        case 'BEGIN:STANDARD':
+                        case 'BEGIN:VALARM':
+                            $component = $value;
+                            break;
+                        case 'END:VALARM':
+                        case 'END:VTODO': // End special text - goto VCALENDAR key
+                        case 'END:VEVENT':
+                        case 'END:VFREEBUSY':
+                        case 'END:VCALENDAR':
+                        case 'END:DAYLIGHT':
+                        case 'END:VTIMEZONE':
+                        case 'END:STANDARD':
+                            $component = 'VCALENDAR';
+                            break;
+                        default:
+                            $this->addCalendarComponentWithKeyAndValue($component, $keyword, $value);
+                            break;
+                    }
                 }
             }
-            if (!$this->disable_recurrent) {
-                $this->process_recurrences();
-            }
-            $this->recurrent_event_count = $this->count_recurrences();
+            $this->process_recurrences();
             return $this->cal;
         }
     }
@@ -233,12 +241,40 @@ class ICal
      */
     public function keyValueFromString($text)
     {
-        preg_match('/([A-Za-z-\/;=_^:]+)[:]([\w\W]*)/', $text, $matches);
+        // Match colon separator outside of quoted substrings
+        // Fallback to nearest semicolon outside of quoted substrings, if colon cannot be found
+        // Do not try and match within the value paired with the keyword
+        preg_match('/(.*?)(?::(?=(?:[^"]*"[^"]*")*[^"]*$)|;(?=[^:]*$))([\w\W]*)/', $text, $matches);
         if (count($matches) == 0) {
             return false;
         }
-        $matches = array_splice($matches, 1, 2);
-        return $matches;
+        if (preg_match('/^([A-Z-]+)([;][\w\W]*)?$/', $matches[1])) {
+            $matches = array_splice($matches, 1, 2); // Remove first match and re-align ordering
+            // Process properties
+            if (preg_match('/([A-Z-]+)[;]([\w\W]*)/', $matches[0], $properties)) {
+                array_shift($properties); // Remove first match
+                $matches[0] = $properties[0]; // Fix to ignore everything in keyword after a ; (e.g. Language, TZID, etc.)
+                array_shift($properties); // Repeat removing first match
+                $formatted = array();
+                foreach ($properties as $property) {
+                    preg_match_all('~[^\r\n";]+(?:"[^"\\\]*(?:\\\.[^"\\\]*)*"[^\r\n";]*)*~', $property, $attributes); // Match semicolon separator outside of quoted substrings
+                    $attributes = (sizeof($attributes) == 0) ? array($property) : reset($attributes); // Remove multi-dimensional array and use the first key
+                    foreach ($attributes as $attribute) {
+                        preg_match_all('~[^\r\n"=]+(?:"[^"\\\]*(?:\\\.[^"\\\]*)*"[^\r\n"=]*)*~', $attribute, $values); // Match equals sign separator outside of quoted substrings
+                        $value = (sizeof($values) == 0) ? NULL : reset($values); // Remove multi-dimensional array and use the first key
+                        if (is_array($value) && isset($value[1])) {
+                            $formatted[$value[0]] = trim($value[1], '"'); // Remove double quotes from beginning and end only
+                        }
+                    }
+                }
+                $properties[0] = $formatted; // Assign the keyword property information
+                array_unshift($properties, $matches[1]); // Add match to beginning of array
+                $matches[1] = $properties;
+            }
+            return $matches;
+        } else {
+            return false; // Ignore this match
+        }
     }
 
     /**
@@ -274,7 +310,10 @@ class ICal
 
     private function count_recurrences() {
         $array = $this->cal;
-        $events = $array['VEVENT'];
+	$events = "";
+	if (array_key_exists('VEVENT', $array)) {
+	        $events = $array['VEVENT'];
+	}
         $recurrent_event_count = 0;
         if (empty($events))
             return false;
@@ -295,7 +334,10 @@ class ICal
     public function process_recurrences()
     {
         $array = $this->cal;
-        $events = $array['VEVENT'];
+	$events = "";
+	if (array_key_exists('VEVENT', $array)) {
+	        $events = $array['VEVENT'];
+	}
         if (empty($events))
             return false;
         foreach ($array['VEVENT'] as $anEvent) {
