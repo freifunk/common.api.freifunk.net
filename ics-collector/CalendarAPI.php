@@ -1,6 +1,5 @@
 <?php
 require_once 'lib/class.iCalReader.php';
-header('Access-Control-Allow-Origin: *');
 /*
  * Supported HTTP methods 
  */
@@ -90,7 +89,6 @@ $supportedFormat = array
  * Request validations
  */
 // Check HTTP method
-header('Content-type: application/json; charset=UTF-8');
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 if (!in_array($httpMethod, $supportedMethods)) {
 	throwAPIError('Unsupported HTTP method : ' . $httpMethod);
@@ -235,15 +233,17 @@ if ($parameters['format'] == 'json') {
 	if (count($jsonResult) === 0) {
 		throwAPIError('No result found');
 	}
+	header('Content-type: application/json; charset=UTF-8');
+	header('Access-Control-Allow-Origin: *');
 	echo json_encode($jsonResult);
 } else {
+	header('Access-Control-Allow-Origin: *');
 	header('Content-type: text/ics; charset=UTF-8');
 	echo $includedEvents->toString();
 }
 
 function throwAPIError($errorMsg) {
-	echo '{ "error": "' . $errorMsg . '"}';
-	die;
+	throw new Exception($errorMsg);
 }
 
 function getRequestParameters($httpMethod) {
