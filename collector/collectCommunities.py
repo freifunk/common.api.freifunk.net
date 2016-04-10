@@ -131,6 +131,8 @@ def geoJson(summary, geoJsonPath):
 			properties['name'] = details['name']
 			if 'metacommunity' in details:
 				properties['metacommunity'] = details['metacommunity']
+			if 'socialprojects' in details:
+				properties['socialprojects'] = details['socialprojects']
 			if 'city' in details['location']:
 				properties['city'] = details['location']['city']
 			if 'country' in details['location']:
