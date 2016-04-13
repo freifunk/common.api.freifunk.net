@@ -74,15 +74,15 @@ def getServices():
     with open(olsrServices, 'r') as services:
         servicesText = services.read().splitlines()
         services.closed
-        New=[]
-    for i in servicesText:
+        ServiceList=[]
+    for service in servicesText:
         URL=""
-        j=""
-        if i[0]!="#":
-            URL=i.split("|")[0].slit("//")[1].split(":")[0]
-            j=socket.gethostbyname(URL)
-        New.append(i.replace(URL,j))
-    return New
+        IPAddr=""
+        if service[0]!="#":
+            URL=service.split("|")[0].slit("//")[1].split(":")[0]
+            IPAddr=socket.gethostbyname(URL)
+        ServiceList.append(i.replace(URL,IPAddr))
+    return ServiceList
 
 
 def loadApiFile():
