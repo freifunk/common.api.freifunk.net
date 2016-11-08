@@ -86,7 +86,14 @@ def summarizedJson(ffDir, path):
 	for community in ffDir:
 		log(3, "working on community: " + ffDir[community])
 		try:
-			ffApi = json.loads(urlopen(ffDir[community], None, 10).readall().decode('utf-8'))
+			request = urllib.request.Request(
+				ffDir[community],
+				data=None,
+				headers={
+        				'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+    				}
+			)
+			ffApi = json.loads(urlopen(request, None, 10).readall().decode('utf-8'))
 		except UnicodeError as e:
 			try:
 				ffApi = json.loads(urlopen(ffDir[community]).readall().decode('iso8859_2'))
