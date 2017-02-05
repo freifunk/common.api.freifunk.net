@@ -72,6 +72,7 @@ $supportedFormat = array
 	'to' => 
 		[
 			"/^now$/",
+			"/^\+\d+ weeks$/",
 			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/",
 			"/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/"
 		],
@@ -174,6 +175,9 @@ foreach ($parsedIcs->cal['VEVENT'] as $key => $value) {
 		}
 	}
 	if (array_key_exists('to', $parameters)) {
+		if (strpos($parameters['to'], "weeks")) {
+			$parameters['to'] = "now " . $parameters['to'];
+		}
 		$to = new DateTime($parameters['to']);
 		try {
 			$eventStart = new DateTime(getICSPropertyValue($value['DTSTART']));
