@@ -36,7 +36,10 @@ class IcsMerger {
 			$insertPos = stripos($text, 'VEVENT') + strlen('VEVENT');
 			$text = substr_replace($text, "\n" . $options, $insertPos, 1);
 			*/
-			foreach ($options as $key => $value) {				
+			foreach ($options as $key => $value) {
+				if (!array_key_exists('VEVENT',$ical->cal)){
+					continue;
+				}
 				foreach ($ical->cal['VEVENT'] as &$event) {
 					$event[$key] = $value;
 				}
@@ -61,6 +64,7 @@ class IcsMerger {
 				switch($key) {
 				case 'VCALENDAR' :
 					$result['VCALENDAR'] = array_merge($result['VCALENDAR'], $this->processCalendarHead($value, $timezone));
+					print_r($result['VCALENDAR']);
 					break;
 				case 'VEVENT' :
 					$result['VEVENTS'] = array_merge($result['VEVENTS'], $this->processEvents($value, $timezone));
@@ -95,6 +99,9 @@ class IcsMerger {
 				case 'X-WR-TIMEZONE':
 					$timezone = $value;
 					break;
+				case 'TZID':
+					$timezone = $value;
+					break;
 				default:
 					break;
 			}
@@ -108,13 +115,38 @@ class IcsMerger {
 	private function processEvents($events, $timezone = null) {
 		foreach($events as &$event) {
 			foreach ($event as $key => &$value) {
+				if (!array_key_exists('DTSTAMP', $event)) {
+					$event['DTSTAMP'] = "19700101T000000Z";
+				}
 				switch($key) {
+				case 'ATTENDEE':
+					unset($event['ATTENDEE']);
 				// properties of type DATE / DATE-TIME
+				case 'CREATED':
+					if (preg_match("/^\d{8}T\d{6}$/", $event['CREATED']) ) {
+						$event['CREATED'] = $event['CREATED'] . "Z";
+					}
+				case 'DTSTAMP':
+					if (preg_match("/^\d{8}T\d{6}$/", $event['DTSTAMP']) ) {
+						$event['DTSTAMP'] = $event['DTSTAMP'] . "Z";
+					}
 				case 'DTSTART':
+					if (!preg_match("/^\d{8}T\d{6}/", $event['DTSTART']) && 
+						preg_match("/^\d{8}$/", $event['DTSTART'])) {
+						$event['DTSTART'] = $event['DTSTART'] . "T000000Z";
+					}
 				case 'DTEND' :
+					if (!preg_match("/^\d{8}T\d{6}/", $event['DTEND']) && 
+						preg_match("/^\d{8}$/", $event['DTEND'])) {
+						$event['DTEND'] = $event['DTEND'] . "T000000Z";
+					}
+				case 'LAST-MODIFIED':
+					if (preg_match("/^\d{8}T\d{6}$/", $event['LAST-MODIFIED']) ) {
+						$event['LAST-MODIFIED'] = $event['LAST-MODIFIED'] . "Z";
+					}
 				case 'RDATE' :
 					// only local datime needs conversion
-					if ($value['meta']['type'] == 'DATE-TIME' && $value['meta']['format'] == 'LOCAL-TIME') {
+					if (array_key_exists('meta', $value) && array_key_exists('type', $value['meta']) && $value['meta']['type'] == 'DATE-TIME' && $value['meta']['format'] == 'LOCAL-TIME') {
 						$tz = null;
 						if (array_key_exists('tzid', $value['meta'])) {
 							$tz = new DateTimeZone($value['meta']['tzid']);
@@ -149,12 +181,12 @@ class IcsMerger {
 	 */
 	public static function getRawText($icsMergerResult) {
 		
-		$str = 'BEGIN:VCALENDAR' . PHP_EOL;
+		$str = 'BEGIN:VCALENDAR' . "\r\n";
 		$str .= IcsMerger::arrayToIcs($icsMergerResult['VCALENDAR']);
 		foreach ($icsMergerResult['VEVENTS'] as $event) {
-			$str .= 'BEGIN:VEVENT' . PHP_EOL; 
+			$str .= 'BEGIN:VEVENT' . "\r\n"; 
 			$str .= IcsMerger::arrayToIcs($event);
-			$str .= 'END:VEVENT' . PHP_EOL;
+			$str .= 'END:VEVENT' . "\r\n";
 		}
 		$str .= 'END:VCALENDAR';
 		return $str;
@@ -165,12 +197,12 @@ class IcsMerger {
 		$callback = function ($v, $k) {
 			if (is_array($v)) {
 				if (array_key_exists('value', $v)) {
-					return $k . ':' . $v['value'] . PHP_EOL;
+					return $k . ':' . $v['value'] . "\r\n";
 				} else {
 					return '';
 				}
 			} else {
-				return $k . ':' . $v . PHP_EOL; 
+				return $k . ':' . $v . "\r\n"; 
 			}
 		};
 		return implode('', array_map($callback, $array, array_keys($array)));
