@@ -39,7 +39,7 @@ You can host your own instace as well. CalendarAPI.php requires 2 dependencies :
          | -- ffMerged.ics
    | -- lib
          |
-         | -- class.iCalReader.php
+         | -- ICal.php
 ```
 (or you can just clone the whole repo)
 
@@ -53,7 +53,6 @@ fields | | `start`, `end`, `location`, `summary`,  `description`, .. |x ||In `j
 from | | date* <br/>datetime* <br/>`now` | ||Lower bound of returned events datetime. Based on `start` time.
 to | | date<br/>datetime<br/>`now` | || Upper bound of returned events datetime. Based on `start` time.
 limit | |An integer | | |   The limit number of return results. If not specified, the API will return as many events as it can.
-sort | |`asc-date`<br/>`desc-date` | || Sort result in ascending or descending order of event time. Based on `start` time.
 
 
 **\*Multiple values** : Support multiple values, separated by commas
