@@ -1,6 +1,12 @@
 <?php
-require_once 'class.iCalReader.php';
+require_once 'EventObject.php';
+require_once 'ICal.php';
 
+use ICal\ICal;
+
+/**
+ * Class IcsMerger
+ */
 class IcsMerger {
 
 	private $inputs = array();
@@ -23,13 +29,20 @@ class IcsMerger {
 		$this->defaultTimezone = new DateTimeZone($this->defaultHeader['X-WR-TIMEZONE']);
 	}
 
+
+	public function warmupCache(string $mergedFileName) {
+	    error_log("warmup cache for merged calendars");
+	    $ical = new ICal($mergedFileName, 'MO', true, true);
+	    $ical->eventsFromRange("now", "now + 4 months", true);
+    }
+
 	/**
 	 * Add text string in ics format to the merger
 	 * @param string $text
 	 * @param null|array $options
 	 */
 	public function add($text, $options = null) {
-		$ical = new ICal(explode("\n", $text), true);
+		$ical = new ICal(explode("\n", $text), 'MO');
 		if ($options != null) {
 			/*
 			$options = IcsMerger::arrayToIcs($options);
@@ -37,7 +50,7 @@ class IcsMerger {
 			$text = substr_replace($text, "\n" . $options, $insertPos, 1);
 			*/
 			foreach ($options as $key => $value) {
-				if (!array_key_exists('VEVENT',$ical->cal)){
+				if (is_null($ical->cal) || !array_key_exists('VEVENT',$ical->cal)){
 					continue;
 				}
 				foreach ($ical->cal['VEVENT'] as &$event) {
@@ -60,11 +73,13 @@ class IcsMerger {
 		foreach ($this->inputs as $ical) {
 			//var_dump($ical);
 			$timezone = null;
+			if (! $ical->cal) {
+			    continue;
+            }
 			foreach($ical->cal as $key => $value) {
 				switch($key) {
 				case 'VCALENDAR' :
 					$result['VCALENDAR'] = array_merge($result['VCALENDAR'], $this->processCalendarHead($value, $timezone));
-					print_r($result['VCALENDAR']);
 					break;
 				case 'VEVENT' :
 					$result['VEVENTS'] = array_merge($result['VEVENTS'], $this->processEvents($value, $timezone));
@@ -120,7 +135,10 @@ class IcsMerger {
 				}
 				switch($key) {
 				case 'ATTENDEE':
-					unset($event['ATTENDEE']);
+				case 'DTSTART_tz':
+				case 'DTEND_tz':
+					unset($event[$key]);
+				break;
 				// properties of type DATE / DATE-TIME
 				case 'CREATED':
 					if (preg_match("/^\d{8}T\d{6}$/", $event['CREATED']) ) {
@@ -136,17 +154,23 @@ class IcsMerger {
 						$event['DTSTART'] = $event['DTSTART'] . "T000000Z";
 					}
 				case 'DTEND' :
-					if (!preg_match("/^\d{8}T\d{6}/", $event['DTEND']) && 
+					if (array_key_exists("DTEND", $event) &&
+                        !preg_match("/^\d{8}T\d{6}/", $event['DTEND']) &&
 						preg_match("/^\d{8}$/", $event['DTEND'])) {
 						$event['DTEND'] = $event['DTEND'] . "T000000Z";
 					}
 				case 'LAST-MODIFIED':
-					if (preg_match("/^\d{8}T\d{6}$/", $event['LAST-MODIFIED']) ) {
+					if (array_key_exists("LAST-MODIFIED", $event) &&
+                        preg_match("/^\d{8}T\d{6}$/", $event['LAST-MODIFIED']) ) {
 						$event['LAST-MODIFIED'] = $event['LAST-MODIFIED'] . "Z";
 					}
 				case 'RDATE' :
 					// only local datime needs conversion
-					if (array_key_exists('meta', $value) && array_key_exists('type', $value['meta']) && $value['meta']['type'] == 'DATE-TIME' && $value['meta']['format'] == 'LOCAL-TIME') {
+					if (is_array($value) &&
+					    array_key_exists('meta', $value) &&
+                        array_key_exists('type', $value['meta'])
+                        && $value['meta']['type'] == 'DATE-TIME'
+                        && $value['meta']['format'] == 'LOCAL-TIME') {
 						$tz = null;
 						if (array_key_exists('tzid', $value['meta'])) {
 							$tz = new DateTimeZone($value['meta']['tzid']);

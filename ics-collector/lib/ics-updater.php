@@ -2,6 +2,8 @@
 
 require (realpath(dirname(__FILE__))  . '/ics-merger.php');
 
+const MERGED_FILE_NAME = "/../data/ffMerged.ics";
+
 $configs = parse_ini_file(realpath(dirname(__FILE__))  .  '/../api-config.ini', true);
 $mergedIcsHeader = $configs['MERGED_ICS_HEADER'];
 
@@ -25,9 +27,11 @@ foreach($summary as $key => $value) {
 }
 
 echo 'Merge all ics files..' . PHP_EOL;
-$fp = fopen((realpath(dirname(__FILE__))  . '/../data/ffMerged.ics'), 'w+');
+$fp = fopen((realpath(dirname(__FILE__))  . MERGED_FILE_NAME), 'w+');
 fwrite($fp, IcsMerger::getRawText($merger->getResult()));
 fclose($fp);
+
+$merger->warmupCache(realpath(dirname(__FILE__)) . MERGED_FILE_NAME);
 
 function removeProtocolFromURL($value)
 {

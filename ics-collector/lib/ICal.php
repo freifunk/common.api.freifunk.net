@@ -20,6 +20,7 @@ class ICal
     const DATE_FORMAT      = 'Ymd';
     const TIME_FORMAT      = 'His';
     const DATE_TIME_FORMAT = 'Ymd\THis';
+    const TMP_PATH         = '/tmp/';
 
     /**
      * Track the number of todos in the current iCal feed
@@ -71,6 +72,26 @@ class ICal
     public $useTimeZoneWithRRules = false;
 
     /**
+     * Variable to store the calendar's filename
+     *
+     * @var string
+     */
+    private $calFilename;
+
+    /**
+     * store calendar file's real path
+     *
+     * @var string
+     */
+    private $absoluteCalFilename;
+
+    /**
+     * Disable cache if not wanted
+     * @var bool
+     */
+    private $useCache = false;
+
+    /**
      * Variable to track the previous keyword
      *
      * @var string
@@ -118,15 +139,15 @@ class ICal
      * @var array
      */
     protected $monthNames = array(
-        1 => 'January',
-        2 => 'February',
-        3 => 'March',
-        4 => 'April',
-        5 => 'May',
-        6 => 'June',
-        7 => 'July',
-        8 => 'August',
-        9 => 'September',
+         1 => 'January',
+         2 => 'February',
+         3 => 'March',
+         4 => 'April',
+         5 => 'May',
+         6 => 'June',
+         7 => 'July',
+         8 => 'August',
+         9 => 'September',
         10 => 'October',
         11 => 'November',
         12 => 'December',
@@ -144,6 +165,12 @@ class ICal
         'YEARLY'  => 'year',
     );
 
+
+    /**
+     * @var bool
+     */
+    private $processRecurrences;
+
     /**
      * Creates the iCal Object
      *
@@ -151,23 +178,44 @@ class ICal
      * @param  mixed $weekStart The default first day of the week (SU or MO, etc.)
      * @return void or false if no filename is provided
      */
-    public function __construct($filename = false, $weekStart = false)
+    public function __construct($filename = false, $weekStart = false, $useCache = false, $processRecurrences = false)
     {
         if (!$filename) {
             return false;
         }
 
+        $this->useCache = $useCache;
+        $this->processRecurrences = $processRecurrences;
+        $this->calFilename = "";
+        $this->absoluteCalFilename = "";
+
         if (is_array($filename)) {
             $lines = $filename;
         } else {
             $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $this->calFilename = str_replace("/", "_", basename($filename));
+            $this->absoluteCalFilename = realpath($filename);
         }
 
         if ($weekStart) {
             $this->defaultWeekStart = $weekStart;
         }
 
-        $this->initLines($lines);
+        $cachedCal = $this->cache_get("raw");
+        if ($cachedCal) {
+            $this->cal = $cachedCal;
+        } else {
+            $this->initLines($lines);
+            $this->cache_set("raw", $this->cal);
+        }
+    }
+
+    public function printVcalendarDataAsIcs() {
+        $str = "";
+        foreach ($this->cal['VCALENDAR'] as $key => $value) {
+            $str .= $key . ":" . $value . "\r\n";
+        }
+        return $str;
     }
 
     /**
@@ -240,7 +288,7 @@ class ICal
                         case 'BEGIN:VTODO':
                             $this->todoCount++;
                             $component = 'VTODO';
-                            break;
+                        break;
 
                         // http://www.kanzaki.com/docs/ical/vevent.html
                         case 'BEGIN:VEVENT':
@@ -248,13 +296,13 @@ class ICal
                                 $this->eventCount++;
                             }
                             $component = 'VEVENT';
-                            break;
+                        break;
 
                         // http://www.kanzaki.com/docs/ical/vfreebusy.html
                         case 'BEGIN:VFREEBUSY':
                             $this->freebusyCount++;
                             $component = 'VFREEBUSY';
-                            break;
+                        break;
 
                         // All other special strings
                         case 'BEGIN:VCALENDAR':
@@ -264,7 +312,7 @@ class ICal
                         case 'BEGIN:STANDARD':
                         case 'BEGIN:VALARM':
                             $component = $value;
-                            break;
+                        break;
 
                         case 'END:VALARM':
                         case 'END:VTODO': // End special text - goto VCALENDAR key
@@ -275,17 +323,19 @@ class ICal
                         case 'END:VTIMEZONE':
                         case 'END:STANDARD':
                             $component = 'VCALENDAR';
-                            break;
+                        break;
 
                         default:
                             $this->addCalendarComponentWithKeyAndValue($component, $keyword, $value);
-                            break;
+                        break;
                     }
                 }
             }
 
             $this->processEvents();
-            $this->processRecurrences();
+            if ($this->processRecurrences) {
+                $this->processRecurrences();
+            }
             $this->processDateConversions();
         }
     }
@@ -307,7 +357,7 @@ class ICal
         switch ($component) {
             case 'VTODO':
                 $this->cal[$component][$this->todoCount - 1][$keyword] = $value;
-                break;
+            break;
 
             case 'VEVENT':
                 if (!isset($this->cal[$component][$this->eventCount - 1][$keyword . '_array'])) {
@@ -364,15 +414,15 @@ class ICal
                         }
                     }
                 }
-                break;
+            break;
 
             case 'VFREEBUSY':
                 $this->cal[$component][$this->freebusyCount - 1][$keyword] = $value;
-                break;
+            break;
 
             default:
                 $this->cal[$component][$keyword] = $value;
-                break;
+            break;
         }
 
         $this->lastKeyword = $keyword;
@@ -467,7 +517,7 @@ class ICal
          */
         if (stripos($icalDate, 'TZID') === false) {
             $date = date_create($icalDate);
-
+		if (gettype($date) === "boolean") error_log($icalDate);
             return date_timestamp_get($date);
         }
 
@@ -598,6 +648,7 @@ class ICal
                     if (isset($anEvent[$type . '_array'][0]['TZID'])) {
                         $date = 'TZID=' . $anEvent[$type . '_array'][0]['TZID'] . ':' . $date;
                     }
+			if (gettype($date) === "boolean"){print_r($anEvent);}
                     $anEvent[$type . '_array'][2] = $this->iCalDateToUnixTimestamp($date);
                 }
             }
@@ -660,6 +711,7 @@ class ICal
                 // Recurring event, parse RRULE and add appropriate duplicate events
                 $rrules = array();
                 $rruleStrings = explode(';', $anEvent['RRULE']);
+                unset($anEvent['RRULE']);
                 foreach ($rruleStrings as $s) {
                     list($k, $v) = explode('=', $s);
                     $rrules[$k] = $v;
@@ -777,9 +829,9 @@ class ICal
                             $anEvent['DTEND_array'] = $anEvent['DTSTART_array'];
                             $anEvent['DTEND_array'][2] += $eventTimestampOffset;
                             $anEvent['DTEND'] = date(
-                                    self::DATE_TIME_FORMAT,
-                                    $anEvent['DTEND_array'][2]
-                                ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
+                                self::DATE_TIME_FORMAT,
+                                $anEvent['DTEND_array'][2]
+                            ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
                             $anEvent['DTEND_array'][1] = $anEvent['DTEND'];
 
                             $searchDate = $anEvent['DTSTART'];
@@ -810,7 +862,7 @@ class ICal
                             // Move forwards
                             $recurringTimestamp = strtotime($offset, $recurringTimestamp);
                         }
-                        break;
+                    break;
 
                     case 'WEEKLY':
                         // Create offset
@@ -851,7 +903,7 @@ class ICal
                             $timezoneOffset = ($this->useTimeZoneWithRRules) ? $initialStart->getTimezone()->getOffset($dayRecurringTimeZone) : 0;
                             $dayRecurringTimestamp += ($timezoneOffset !== $initialStartOffset) ? $initialStartOffset - $timezoneOffset : 0;
 
-                            foreach ($weekdays as $day) {
+                            foreach ($this->weekdays as $day) {
                                 // Check if day should be added
 
                                 if (in_array($day, $byDays) && $dayRecurringTimestamp > $startTimestamp
@@ -864,9 +916,9 @@ class ICal
                                     $anEvent['DTEND_array'] = $anEvent['DTSTART_array'];
                                     $anEvent['DTEND_array'][2] += $eventTimestampOffset;
                                     $anEvent['DTEND'] = date(
-                                            self::DATE_TIME_FORMAT,
-                                            $anEvent['DTEND_array'][2]
-                                        ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
+                                        self::DATE_TIME_FORMAT,
+                                        $anEvent['DTEND_array'][2]
+                                    ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
                                     $anEvent['DTEND_array'][1] = $anEvent['DTEND'];
 
                                     $searchDate = $anEvent['DTSTART'];
@@ -902,7 +954,7 @@ class ICal
                             // Move forwards $interval weeks
                             $weekRecurringTimestamp = strtotime($offset, $weekRecurringTimestamp);
                         }
-                        break;
+                    break;
 
                     case 'MONTHLY':
                         // Create offset
@@ -918,16 +970,16 @@ class ICal
                                     if ($key === 0) {
                                         // Ensure original event conforms to monthday rule
                                         $anEvent['DTSTART'] = gmdate(
-                                                'Ym' . sprintf('%02d', $monthday) . '\T' . self::TIME_FORMAT,
-                                                strtotime($anEvent['DTSTART'])
-                                            ) . ($isAllDayEvent || $initialStartTimeZoneName === 'Z' ? 'Z' : '');
+                                            'Ym' . sprintf('%02d', $monthday) . '\T' . self::TIME_FORMAT,
+                                            strtotime($anEvent['DTSTART'])
+                                        ) . ($isAllDayEvent || $initialStartTimeZoneName === 'Z' ? 'Z' : '');
 
                                         $anEvent['DTEND'] = gmdate(
-                                                'Ym' . sprintf('%02d', $monthday) . '\T' . self::TIME_FORMAT,
-                                                isset($anEvent['DURATION'])
-                                                    ? $this->parseDuration($anEvent['DTSTART'], end($anEvent['DURATION_array']))
-                                                    : strtotime($anEvent['DTEND'])
-                                            ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
+                                            'Ym' . sprintf('%02d', $monthday) . '\T' . self::TIME_FORMAT,
+                                            isset($anEvent['DURATION'])
+                                                ? $this->parseDuration($anEvent['DTSTART'], end($anEvent['DURATION_array']))
+                                                : strtotime($anEvent['DTEND'])
+                                        ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
 
                                         $anEvent['DTSTART_array'][1] = $anEvent['DTSTART'];
                                         $anEvent['DTSTART_array'][2] = $this->iCalDateToUnixTimestamp($anEvent['DTSTART']);
@@ -950,17 +1002,17 @@ class ICal
 
                                     // Add event
                                     $anEvent['DTSTART'] = date(
-                                            'Ym' . sprintf('%02d', $monthday) . '\T' . self::TIME_FORMAT,
-                                            $monthRecurringTimestamp
-                                        ) . ($isAllDayEvent || $initialStartTimeZoneName === 'Z' ? 'Z' : '');
+                                        'Ym' . sprintf('%02d', $monthday) . '\T' . self::TIME_FORMAT,
+                                        $monthRecurringTimestamp
+                                    ) . ($isAllDayEvent || $initialStartTimeZoneName === 'Z' ? 'Z' : '');
                                     $anEvent['DTSTART_array'][1] = $anEvent['DTSTART'];
                                     $anEvent['DTSTART_array'][2] = $monthRecurringTimestamp;
                                     $anEvent['DTEND_array'] = $anEvent['DTSTART_array'];
                                     $anEvent['DTEND_array'][2] += $eventTimestampOffset;
                                     $anEvent['DTEND'] = date(
-                                            self::DATE_TIME_FORMAT,
-                                            $anEvent['DTEND_array'][2]
-                                        ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
+                                        self::DATE_TIME_FORMAT,
+                                        $anEvent['DTEND_array'][2]
+                                    ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
                                     $anEvent['DTEND_array'][1] = $anEvent['DTEND'];
 
                                     $searchDate = $anEvent['DTSTART'];
@@ -1033,9 +1085,9 @@ class ICal
                                         $anEvent['DTEND_array'] = $anEvent['DTSTART_array'];
                                         $anEvent['DTEND_array'][2] += $eventTimestampOffset;
                                         $anEvent['DTEND'] = date(
-                                                self::DATE_TIME_FORMAT,
-                                                $anEvent['DTEND_array'][2]
-                                            ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
+                                            self::DATE_TIME_FORMAT,
+                                            $anEvent['DTEND_array'][2]
+                                        ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
                                         $anEvent['DTEND_array'][1] = $anEvent['DTEND'];
 
                                         $searchDate = $anEvent['DTSTART'];
@@ -1071,7 +1123,7 @@ class ICal
                                 $recurringTimestamp = strtotime($offset, $recurringTimestamp);
                             }
                         }
-                        break;
+                    break;
 
                     case 'YEARLY':
                         // Create offset
@@ -1118,9 +1170,9 @@ class ICal
                                             $anEvent['DTEND_array'] = $anEvent['DTSTART_array'];
                                             $anEvent['DTEND_array'][2] += $eventTimestampOffset;
                                             $anEvent['DTEND'] = date(
-                                                    self::DATE_TIME_FORMAT,
-                                                    $anEvent['DTEND_array'][2]
-                                                ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
+                                                self::DATE_TIME_FORMAT,
+                                                $anEvent['DTEND_array'][2]
+                                            ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
                                             $anEvent['DTEND_array'][1] = $anEvent['DTEND'];
 
                                             $searchDate = $anEvent['DTSTART'];
@@ -1187,9 +1239,9 @@ class ICal
                                         $anEvent['DTEND_array'] = $anEvent['DTSTART_array'];
                                         $anEvent['DTEND_array'][2] += $eventTimestampOffset;
                                         $anEvent['DTEND'] = date(
-                                                self::DATE_TIME_FORMAT,
-                                                $anEvent['DTEND_array'][2]
-                                            ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
+                                            self::DATE_TIME_FORMAT,
+                                            $anEvent['DTEND_array'][2]
+                                        ) . ($isAllDayEvent || $initialEndTimeZoneName === 'Z' ? 'Z' : '');
                                         $anEvent['DTEND_array'][1] = $anEvent['DTEND'];
 
                                         $searchDate = $anEvent['DTSTART'];
@@ -1223,13 +1275,12 @@ class ICal
                                 $recurringTimestamp = strtotime($offset, $recurringTimestamp);
                             }
                         }
-                        break;
+                    break;
 
-                        $events = (isset($countOrig) && sizeof($events) > $countOrig) ? array_slice($events, 0, $countOrig) : $events; // Ensure we abide by COUNT if defined
+                    $events = (isset($countOrig) && sizeof($events) > $countOrig) ? array_slice($events, 0, $countOrig) : $events; // Ensure we abide by COUNT if defined
                 }
             }
         }
-
         $this->cal['VEVENT'] = $events;
     }
 
@@ -1271,6 +1322,11 @@ class ICal
      */
     public function events()
     {
+        $cachedEvents = $this->cache_get("processed");
+        if ($cachedEvents) {
+            error_log("use cached events");
+            return $cachedEvents;
+        }
         $array = $this->cal;
         $array = isset($array['VEVENT']) ? $array['VEVENT'] : array();
         $events = array();
@@ -1280,8 +1336,38 @@ class ICal
                 $events[] = new EventObject($event);
             }
         }
+        $this->cache_set("processed", $events);
 
         return $events;
+    }
+
+    /**
+     * writes value to file cache
+     */
+    function cache_set($key, $val) {
+        if ($this->useCache) {
+            $val = var_export($val, true);
+            // HHVM fails at __set_state, so just use object cast for now
+            $val = str_replace('stdClass::__set_state', '(object)', $val);
+            // Write to temp file first to ensure atomicity
+            $tmp = self::TMP_PATH . $this->calFilename . "_$key." . uniqid('', true) . '.tmp';
+            file_put_contents($tmp, '<?php $val = ' . $val . ';', LOCK_EX);
+            rename($tmp, self::TMP_PATH . $this->calFilename . "_$key");
+        }
+    }
+
+    /**
+     * reads value from file cache
+     */
+    function cache_get($key) {
+        if (!$this->useCache ||
+            !file_exists(self::TMP_PATH . $this->calFilename . "_$key") ||
+            filemtime(self::TMP_PATH . $this->calFilename . "_$key") <
+        filemtime($this->absoluteCalFilename)) {
+            return false;
+        }
+        @include self::TMP_PATH . $this->calFilename . "_$key";
+        return isset($val) ? $val : false;
     }
 
     /**
@@ -1373,9 +1459,15 @@ class ICal
      * @param  string $rangeEnd   End date of the search range.
      * @return array of EventObjects
      */
-    public function eventsFromRange($rangeStart = false, $rangeEnd = false)
+    public function eventsFromRange($rangeStart = false, $rangeEnd = false, $setCache = false)
     {
-        $events = $this->sortEventsWithOrder($this->events(), SORT_ASC);
+        if ($this->useCache) {
+            $events = $this->cache_get("filtered");
+        }
+        if (!$events) {
+            $events = $this->sortEventsWithOrder($this->events(), SORT_ASC);
+        }
+
 
         if (empty($events)) {
             return array();
@@ -1434,6 +1526,9 @@ class ICal
 
         if (empty($extendedEvents)) {
             return array();
+        }
+        if ($this->useCache && $setCache) {
+            $this->cache_set("filtered", $extendedEvents);
         }
         return $extendedEvents;
     }
@@ -1578,4 +1673,5 @@ class ICal
 
         return $dayOrdinals[$dayNumber * -1];
     }
+    
 }
