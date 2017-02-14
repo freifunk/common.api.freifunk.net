@@ -693,6 +693,7 @@ class ICal
                 $initialStart             = new \DateTime($anEvent['DTSTART_array'][1], ($this->useTimeZoneWithRRules && isset($initialStartTimeZone)) ? new \DateTimeZone($initialStartTimeZone) : null);
                 $initialStartOffset       = $initialStart->getOffset();
                 $initialStartTimeZoneName = $initialStart->getTimezone()->getName();
+                $initialUid               = $anEvent['UID'];
 
                 if (isset($anEvent['DTEND'])) {
                     if (isset($anEvent['DTEND_array'][0]['TZID']) && $this->isValidTimeZoneId($anEvent['DTEND_array'][0]['TZID'])) {
@@ -846,7 +847,7 @@ class ICal
                             }
 
                             if (!$isExcluded) {
-                                $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
+                                $anEvent['UID'] = $anEvent['DTSTART'] . $initialUid;
                                 $events[] = $anEvent;
                                 $this->eventCount++;
 
@@ -934,7 +935,7 @@ class ICal
                                     }
 
                                     if (!$isExcluded) {
-                                        $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
+                                        $anEvent['UID'] = $anEvent['DTSTART'] . $initialUid;
                                         $events[] = $anEvent;
                                         $this->eventCount++;
 
@@ -1029,7 +1030,7 @@ class ICal
                                     }
 
                                     if (!$isExcluded) {
-                                        $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
+                                        $anEvent['UID'] = $anEvent['DTSTART'] . $initialUid;
                                         $events[] = $anEvent;
                                         $this->eventCount++;
 
@@ -1105,7 +1106,7 @@ class ICal
                                         }
 
                                         if (!$isExcluded) {
-                                            $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
+                                            $anEvent['UID'] = $anEvent['DTSTART'] . $initialUid;
                                             $events[] = $anEvent;
                                             $this->eventCount++;
 
@@ -1191,7 +1192,7 @@ class ICal
                                             }
 
                                             if (!$isExcluded) {
-                                                $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
+                                                $anEvent['UID'] = $anEvent['DTSTART'] . $initialUid;
                                                 $events[] = $anEvent;
                                                 $this->eventCount++;
 
@@ -1261,7 +1262,7 @@ class ICal
                                         }
 
                                         if (!$isExcluded) {
-                                            $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
+                                            $anEvent['UID'] = $anEvent['DTSTART'] . $initialUid;
                                             $events[] = $anEvent;
                                             $this->eventCount++;
 
