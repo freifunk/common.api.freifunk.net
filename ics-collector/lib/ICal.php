@@ -846,6 +846,7 @@ class ICal
                             }
 
                             if (!$isExcluded) {
+                                $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
                                 $events[] = $anEvent;
                                 $this->eventCount++;
 
@@ -933,6 +934,7 @@ class ICal
                                     }
 
                                     if (!$isExcluded) {
+                                        $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
                                         $events[] = $anEvent;
                                         $this->eventCount++;
 
@@ -1027,6 +1029,7 @@ class ICal
                                     }
 
                                     if (!$isExcluded) {
+                                        $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
                                         $events[] = $anEvent;
                                         $this->eventCount++;
 
@@ -1102,6 +1105,7 @@ class ICal
                                         }
 
                                         if (!$isExcluded) {
+                                            $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
                                             $events[] = $anEvent;
                                             $this->eventCount++;
 
@@ -1187,6 +1191,7 @@ class ICal
                                             }
 
                                             if (!$isExcluded) {
+                                                $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
                                                 $events[] = $anEvent;
                                                 $this->eventCount++;
 
@@ -1256,6 +1261,7 @@ class ICal
                                         }
 
                                         if (!$isExcluded) {
+                                            $anEvent['UID'] = $anEvent['DTSTART'] . $anEvent['UID'];
                                             $events[] = $anEvent;
                                             $this->eventCount++;
 
