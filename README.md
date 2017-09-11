@@ -22,7 +22,7 @@ The Freifunk API is designed to collect metadata of communities in a decentral w
 
 [Freifunk API repo](https://github.com/freifunk/api.freifunk.net)
 
-## Contribute
+## Contribute
 
 Most of the scripts are written in PHP and Python, and could be executed in a terminal. Feel free to clone the repo, make changes and send us Pull Requests.
 
