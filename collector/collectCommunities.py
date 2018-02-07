@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-# used Python 3.6 (64-bit), Microsoft Visual Studio 2017
+# used Python 3.6.3 (64-bit), Microsoft Visual Studio 2017
 # fork from https://github.com/freifunk/common.api.freifunk.net/blob/master/collector/collectCommunities.py
 # viewer: https://github.com/cholin/ff-api-viewer
+# etime and error field added to ffapi
 
 import json
 import shutil
@@ -49,7 +50,7 @@ def loadDirectory(url):
 
 #create a summarized json file, works as cache
 def summarizedJson(ffDir, path):
-	time = datetime.now().isoformat(' ')
+	time = datetime.now().isoformat()	#OLr 'T' ist Trenner in ISO 8601, ist aber auch mit ' ' lesbar
 	historyTime = datetime.now().strftime('%Y%m%d-%H.%M.%S-')
 	summary = dict() 
 	#open summarized file first
@@ -88,6 +89,7 @@ def summarizedJson(ffDir, path):
 
 	for community in ffDir:
 		log(3, "working on community: " + ffDir[community])
+		error = None
 		try:
 			request = urllib.request.Request(
 				ffDir[community],
@@ -99,17 +101,36 @@ def summarizedJson(ffDir, path):
 			ffApi = json.loads(urlopen(request, None, 10).read().decode('utf-8'))	#OLr AttributeError: 'HTTPResponse' object has no attribute 'readall'
 		except UnicodeError as e:
 			try:
+				log(0, "Unicode Error: " + ffDir[community] + ": " + str(e) + ", try iso8859_2 instead")	#OLr erst loggen, dann probieren
 				ffApi = json.loads(urlopen(ffDir[community]).read().decode('iso8859_2'))		#OLr AttributeError: 'HTTPResponse' object has no attribute 'readall'
-				log(0, "Unicode Error: " + ffDir[community] + ": " + str(e) + ", try iso8859_2 instead")
-				pass
+				#pass
 			except BaseException as e:
+				error = e
 				log(0, "Error reading community api file " + ffDir[community] + ": " + str(e))
-				continue
+				#continue
 		except BaseException as e:
+			error = e
 			log(0, "Error reading community api file " + ffDir[community] + ": " + str(e))
-			continue
+			#continue
 
-		ffApi['mtime'] = time
+		if (error is None):
+			#OLr wie bisher mtime setzten
+			ffApi['mtime'] = time
+		else:
+			try:	#kein has_key verfügbar
+				ffApi = summary[community]
+			except:
+				ffApi = dict()	#init new instance
+				ffApi['mtime'] = time
+				#nachfolgende Felder werden für tableHtml benötigt
+				ffApi['location'] = dict()
+				ffApi['location']['city'] = community
+				ffApi['name'] = community
+				ffApi['state'] = dict()
+			#OLr im Fehlerfall etime und error setzten (statt mtime)
+			ffApi['etime'] = time
+			ffApi['error'] = str(type(error)) + " " + str(error)	#OLr exception type ergänzen?!
+
 		summary[community] = ffApi
 	log(4, "our summary: " + str(summary))
 	summaryResult = json.dumps(summary, indent=4)
