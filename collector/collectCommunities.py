@@ -117,6 +117,7 @@ def summarizedJson(ffDir, path):
 			#OLr wie bisher mtime setzten
 			ffApi['mtime'] = time
 		else:
+			#OLr ffApi von summary lesen oder neu erstellen
 			try:	#kein has_key verfügbar
 				ffApi = summary[community]
 			except:
@@ -129,7 +130,7 @@ def summarizedJson(ffDir, path):
 				ffApi['state'] = dict()
 			#OLr im Fehlerfall etime und error setzten (statt mtime)
 			ffApi['etime'] = time
-			ffApi['error'] = str(type(error)) + " " + str(error)	#OLr exception type ergänzen?!
+			ffApi['error'] = str(type(error)) + " " + str(error)	#OLr exception type und nachricht
 
 		summary[community] = ffApi
 	log(4, "our summary: " + str(summary))
