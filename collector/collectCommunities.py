@@ -1,8 +1,4 @@
 #!/usr/bin/python3
-# used Python 3.6.3 (64-bit), Microsoft Visual Studio 2017
-# fork from https://github.com/freifunk/common.api.freifunk.net/blob/master/collector/collectCommunities.py
-# viewer: https://github.com/cholin/ff-api-viewer
-# etime and error field added to ffapi
 
 import json
 import shutil
@@ -46,11 +42,11 @@ def loadDirectory(url):
 		log(0, "error reading directory " + str(e))
 		exit(1)
 
-	return json.loads(ffDirectoryRaw.read().decode('utf-8'))	#OLr AttributeError: 'HTTPResponse' object has no attribute 'readall'
+	return json.loads(ffDirectoryRaw.readall().decode('utf-8'))
 
 #create a summarized json file, works as cache
 def summarizedJson(ffDir, path):
-	time = datetime.now().isoformat()	#OLr 'T' ist Trenner in ISO 8601, ist aber auch mit ' ' lesbar
+	time = datetime.now().isoformat(' ')
 	historyTime = datetime.now().strftime('%Y%m%d-%H.%M.%S-')
 	summary = dict() 
 	#open summarized file first
@@ -98,19 +94,19 @@ def summarizedJson(ffDir, path):
         				'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
     				}
 			)
-			ffApi = json.loads(urlopen(request, None, 10).read().decode('utf-8'))	#OLr AttributeError: 'HTTPResponse' object has no attribute 'readall'
+			ffApi = json.loads(urlopen(request, None, 10).readall().decode('utf-8'))
 		except UnicodeError as e:
 			try:
-				log(0, "Unicode Error: " + ffDir[community] + ": " + str(e) + ", try iso8859_2 instead")	#OLr erst loggen, dann probieren
-				ffApi = json.loads(urlopen(ffDir[community]).read().decode('iso8859_2'))		#OLr AttributeError: 'HTTPResponse' object has no attribute 'readall'
-				#pass
+				ffApi = json.loads(urlopen(ffDir[community]).readall().decode('iso8859_2'))
+				log(0, "Unicode Error: " + ffDir[community] + ": " + str(e) + ", try iso8859_2 instead")
+				pass
 			except BaseException as e:
-				error = e
 				log(0, "Error reading community api file " + ffDir[community] + ": " + str(e))
+				error = e
 				#continue
 		except BaseException as e:
-			error = e
 			log(0, "Error reading community api file " + ffDir[community] + ": " + str(e))
+			error = e
 			#continue
 
 		if (error is None):
@@ -227,7 +223,7 @@ def sanitizeContactUrls(contacts):
 def tableHtml(summary, HtmlTablePath):
 	htmlOutputHead = "<link rel=\"stylesheet\" href=\"" + htmlTableCommunityMapCss + "\" />"
 	htmlOutputHead += "<script src=\"" + htmlTableSorttableJs + "\"></script>"
-	htmlOutputHead += "<table class=\"sortable community-table\"><tr><th>Name</th><th class=\"sorttable_sorted\">Stadt/Region<span id=\"sorttable_sortfwdind\">&nbsp;</span></th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
+	htmlOutputHead += "<table class=\"sortable community-table\"><tr><th>Name</th><th class=\"sorttable_sorted\">Stadt/Region<span id=\"sorttable_sortfwdind\">&nbsp;▾</span></th><th>Firmware</th><th>Routing</th><th>Knoten</th><th>Kontakt</th></tr>"
 
 	htmlOutputFoot = "</table>"
 	htmlOutputContent = ""
