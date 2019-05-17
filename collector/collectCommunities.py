@@ -42,7 +42,7 @@ def loadDirectory(url):
 		log(0, "error reading directory " + str(e))
 		exit(1)
 
-	return json.loads(ffDirectoryRaw.readall().decode('utf-8'))
+	return json.loads(ffDirectoryRaw.read().decode('utf-8'))
 
 #create a summarized json file, works as cache
 def summarizedJson(ffDir, path):
@@ -94,10 +94,10 @@ def summarizedJson(ffDir, path):
         				'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
     				}
 			)
-			ffApi = json.loads(urlopen(request, None, 10).readall().decode('utf-8'))
+			ffApi = json.loads(urlopen(request, None, 10).read().decode('utf-8'))
 		except UnicodeError as e:
 			try:
-				ffApi = json.loads(urlopen(ffDir[community]).readall().decode('iso8859_2'))
+				ffApi = json.loads(urlopen(ffDir[community]).read().decode('iso8859_2'))
 				log(0, "Unicode Error: " + ffDir[community] + ": " + str(e) + ", try iso8859_2 instead")
 				pass
 			except BaseException as e:
