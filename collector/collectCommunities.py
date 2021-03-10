@@ -4,6 +4,7 @@ import json
 import shutil
 import os.path
 import re
+import copy
 import urllib
 from optparse import OptionParser
 from urllib.request import urlopen, install_opener, build_opener, ProxyHandler
@@ -86,6 +87,7 @@ def summarizedJson(ffDir, path):
 	for community in ffDir:
 		log(3, "working on community: " + ffDir[community])
 		error = None
+		additionalLocations = []
 		try:
 			request = urllib.request.Request(
 				ffDir[community],
@@ -103,15 +105,25 @@ def summarizedJson(ffDir, path):
 			except BaseException as e:
 				log(0, "Error reading community api file " + ffDir[community] + ": " + str(e))
 				error = e
-				#continue
 		except BaseException as e:
 			log(0, "Error reading community api file " + ffDir[community] + ": " + str(e))
 			error = e
-			#continue
 
 		if (error is None):
 			#OLr wie bisher mtime setzten
 			ffApi['mtime'] = time
+			if 'additionalLocations' in ffApi['location']:
+				for additionalLocation in ffApi['location']['additionalLocations']:
+					additionalProperties = copy.deepcopy(ffApi)
+					additionalProperties['state'].pop('nodes', None)
+					additionalProperties.pop('nodeMaps', None)
+					additionalProperties.pop('feeds', None)
+					additionalProperties.pop('services', None)
+					additionalProperties.pop('timeline', None)
+					additionalProperties['location'] = additionalLocation
+					additionalProperties['name'] = additionalProperties['name'] + '(' + additionalLocation['city'] + ')'
+					additionalLocations.append(additionalProperties)
+					additionalProperties = ""
 		else:
 			#OLr ffApi von summary lesen oder neu erstellen
 			try:	#kein has_key verfügbar
@@ -129,6 +141,8 @@ def summarizedJson(ffDir, path):
 			ffApi['error'] = str(type(error)) + " " + str(error)	#OLr exception type und nachricht
 
 		summary[community] = ffApi
+		for index, additionalLocation in enumerate(additionalLocations):
+			summary[community + str(index)] = additionalLocation
 	log(4, "our summary: " + str(summary))
 	summaryResult = json.dumps(summary, indent=4)
 
