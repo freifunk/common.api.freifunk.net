@@ -10,6 +10,21 @@ from optparse import OptionParser
 from urllib.request import urlopen, install_opener, build_opener, ProxyHandler
 from datetime import tzinfo, timedelta, datetime
 
+#to correct the location
+def correctLocation(data):
+	#checking the geocodes in location
+	if "geoCode" in data["location"].keys():
+		data["location"]["lat"] = data["location"]["geoCode"]["lat"]
+		data["location"]["lon"] = data["location"]["geoCode"]["lon"]
+		del data["location"]["geoCode"]
+
+		for i in data["location"]["additionalLocations"]:
+			if "geoCode" in i:
+				i["lat"] = i["geoCode"]["lat"]
+				i["lon"] = i["geoCode"]["lon"]
+				del i["geoCode"]
+		return data;
+
 #log helper function
 def log(logLevel, message):
 	if logLevel <= options.logLevel:
@@ -112,6 +127,7 @@ def summarizedJson(ffDir, path):
 		if (error is None):
 			#OLr wie bisher mtime setzten
 			ffApi['mtime'] = time
+			# ffApi = correctLocation(ffApi)
 			if 'additionalLocations' in ffApi['location']:
 				for additionalLocation in ffApi['location']['additionalLocations']:
 					additionalProperties = copy.deepcopy(ffApi)
