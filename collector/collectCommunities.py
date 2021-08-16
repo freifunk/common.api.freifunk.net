@@ -16,13 +16,11 @@ def correctLocation(data):
 	if "geoCode" in data["location"].keys():
 		data["location"]["lat"] = data["location"]["geoCode"]["lat"]
 		data["location"]["lon"] = data["location"]["geoCode"]["lon"]
-		del data["location"]["geoCode"]
 
 		for i in data["location"]["additionalLocations"]:
 			if "geoCode" in i:
 				i["lat"] = i["geoCode"]["lat"]
 				i["lon"] = i["geoCode"]["lon"]
-				del i["geoCode"]
 		return data;
 
 #log helper function
