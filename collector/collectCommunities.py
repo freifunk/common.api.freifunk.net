@@ -125,7 +125,7 @@ def summarizedJson(ffDir, path):
 		if (error is None):
 			#OLr wie bisher mtime setzten
 			ffApi['mtime'] = time
-			# ffApi = correctLocation(ffApi)
+			ffApi = correctLocation(ffApi)
 			if 'additionalLocations' in ffApi['location']:
 				for additionalLocation in ffApi['location']['additionalLocations']:
 					additionalProperties = copy.deepcopy(ffApi)
@@ -135,7 +135,7 @@ def summarizedJson(ffDir, path):
 					additionalProperties.pop('services', None)
 					additionalProperties.pop('timeline', None)
 					additionalProperties['location'] = additionalLocation
-					additionalProperties['name'] = additionalProperties['name'] + '(' + additionalLocation['city'] + ')'
+					additionalProperties['name'] = additionalProperties['name'] + ' (' + additionalLocation['city'] + ')'
 					additionalLocations.append(additionalProperties)
 					additionalProperties = ""
 		else:
