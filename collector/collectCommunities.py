@@ -21,7 +21,7 @@ def correctLocation(data):
 			if "geoCode" in i:
 				i["lat"] = i["geoCode"]["lat"]
 				i["lon"] = i["geoCode"]["lon"]
-		return data;
+	return data;
 
 #log helper function
 def log(logLevel, message):
