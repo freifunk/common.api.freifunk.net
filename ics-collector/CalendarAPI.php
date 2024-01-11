@@ -206,7 +206,7 @@ if ($parameters['format'] == 'json') {
     echo json_encode($jsonResult);
 } else {
     header('Access-Control-Allow-Origin: *');
-    header('Content-type: text/ics; charset=UTF-8');
+    header('Content-type: text/calendar; charset=UTF-8');
     echo toString($parsedIcs, $events);
 }
 
