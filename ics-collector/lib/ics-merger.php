@@ -151,13 +151,13 @@ class IcsMerger {
 				case 'DTSTART':
 					if (!preg_match("/^\d{8}T\d{6}/", $event['DTSTART']) && 
 						preg_match("/^\d{8}$/", $event['DTSTART'])) {
-						$event['DTSTART'] = $event['DTSTART'] . "T000000Z";
+						$event['DTSTART'] = substr($event['DTSTART'],0,15); // This will extract the 15 characters i.e. YYYYMMDDTHHMMSS
 					}
 				case 'DTEND' :
 					if (array_key_exists("DTEND", $event) &&
                         !preg_match("/^\d{8}T\d{6}/", $event['DTEND']) &&
 						preg_match("/^\d{8}$/", $event['DTEND'])) {
-						$event['DTEND'] = $event['DTEND'] . "T000000Z";
+						$event['DTEND'] = substr($event['DTEND'],0,15); // This will extract the 15 characters i.e. YYYYMMDDTHHMMSS
 					}
 				case 'LAST-MODIFIED':
 					if (array_key_exists("LAST-MODIFIED", $event) &&
