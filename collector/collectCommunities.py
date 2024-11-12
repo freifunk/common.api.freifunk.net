@@ -17,10 +17,11 @@ def correctLocation(data):
 		data["location"]["lat"] = data["location"]["geoCode"]["lat"]
 		data["location"]["lon"] = data["location"]["geoCode"]["lon"]
 
-		for i in data["location"]["additionalLocations"]:
-			if "geoCode" in i:
-				i["lat"] = i["geoCode"]["lat"]
-				i["lon"] = i["geoCode"]["lon"]
+		if 'additionalLocations' in data['location']:
+			for i in data["location"]["additionalLocations"]:
+				if "geoCode" in i:
+					i["lat"] = i["geoCode"]["lat"]
+					i["lon"] = i["geoCode"]["lon"]
 	return data;
 
 #log helper function
