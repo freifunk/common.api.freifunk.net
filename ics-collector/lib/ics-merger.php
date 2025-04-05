@@ -149,16 +149,37 @@ class IcsMerger {
 						$event['DTSTAMP'] = $event['DTSTAMP'] . "Z";
 					}
 				case 'DTSTART':
-					if (!preg_match("/^\d{8}T\d{6}/", $event['DTSTART']) && 
-						preg_match("/^\d{8}$/", $event['DTSTART'])) {
-						$event['DTSTART'] = $event['DTSTART'] . "T000000Z";
+					// Check if DTSTART already has a TZID parameter
+					if (strpos($value, 'TZID=') === false) {
+						// Add timezone parameter for date-time values (not for all-day events with just date)
+						if (preg_match("/^\d{8}T\d{6}/", $value) && substr($value, -1) !== 'Z') {
+							// Use event timezone, calendar timezone, or default timezone
+							$tzid = $timezone ?? $this->defaultHeader['X-WR-TIMEZONE'];
+							$event[$key] = 'TZID=' . $tzid . ':' . $value;
+						} 
+						// For all-day events and UTC times, keep as is
+						else if (preg_match("/^\d{8}$/", $value) || substr($value, -1) === 'Z') {
+							$event[$key] = $value;
+						}
 					}
-				case 'DTEND' :
-					if (array_key_exists("DTEND", $event) &&
-                        !preg_match("/^\d{8}T\d{6}/", $event['DTEND']) &&
-						preg_match("/^\d{8}$/", $event['DTEND'])) {
-						$event['DTEND'] = $event['DTEND'] . "T000000Z";
+					break;
+				case 'DTEND':
+					if (array_key_exists("DTEND", $event)) {
+						// Check if DTEND already has a TZID parameter
+						if (strpos($value, 'TZID=') === false) {
+							// Add timezone parameter for date-time values (not for all-day events with just date)
+							if (preg_match("/^\d{8}T\d{6}/", $value) && substr($value, -1) !== 'Z') {
+								// Use event timezone, calendar timezone, or default timezone
+								$tzid = $timezone ?? $this->defaultHeader['X-WR-TIMEZONE'];
+								$event[$key] = 'TZID=' . $tzid . ':' . $value;
+							}
+							// For all-day events and UTC times, keep as is
+							else if (preg_match("/^\d{8}$/", $value) || substr($value, -1) === 'Z') {
+								$event[$key] = $value;
+							}
+						}
 					}
+					break;
 				case 'LAST-MODIFIED':
 					if (array_key_exists("LAST-MODIFIED", $event) &&
                         preg_match("/^\d{8}T\d{6}$/", $event['LAST-MODIFIED']) ) {
@@ -199,6 +220,41 @@ class IcsMerger {
 	}
 
 	/**
+	 * Generate VTIMEZONE block with proper DST rules
+	 * @param string $timezone Timezone identifier
+	 * @return string Generated VTIMEZONE block
+	 */
+	private static function generateVTimeZone($timezone = 'Europe/Berlin') {
+		$str = "BEGIN:VTIMEZONE\r\n";
+		$str .= "TZID:" . $timezone . "\r\n";
+		$str .= "X-LIC-LOCATION:" . $timezone . "\r\n";
+		
+		// Get current year for DST transitions
+		$year = (int)date('Y');
+		
+		// Add STANDARD component (winter time)
+		$str .= "BEGIN:STANDARD\r\n";
+		$str .= "DTSTART:" . $year . "1027T030000\r\n";
+		$str .= "TZOFFSETFROM:+0200\r\n";
+		$str .= "TZOFFSETTO:+0100\r\n";
+		$str .= "RDATE:" . ($year + 1) . "1026T030000\r\n";
+		$str .= "TZNAME:CET\r\n";
+		$str .= "END:STANDARD\r\n";
+		
+		// Add DAYLIGHT component (summer time)
+		$str .= "BEGIN:DAYLIGHT\r\n";
+		$str .= "DTSTART:" . $year . "0330T020000\r\n";
+		$str .= "TZOFFSETFROM:+0100\r\n";
+		$str .= "TZOFFSETTO:+0200\r\n";
+		$str .= "RDATE:" . ($year + 1) . "0329T020000\r\n";
+		$str .= "TZNAME:CEST\r\n";
+		$str .= "END:DAYLIGHT\r\n";
+		
+		$str .= "END:VTIMEZONE\r\n";
+		return $str;
+	}
+
+	/**
 	 * Convert an array returned by IcsMerger::getResult() into valid ics string
 	 * @param array $icsMergerResult
 	 * @return string
@@ -207,6 +263,13 @@ class IcsMerger {
 		
 		$str = 'BEGIN:VCALENDAR' . "\r\n";
 		$str .= IcsMerger::arrayToIcs($icsMergerResult['VCALENDAR']);
+		
+		// Add VTIMEZONE block
+		$timezone = isset($icsMergerResult['VCALENDAR']['X-WR-TIMEZONE']) 
+			? $icsMergerResult['VCALENDAR']['X-WR-TIMEZONE'] 
+			: 'Europe/Berlin';
+		$str .= self::generateVTimeZone($timezone);
+		
 		foreach ($icsMergerResult['VEVENTS'] as $event) {
 			$str .= 'BEGIN:VEVENT' . "\r\n"; 
 			$str .= IcsMerger::arrayToIcs($event);
