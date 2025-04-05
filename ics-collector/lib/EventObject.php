@@ -27,6 +27,10 @@ class EventObject
     public $categories;
     public $xWrSource;
     public $xWrSourceUrl;
+    
+    // Array properties to store timezone info
+    public $dtstart_array;
+    public $dtend_array;
 
     public function __construct($data = array())
     {
@@ -37,10 +41,9 @@ class EventObject
                 } else {
                     $variable = $key;
                 }
-                $this->{$variable} = $value;
-
+                
                 if (is_array($value)) {
-                     $this->{$variable} = $value;
+                    $this->{$variable} = $value;
                 } else {
                     $this->{$variable} = stripslashes(trim(str_replace('\n', "\n", $value)));
                 }
@@ -56,17 +59,55 @@ class EventObject
 
     /**
      * Return Event data excluding anything blank
-     * as ICS format 
+     * as ICS format with proper timezone handling
      *
      * @return string
      */
     public function printIcs()
     {
         $crlf = "\r\n";
+        $output = "BEGIN:VEVENT".$crlf;
+
+        // Get default timezone
+        $defaultTimezone = 'Europe/Berlin';
+        
+        // Handle DTSTART with timezone information
+        if (!empty($this->dtstart)) {
+            // Skip values that end with Z (already in UTC)
+            $isUtc = (substr($this->dtstart, -1) === 'Z');
+            
+            if (isset($this->dtstart_array) && isset($this->dtstart_array[0]['TZID'])) {
+                // Use timezone from the event data
+                $output .= sprintf("DTSTART;TZID=%s:%s%s", $this->dtstart_array[0]['TZID'], $this->dtstart, $crlf);
+            } elseif (!$isUtc && preg_match("/^\d{8}T\d{6}/", $this->dtstart)) {
+                // Add default timezone for datetime values without timezone
+                $output .= sprintf("DTSTART;TZID=%s:%s%s", $defaultTimezone, $this->dtstart, $crlf);
+            } else {
+                // Keep all-day events and UTC times as is
+                $output .= sprintf("DTSTART:%s%s", $this->dtstart, $crlf);
+            }
+        }
+        
+        // Handle DTEND with timezone information
+        if (!empty($this->dtend)) {
+            // Skip values that end with Z (already in UTC)
+            $isUtc = (substr($this->dtend, -1) === 'Z');
+            
+            if (isset($this->dtend_array) && isset($this->dtend_array[0]['TZID'])) {
+                // Use timezone from the event data
+                $output .= sprintf("DTEND;TZID=%s:%s%s", $this->dtend_array[0]['TZID'], $this->dtend, $crlf);
+            } elseif (!$isUtc && preg_match("/^\d{8}T\d{6}/", $this->dtend)) {
+                // Add default timezone for datetime values without timezone
+                $output .= sprintf("DTEND;TZID=%s:%s%s", $defaultTimezone, $this->dtend, $crlf);
+            } else {
+                // Keep all-day events and UTC times as is
+                $output .= sprintf("DTEND:%s%s", $this->dtend, $crlf);
+            }
+        }
+        
+        // Process other properties
         $data = array(
             'SUMMARY'         => $this->summary,
-            'DTSTART'         => $this->dtstart,
-            'DTEND'           => $this->dtend,
             'DURATION'        => $this->duration,
             'DTSTAMP'         => $this->dtstamp,
             'UID'             => $this->uid,
@@ -86,7 +127,6 @@ class EventObject
 
         $data   = array_map('trim', $data); // Trim all values
         $data   = array_filter($data);      // Remove any blank values
-        $output = "BEGIN:VEVENT".$crlf;
 
         foreach ($data as $key => $value) {
             $output .= sprintf("%s:%s%s", $key, $value, $crlf);
