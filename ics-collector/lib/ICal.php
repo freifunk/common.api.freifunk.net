@@ -588,7 +588,13 @@ class ICal
         }
 
         $dateArray = $event[$key . '_array'];
-        $date      = $event[$key];
+        $date = $event[$key];
+        
+        // Verhindern, dass ein Datum mit _tz genutzt wird
+        if (strpos($date, '_tz:') !== false) {
+            // Datum ist fehlerhaft formatiert, nur den ersten Teil verwenden
+            $date = substr($date, 0, strpos($date, '_tz:'));
+        }
 
         if ($key === 'DURATION') {
             $duration  = end($dateArray);
@@ -596,9 +602,20 @@ class ICal
             $dateTime  = \DateTime::createFromFormat('U', $timestamp);
             $date      = $dateTime->format(self::DATE_TIME_FORMAT);
         } else {
-            $dateTime = new \DateTime($date);
+            try {
+                $dateTime = new \DateTime($date);
+            } catch (\Exception $e) {
+                // Bei Fehler mit dem Datum, versuche zu reparieren
+                if (preg_match('/^(\d{8}T\d{6})/', $date, $matches)) {
+                    $date = $matches[1];
+                    $dateTime = new \DateTime($date);
+                } else {
+                    return false; // Kann das Datum nicht parsen
+                }
+            }
         }
 
+        $timeZone = null;
         if (isset($dateArray[0]['TZID']) && preg_match('/[a-z]*\/[a-z_]*/i', $dateArray[0]['TZID'])) {
             $timeZone = $dateArray[0]['TZID'];
         }

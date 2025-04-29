@@ -27,6 +27,12 @@ class EventObject
     public $categories;
     public $xWrSource;
     public $xWrSourceUrl;
+    
+    // Array-Versionen der Datumsfelder
+    public $dtstart_array;
+    public $dtend_array;
+    public $dtstart_tz;
+    public $dtend_tz;
 
     public function __construct($data = array())
     {
@@ -63,10 +69,11 @@ class EventObject
     public function printIcs()
     {
         $crlf = "\r\n";
-        $data = array(
+        $data = array();
+        
+        // Standardfelder
+        $standardFields = array(
             'SUMMARY'         => $this->summary,
-            'DTSTART'         => $this->dtstart,
-            'DTEND'           => $this->dtend,
             'DURATION'        => $this->duration,
             'DTSTAMP'         => $this->dtstamp,
             'UID'             => $this->uid,
@@ -83,15 +90,37 @@ class EventObject
             'X-WR-SOURCE'     => $this->xWrSource,
             'X-WR-SOURCE-URL' => $this->xWrSourceUrl,
         );
-
-        $data   = array_map('trim', $data); // Trim all values
-        $data   = array_filter($data);      // Remove any blank values
+        
+        $data = array_merge($data, array_filter(array_map('trim', $standardFields)));
+        
+        // Spezialbehandlung für Felder mit Zeitzone
         $output = "BEGIN:VEVENT".$crlf;
-
+        
+        // DTSTART mit TZID
+        if (isset($this->dtstart) && isset($this->dtstart_array) && isset($this->dtstart_array[0]['TZID'])) {
+            $output .= sprintf("DTSTART;TZID=%s:%s%s", 
+                $this->dtstart_array[0]['TZID'], 
+                $this->dtstart_array[1], 
+                $crlf);
+        } else if (isset($this->dtstart)) {
+            $output .= sprintf("DTSTART:%s%s", $this->dtstart, $crlf);
+        }
+        
+        // DTEND mit TZID
+        if (isset($this->dtend) && isset($this->dtend_array) && isset($this->dtend_array[0]['TZID'])) {
+            $output .= sprintf("DTEND;TZID=%s:%s%s", 
+                $this->dtend_array[0]['TZID'], 
+                $this->dtend_array[1], 
+                $crlf);
+        } else if (isset($this->dtend)) {
+            $output .= sprintf("DTEND:%s%s", $this->dtend, $crlf);
+        }
+        
+        // Alle anderen Felder ausgeben
         foreach ($data as $key => $value) {
             $output .= sprintf("%s:%s%s", $key, $value, $crlf);
         }
-
+        
         $output .= "END:VEVENT".$crlf;
         return $output;
     }

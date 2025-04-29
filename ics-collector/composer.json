@@ -1,0 +1,29 @@
+{
+    "name": "freifunk/ics-collector",
+    "description": "Calendar collector for Freifunk community events",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "ICal\\": "lib/"
+        },
+        "files": [
+            "CalendarAPI.php",
+            "ics-collector.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/php/"
+        }
+    },
+    "require": {
+        "php": ">=7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}

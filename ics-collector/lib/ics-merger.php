@@ -135,42 +135,61 @@ class IcsMerger {
 				}
 				switch($key) {
 				case 'ATTENDEE':
-				case 'DTSTART_tz':
-				case 'DTEND_tz':
 					unset($event[$key]);
-				break;
+					break;
 				// properties of type DATE / DATE-TIME
 				case 'CREATED':
 					if (preg_match("/^\d{8}T\d{6}$/", $event['CREATED']) ) {
 						$event['CREATED'] = $event['CREATED'] . "Z";
 					}
+					break;
 				case 'DTSTAMP':
 					if (preg_match("/^\d{8}T\d{6}$/", $event['DTSTAMP']) ) {
 						$event['DTSTAMP'] = $event['DTSTAMP'] . "Z";
 					}
+					break;
 				case 'DTSTART':
-					if (!preg_match("/^\d{8}T\d{6}/", $event['DTSTART']) && 
-						preg_match("/^\d{8}$/", $event['DTSTART'])) {
-						$event['DTSTART'] = $event['DTSTART'] . "T000000Z";
+					// Speichere den Original-String-Wert für die preg_match Prüfungen
+					$dtStartValue = $event[$key];
+					
+					if (isset($event['DTSTART_array']) && isset($event['DTSTART_array'][0]['TZID'])) {
+						$event[$key] = array(
+							'value' => $dtStartValue,
+							'params' => array('TZID' => $event['DTSTART_array'][0]['TZID'])
+						);
+					} else if (!preg_match("/^\d{8}T\d{6}/", $dtStartValue) && 
+							preg_match("/^\d{8}$/", $dtStartValue)) {
+						$event[$key] = $dtStartValue . "T000000Z";
 					}
-				case 'DTEND' :
-					if (array_key_exists("DTEND", $event) &&
-                        !preg_match("/^\d{8}T\d{6}/", $event['DTEND']) &&
-						preg_match("/^\d{8}$/", $event['DTEND'])) {
-						$event['DTEND'] = $event['DTEND'] . "T000000Z";
+					break;
+				case 'DTEND':
+					// Speichere den Original-String-Wert für die preg_match Prüfungen
+					$dtEndValue = $event[$key];
+					
+					if (isset($event['DTEND_array']) && isset($event['DTEND_array'][0]['TZID'])) {
+						$event[$key] = array(
+							'value' => $dtEndValue,
+							'params' => array('TZID' => $event['DTEND_array'][0]['TZID'])
+						);
+					} else if (array_key_exists("DTEND", $event) &&
+							!preg_match("/^\d{8}T\d{6}/", $dtEndValue) &&
+							preg_match("/^\d{8}$/", $dtEndValue)) {
+						$event[$key] = $dtEndValue . "T000000Z";
 					}
+					break;
 				case 'LAST-MODIFIED':
 					if (array_key_exists("LAST-MODIFIED", $event) &&
-                        preg_match("/^\d{8}T\d{6}$/", $event['LAST-MODIFIED']) ) {
+						preg_match("/^\d{8}T\d{6}$/", $event['LAST-MODIFIED']) ) {
 						$event['LAST-MODIFIED'] = $event['LAST-MODIFIED'] . "Z";
 					}
-				case 'RDATE' :
+					break;
+				case 'RDATE':
 					// only local datime needs conversion
 					if (is_array($value) &&
-					    array_key_exists('meta', $value) &&
-                        array_key_exists('type', $value['meta'])
-                        && $value['meta']['type'] == 'DATE-TIME'
-                        && $value['meta']['format'] == 'LOCAL-TIME') {
+						array_key_exists('meta', $value) &&
+						array_key_exists('type', $value['meta'])
+						&& $value['meta']['type'] == 'DATE-TIME'
+						&& $value['meta']['format'] == 'LOCAL-TIME') {
 						$tz = null;
 						if (array_key_exists('tzid', $value['meta'])) {
 							$tz = new DateTimeZone($value['meta']['tzid']);
@@ -189,7 +208,7 @@ class IcsMerger {
 						}
 					}
 					break;
-				default : 
+				default: 
 					// ignore others
 					break;
 				}
@@ -220,7 +239,9 @@ class IcsMerger {
 	private static function arrayToIcs($array) {
 		$callback = function ($v, $k) {
 			if (is_array($v)) {
-				if (array_key_exists('value', $v)) {
+				if (isset($v['params']) && isset($v['params']['TZID'])) {
+					return $k . ';TZID=' . $v['params']['TZID'] . ':' . $v['value'] . "\r\n";
+				} else if (array_key_exists('value', $v)) {
 					return $k . ':' . $v['value'] . "\r\n";
 				} else {
 					return '';
