@@ -36,7 +36,7 @@ You can host your own instace as well. CalendarAPI.php requires 2 dependencies :
    | -- CalendarAPI.php
    | -- data
          |
-         | -- ffMerged.ics
+         | -- ffMerged.ics
    | -- lib
          |
          | -- ICal.php
@@ -49,7 +49,7 @@ Parameter | Required | Value Formats | Multiple values* | Default Value | Descri
 --- | --- | --- | --- | --- | ---
 source | x |  `all`<br/>a community short name | x| | The community source of event feeds 
 format |  | `ics`<br/> `json`||`json`|Result format. Note that some other parameters don't work with `ics` format (`fields` parameter for example)
-fields | | `start`, `end`, `location`, `summary`,  `description`, .. |x ||In `json` mode, filter the event field to be returned. If this parameter is not specified, the fields will be returned by default : `start`, `end`, `summary`, `description`, `location`
+fields | | `start`, `end`, `location`, `summary`,  `description`, .. |x ||In `json` mode, filter the event field to be returned. If this parameter is not specified, the fields will be returned by default : `start`, `end`, `summary`, `description`, `location`
 from | | date* <br/>datetime* <br/>`now` | ||Lower bound of returned events datetime. Based on `start` time.
 to | | date<br/>datetime<br/>`now` | || Upper bound of returned events datetime. Based on `start` time.
 limit | |An integer | | |   The limit number of return results. If not specified, the API will return as many events as it can.
@@ -67,7 +67,7 @@ limit | |An integer | | |   The limit number of return results. If not specified
     ?source=all&start=now&end=2015-12-31T23:59:59&sort=asc-date
 ```
 
- * Events from halle community, maximum 6 events, and return only fields `start`, `source` and `url` :
+ * Events from halle community, maximum 6 events, and return only fields `start`, `source` and `url` :
 ```
    ?source=halle&limit=6&fields=start,source,url
 ```
@@ -76,10 +76,10 @@ limit | |An integer | | |   The limit number of return results. If not specified
    ?source=all
 ```
 
-## Supported method
+## Supported method
  Only `HTTP GET` is supported. This is a read-only API, meaning that users can not update events information with this API. It could be updated directly from ics sources.
 
-## Testing
+## Testing
   
  To run API tests : 
 
@@ -93,6 +93,35 @@ jasmine-node test_spec.js
 npm install jasmine-node -g
 ```
 
-## Contribute
+## Contribute
  We're happy to have reported issues and pull requests. Please clearly specify scenario, API call and API result.
+ 
+
+## ICS Validation and Repair
+
+The application now features automatic validation and repair of ICS files to prevent issues with invalid calendar data:
+
+- Automatic validation with each API call
+- Script `validate_all_ics.php` for regular checking of all ICS files
+- Support for creating backups before repairs
+- Removal of defective events with missing date/time information
+
+The validation checks:
+- Basic ICS structure (BEGIN:VCALENDAR, END:VCALENDAR)
+- Required ICS components (VERSION, PRODID)
+- Validity of individual events (DTSTART, DTEND/DURATION, UID)
+
+### Setting up as a Cron Job
+
+For regular checking of all ICS files, the script can be set up as a cron job:
+
+```
+0 1-5 * * * php /path/to/validate_all_ics.php
+```
+
+This runs the validation daily between 1:00 and 5:00 AM.
+
+### Manual Repair of Individual ICS Files
+
+To validate and repair a specific ICS file, the script `fix_wiesbaden.php` can be used as a template and adapted accordingly.
  

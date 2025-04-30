@@ -8,33 +8,38 @@ namespace ICal;
 
 class EventObject
 {
-    public $summary;
-    public $dtstart;
-    public $dtend;
-    public $duration;
-    public $dtstamp;
-    public $uid;
-    public $created;
-    public $lastmodified;
-    public $description;
-    public $location;
-    public $sequence;
-    public $status;
-    public $transp;
-    public $organizer;
-    public $attendee;
-    public $url;
-    public $categories;
-    public $xWrSource;
-    public $xWrSourceUrl;
+    public ?string $summary = null;
+    public ?string $dtstart = null;
+    public ?string $dtend = null;
+    public ?string $duration = null;
+    public ?string $dtstamp = null;
+    public ?string $uid = null;
+    public ?string $created = null;
+    public ?string $lastmodified = null;
+    public ?string $description = null;
+    public ?string $location = null;
+    public ?string $sequence = null;
+    public ?string $status = null;
+    public ?string $transp = null;
+    public ?string $organizer = null;
+    public ?string $attendee = null;
+    public ?string $url = null;
+    public ?string $categories = null;
+    public ?string $xWrSource = null;
+    public ?string $xWrSourceUrl = null;
     
     // Array-Versionen der Datumsfelder
-    public $dtstart_array;
-    public $dtend_array;
-    public $dtstart_tz;
-    public $dtend_tz;
+    public ?array $dtstart_array = null;
+    public ?array $dtend_array = null;
+    public ?string $dtstart_tz = null;
+    public ?string $dtend_tz = null;
 
-    public function __construct($data = array())
+    /**
+     * EventObject constructor
+     * 
+     * @param array<string, mixed> $data Event data array
+     */
+    public function __construct(array $data = [])
     {
         if (!empty($data)) {
             foreach ($data as $key => $value) {
@@ -43,7 +48,6 @@ class EventObject
                 } else {
                     $variable = $key;
                 }
-                $this->{$variable} = $value;
 
                 if (is_array($value)) {
                      $this->{$variable} = $value;
@@ -54,9 +58,15 @@ class EventObject
         }
     }
 
-    public static function __set_state($anArray)
+    /**
+     * Magic method for var_export() serialization
+     * 
+     * @param array<string, mixed> $anArray Exported array representation
+     * @return self
+     */
+    public static function __set_state(array $anArray): self
     {
-        $eventObject = new EventObject($anArray);
+        $eventObject = new self($anArray);
         return $eventObject;
     }
 
@@ -66,13 +76,13 @@ class EventObject
      *
      * @return string
      */
-    public function printIcs()
+    public function printIcs(): string
     {
         $crlf = "\r\n";
-        $data = array();
+        $data = [];
         
         // Standardfelder
-        $standardFields = array(
+        $standardFields = [
             'SUMMARY'         => $this->summary,
             'DURATION'        => $this->duration,
             'DTSTAMP'         => $this->dtstamp,
@@ -89,7 +99,7 @@ class EventObject
             'CATEGORIES'      => $this->categories,
             'X-WR-SOURCE'     => $this->xWrSource,
             'X-WR-SOURCE-URL' => $this->xWrSourceUrl,
-        );
+        ];
         
         $data = array_merge($data, array_filter(array_map('trim', $standardFields)));
         
@@ -102,7 +112,7 @@ class EventObject
                 $this->dtstart_array[0]['TZID'], 
                 $this->dtstart_array[1], 
                 $crlf);
-        } else if (isset($this->dtstart)) {
+        } elseif (isset($this->dtstart)) {
             $output .= sprintf("DTSTART:%s%s", $this->dtstart, $crlf);
         }
         
@@ -112,7 +122,7 @@ class EventObject
                 $this->dtend_array[0]['TZID'], 
                 $this->dtend_array[1], 
                 $crlf);
-        } else if (isset($this->dtend)) {
+        } elseif (isset($this->dtend)) {
             $output .= sprintf("DTEND:%s%s", $this->dtend, $crlf);
         }
         
@@ -132,9 +142,9 @@ class EventObject
      * @param string $html HTML template to use
      * @return string
      */
-    public function printData($html = '<p>%s: %s</p>')
+    public function printData(string $html = '<p>%s: %s</p>'): string
     {
-        $data = array(
+        $data = [
             'SUMMARY'       => $this->summary,
             'DTSTART'       => $this->dtstart,
             'DTEND'         => $this->dtend,
@@ -152,7 +162,7 @@ class EventObject
             'TRANSP'        => $this->transp,
             'ORGANISER'     => $this->organizer,
             'ATTENDEE(S)'   => $this->attendee,
-        );
+        ];
 
         $data   = array_map('trim', $data); // Trim all values
         $data   = array_filter($data);      // Remove any blank values

@@ -1,8 +1,11 @@
 <?php
 require_once 'lib/EventObject.php';
 require_once 'lib/ICal.php';
+require_once 'lib/ics-validator.php';
 
 use ICal\ICal;
+use ICal\EventObject;
+use ICal\IcsValidator;
 
 /**
  * CalendarAPI class for handling iCal data and generating responses
@@ -10,18 +13,21 @@ use ICal\ICal;
 class CalendarAPI {
     /**
      * Supported HTTP methods
+     * @var array<string>
      */
-    protected $supportedMethods = ['GET'];
+    protected array $supportedMethods = ['GET'];
     
     /**
      * Mandatory parameters fields
+     * @var array<string>
      */
-    protected $mandatory = ['source'];
+    protected array $mandatory = ['source'];
     
     /**
      * If not specified, the parameters will take these default values
+     * @var array<string, string>
      */
-    protected $defaultValues = [
+    protected array $defaultValues = [
         'format' => 'json'
     ];
     
@@ -31,8 +37,9 @@ class CalendarAPI {
      * $icsKey : ics property name
      * $jsonKey : json key name (null <=> copy ics property name as json key, lower case)
      * $include : boolean indicating that if the field should be included by default in the result
+     * @var array<string, array{0: ?string, 1: bool}>
      */
-    protected $jsonEventFields = [
+    protected array $jsonEventFields = [
         'dtstart' => ['start', true],
         'dtend' => ['end', true],
         'summary' => [null, true],
@@ -49,20 +56,23 @@ class CalendarAPI {
     
     /**
      * Supported sets of values for some parameters
+     * @var array<string, array<string>>
      */
-    protected $supportedValues = [
+    protected array $supportedValues = [
         'format' => ['ics', 'json']
     ];
     
     /**
      * Supported set of values for some parameters that could have multiple values, separated by commas
+     * @var array<string, array<string>>
      */
-    protected $supportedMultipleValues = [];
+    protected array $supportedMultipleValues = [];
     
     /**
      * Supported formats (in regexp) for some parameters
+     * @var array<string, array<string>>
      */
-    protected $supportedFormat = [
+    protected array $supportedFormat = [
         'from' => [
             "/^now$/",
             "/^\+\d+ weeks$/",
@@ -80,10 +90,33 @@ class CalendarAPI {
         ]
     ];
     
-    protected $parameters = [];
-    protected $sources = [];
-    protected $fieldsParameterExists = false;
-    protected $fields = [];
+    /**
+     * Parameters passed to the API
+     * @var array<string, string>
+     */
+    protected array $parameters = [];
+    
+    /**
+     * Source names from the source parameter
+     * @var array<string>
+     */
+    protected array $sources = [];
+    
+    /**
+     * Whether the fields parameter exists
+     */
+    protected bool $fieldsParameterExists = false;
+    
+    /**
+     * Fields to include in the output
+     * @var array<string>
+     */
+    protected array $fields = [];
+    
+    /**
+     * ICS-Validator instance
+     */
+    protected IcsValidator $validator;
     
     /**
      * Constructor
@@ -99,17 +132,20 @@ class CalendarAPI {
         
         // Initialize supported multiple values
         $this->supportedMultipleValues = [
-            'fields' => array_map(function($v) { return $v[0]; }, $this->jsonEventFields)
+            'fields' => array_map(fn($v) => $v[0], $this->jsonEventFields)
         ];
+        
+        // Initialize validator
+        $this->validator = new IcsValidator();
     }
     
     /**
      * Process the API request
      */
-    public function processRequest() {
+    public function processRequest(): void {
         // Check HTTP method
         $httpMethod = $_SERVER['REQUEST_METHOD'];
-        if (!in_array($httpMethod, $this->supportedMethods)) {
+        if (!in_array($httpMethod, $this->supportedMethods, true)) {
             $this->throwAPIError('Unsupported HTTP method : ' . $httpMethod);
         }
         
@@ -125,7 +161,7 @@ class CalendarAPI {
         // Check parameters with limited support values
         foreach ($this->supportedValues as $key => $value) {
             if (array_key_exists($key, $this->parameters)) {
-                if (!in_array($this->parameters[$key], $value)) {
+                if (!in_array($this->parameters[$key], $value, true)) {
                     $this->throwAPIError('Value not supported for parameter \'' . $key . '\' : ' . $this->parameters[$key]);
                 }
             }
@@ -161,31 +197,96 @@ class CalendarAPI {
             // fields can have multiple values, separated by comma
             $this->fields = explode(',', $this->parameters['fields']);
             foreach ($this->fields as $field) {
-                if (!in_array($field, $this->supportedMultipleValues['fields'])) {
+                if (!in_array($field, $this->supportedMultipleValues['fields'], true)) {
                     $this->throwAPIError('Field not supported : ' . $field);
                 }
             }
             $this->fieldsParameterExists = true;
         }
         
+        // Validate and ensure ICS file integrity before processing
+        $this->validateAndRepairIcsFile('data/ffMerged.ics');
+        
         $this->processCalendar();
+    }
+    
+    /**
+     * Validate and repair an ICS file if needed
+     * 
+     * @param string $icsFile Path to the ICS file
+     * @return bool True if file is valid or was repaired successfully
+     */
+    protected function validateAndRepairIcsFile(string $icsFile): bool {
+        if (!file_exists($icsFile)) {
+            error_log("ICS file not found: $icsFile");
+            return false;
+        }
+        
+        $isValid = $this->validator->validateFile($icsFile);
+        
+        // Log validation results
+        if (!$isValid) {
+            error_log("Invalid ICS file: $icsFile");
+            foreach ($this->validator->getErrors() as $error) {
+                error_log(" - Error: $error");
+            }
+        }
+        
+        if (!empty($this->validator->getWarnings())) {
+            foreach ($this->validator->getWarnings() as $warning) {
+                error_log(" - Warning: $warning");
+            }
+        }
+        
+        // Attempt to repair the file if invalid
+        if (!$isValid) {
+            error_log("Attempting to repair ICS file: $icsFile");
+            
+            $content = file_get_contents($icsFile);
+            $fixedContent = $this->validator->fixIcsContent($content);
+            
+            if ($content !== $fixedContent) {
+                // Create backup
+                $backupFile = $icsFile . '.bak.' . date('YmdHis');
+                file_put_contents($backupFile, $content);
+                error_log("Created backup: $backupFile");
+                
+                // Save fixed content
+                file_put_contents($icsFile, $fixedContent);
+                error_log("Repaired ICS file: $icsFile");
+                
+                // Validate again
+                $isValid = $this->validator->validateFile($icsFile);
+                
+                if (!$isValid) {
+                    error_log("ICS file still invalid after repair: $icsFile");
+                    foreach ($this->validator->getErrors() as $error) {
+                        error_log(" - Error: $error");
+                    }
+                }
+            } else {
+                error_log("No automatic repair possible for: $icsFile");
+            }
+        }
+        
+        return $isValid;
     }
     
     /**
      * Process the calendar data and output the response
      */
-    protected function processCalendar() {
-        $parsedIcs = new ICal('data/ffMerged.ics', 'MO', $useCache=true, $processRecurrences=true);
+    protected function processCalendar(): void {
+        $parsedIcs = new ICal('data/ffMerged.ics', 'MO', true, true);
         $from = false;
         $to = false;
         
-        if (array_key_exists('from', $this->parameters) && strpos($this->parameters['from'], "weeks")) {
+        if (array_key_exists('from', $this->parameters) && strpos($this->parameters['from'], "weeks") !== false) {
             $from = "now " . $this->parameters['from'];
         } elseif (array_key_exists('from', $this->parameters)){
             $from = $this->parameters['from'];
         }
         
-        if (array_key_exists('to', $this->parameters) && strpos($this->parameters['to'], "weeks")) {
+        if (array_key_exists('to', $this->parameters) && strpos($this->parameters['to'], "weeks") !== false) {
             $to = "now " . $this->parameters['to'];
         } elseif (array_key_exists('to', $this->parameters)){
             $to = $this->parameters['to'];
@@ -200,19 +301,19 @@ class CalendarAPI {
         foreach ($events as $key => $value) {
             // this filter is to skip all events that don't match the criteria
             // and shouldn't be added to the output result
-            if (!in_array('all', $this->sources)) {
-                if (is_null($value->xWrSource) || !in_array($value->xWrSource, $this->sources)) {
+            if (!in_array('all', $this->sources, true)) {
+                if ($value->xWrSource === null || !in_array($value->xWrSource, $this->sources, true)) {
                     unset($events[$key]);
                     continue;
                 }
             }
         }
 
-        if (array_key_exists('limit', $this->parameters) && count($events) > $this->parameters['limit']) {
-            $events = array_slice($events, 0, $this->parameters['limit'], true);
+        if (array_key_exists('limit', $this->parameters) && count($events) > (int)$this->parameters['limit']) {
+            $events = array_slice($events, 0, (int)$this->parameters['limit'], true);
         }
 
-        if ($this->parameters['format'] == 'json') {
+        if ($this->parameters['format'] === 'json') {
             $this->outputJson($events);
         } else {
             $this->outputIcs($parsedIcs, $events);
@@ -221,11 +322,13 @@ class CalendarAPI {
     
     /**
      * Output JSON response
+     * 
+     * @param array<EventObject> $events Array of EventObject instances
      */
-    protected function outputJson($events) {
-        $jsonResult = array();
+    protected function outputJson(array $events): void {
+        $jsonResult = [];
         foreach ($events as $event) {
-            $selectedEvent = array();
+            $selectedEvent = [];
             foreach ($event as $propertyKey => $propertyValue) {
                 if ($this->isRequiredField($propertyKey)) {
                     $selectedEvent[$this->jsonEventFields[$propertyKey][0]] = $this->getICSPropertyValue($propertyValue);
@@ -245,8 +348,11 @@ class CalendarAPI {
     
     /**
      * Output ICS response
+     * 
+     * @param ICal $parsedIcs The parsed ICal object
+     * @param array<EventObject> $events Array of EventObject instances
      */
-    protected function outputIcs($parsedIcs, $events) {
+    protected function outputIcs(ICal $parsedIcs, array $events): void {
         header('Access-Control-Allow-Origin: *');
         header('Content-type: text/calendar; charset=UTF-8');
         echo $this->toString($parsedIcs, $events);
@@ -254,9 +360,12 @@ class CalendarAPI {
     
     /**
      * Convert the ICal object into valid ics string
-     * @return string
+     * 
+     * @param ICal $ical The ICal object
+     * @param array<EventObject> $events Array of EventObject instances
+     * @return string ICS-formatted string
      */
-    protected function toString(ICal $ical, $events) {
+    protected function toString(ICal $ical, array $events): string {
         $str = 'BEGIN:VCALENDAR' . "\r\n";
         $str .= $ical->printVcalendarDataAsIcs();
         foreach ($events as $event) {
@@ -268,45 +377,60 @@ class CalendarAPI {
     
     /**
      * Check if a field is required
+     * 
+     * @param string $propertyKey The property key to check
+     * @return bool True if the field is required
      */
-    protected function isRequiredField($propertyKey) {
+    protected function isRequiredField(string $propertyKey): bool {
         if ($this->fieldsParameterExists) {
-            return array_key_exists($propertyKey, $this->jsonEventFields) && in_array($this->jsonEventFields[$propertyKey][0], $this->fields);
+            return array_key_exists($propertyKey, $this->jsonEventFields) && in_array($this->jsonEventFields[$propertyKey][0], $this->fields, true);
         }
         return array_key_exists($propertyKey, $this->jsonEventFields) && $this->isDefaultJSONField($propertyKey);
     }
     
     /**
      * Check if a field is a default JSON field
+     * 
+     * @param string $icsKey The ICS key to check
+     * @return bool True if the field is a default JSON field
      */
-    protected function isDefaultJSONField($icsKey) {
+    protected function isDefaultJSONField(string $icsKey): bool {
         return $this->jsonEventFields[$icsKey][1];
     }
     
     /**
      * Get property value from ICS
+     * 
+     * @param mixed $value The property value
+     * @return mixed The extracted property value
      */
-    protected function getICSPropertyValue($value) {
+    protected function getICSPropertyValue(mixed $value): mixed {
         return is_array($value) ? $value['value'] : $value;
     }
     
     /**
      * Get request parameters
+     * 
+     * @param string $httpMethod The HTTP method
+     * @return array<string, string> The request parameters
      */
-    protected function getRequestParameters($httpMethod) {
+    protected function getRequestParameters(string $httpMethod): array {
         return $httpMethod === 'GET' ? $_GET : ($httpMethod === 'POST' ? $_POST : []);
     }
     
     /**
      * Throw API error
+     * 
+     * @param string $errorMsg The error message
+     * @throws \Exception
      */
-    protected function throwAPIError($errorMsg) {
+    protected function throwAPIError(string $errorMsg): never {
         throw new \Exception($errorMsg);
     }
 }
 
 // Only execute if this file is being run directly (not included through autoloader)
-if (basename($_SERVER['SCRIPT_FILENAME']) == basename(__FILE__)) {
+if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
     $api = new CalendarAPI();
     $api->processRequest();
 }
