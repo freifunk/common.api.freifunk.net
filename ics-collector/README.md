@@ -101,27 +101,23 @@ npm install jasmine-node -g
 
 The application now features automatic validation and repair of ICS files to prevent issues with invalid calendar data:
 
-- Automatic validation with each API call
-- Script `validate_all_ics.php` for regular checking of all ICS files
-- Support for creating backups before repairs
-- Removal of defective events with missing date/time information
+- Automatic validation integrated directly into the ICS update process
+- Validation and repair happen during the regular update cycle, no separate cron job needed
+- Failed repairs are logged and skipped from the final merged calendar
+- Statistics about valid, repaired, and invalid files are logged
 
 The validation checks:
 - Basic ICS structure (BEGIN:VCALENDAR, END:VCALENDAR)
 - Required ICS components (VERSION, PRODID)
 - Validity of individual events (DTSTART, DTEND/DURATION, UID)
 
-### Setting up as a Cron Job
+### Manual Validation
 
-For regular checking of all ICS files, the script can be set up as a cron job:
+For manual validation of ICS files, a command-line tool is available:
 
 ```
-0 1-5 * * * php /path/to/validate_all_ics.php
+php validate_all_ics.php --file=data/filename.ics
 ```
 
-This runs the validation daily between 1:00 and 5:00 AM.
-
-### Manual Repair of Individual ICS Files
-
-To validate and repair a specific ICS file, the script `fix_wiesbaden.php` can be used as a template and adapted accordingly.
+Run `php validate_all_ics.php --help` for more options.
  

@@ -168,12 +168,62 @@ class IcsValidator {
      * @return string Korrigierter Inhalt
      */
     public function fixIcsContent(string $content): string {
-        // Entferne Events mit leeren DTSTART/DTEND-Feldern
-        $content = preg_replace('/BEGIN:VEVENT.*?DTSTART;[^:]*:(\s|$).*?END:VEVENT\r?\n?/s', '', $content);
-        $content = preg_replace('/BEGIN:VEVENT.*?DTSTART:(\s|$).*?END:VEVENT\r?\n?/s', '', $content);
-        $content = preg_replace('/BEGIN:VEVENT.*?DTEND;[^:]*:(\s|$).*?END:VEVENT\r?\n?/s', '', $content);
-        $content = preg_replace('/BEGIN:VEVENT.*?DTEND:(\s|$).*?END:VEVENT\r?\n?/s', '', $content);
+        // Extrahiere den Teil vor und nach den Events
+        if (!preg_match('/(.*?)(BEGIN:VEVENT.*END:VEVENT)(.*)$/s', $content, $parts)) {
+            return $content; // Kein Event gefunden oder Format nicht erkannt
+        }
         
-        return $content;
+        $header = $parts[1];
+        $eventsContent = $parts[2];
+        $footer = $parts[3];
+        
+        // Suche alle Events
+        preg_match_all('/(BEGIN:VEVENT.*?END:VEVENT)/s', $eventsContent, $matches);
+        
+        // Wenn keine Events gefunden wurden, nichts zu tun
+        if (empty($matches[0])) {
+            return $content;
+        }
+        
+        $validEvents = [];
+        
+        foreach ($matches[0] as $event) {
+            $isInvalid = false;
+            
+            // Prüfe auf leere DTSTART
+            if (preg_match('/DTSTART;[^:]*:(\s|$)/m', $event) || 
+                preg_match('/DTSTART:(\s|$)/m', $event)) {
+                $isInvalid = true;
+            }
+            
+            // Prüfe auf leere DTEND
+            if (preg_match('/DTEND;[^:]*:(\s|$)/m', $event) || 
+                preg_match('/DTEND:(\s|$)/m', $event)) {
+                $isInvalid = true;
+            }
+            
+            // Prüfe auf fehlende UID
+            if (!preg_match('/UID:/i', $event)) {
+                $isInvalid = true;
+            }
+            
+            // Prüfe ob DTEND und DURATION gleichzeitig vorkommen
+            if (preg_match('/DTEND:/i', $event) && preg_match('/DURATION:/i', $event)) {
+                $isInvalid = true;
+            }
+            
+            // Füge das Event zur Liste der gültigen Events hinzu, wenn es gültig ist
+            if (!$isInvalid) {
+                $validEvents[] = $event;
+            }
+        }
+        
+        // Stelle den Inhalt neu zusammen mit nur den gültigen Events
+        $fixedContent = $header . implode("\n", $validEvents) . $footer;
+        
+        // Normalisiere Zeilenumbrüche
+        $fixedContent = preg_replace("/(\r?\n)+/", "\n", $fixedContent);
+        
+        return $fixedContent;
     }
 } 
