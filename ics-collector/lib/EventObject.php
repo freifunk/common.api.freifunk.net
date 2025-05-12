@@ -27,6 +27,7 @@ class EventObject
     public ?string $categories = null;
     public ?string $xWrSource = null;
     public ?string $xWrSourceUrl = null;
+    public ?string $rrule = null;
     
     // Array-Versionen der Datumsfelder
     public ?array $dtstart_array = null;
@@ -99,6 +100,7 @@ class EventObject
             'CATEGORIES'      => $this->categories,
             'X-WR-SOURCE'     => $this->xWrSource,
             'X-WR-SOURCE-URL' => $this->xWrSourceUrl,
+            'RRULE'           => $this->rrule,
         ];
         
         $data = array_merge($data, array_filter(array_map('trim', $standardFields)));
