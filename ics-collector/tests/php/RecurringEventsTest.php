@@ -95,4 +95,88 @@ class RecurringEventsTest extends TestCase
             }
         }
     }
+    
+    public function testMonthlyThirdThursdayEvent()
+    {
+        // Verwende die feste Fixture-Datei
+        $testFile = __DIR__ . '/../fixtures/recurring_events.ics';
+        $this->assertTrue(file_exists($testFile), 'Die Testdatei recurring_events.ics muss existieren');
+        
+        // Parse die ICS-Datei und aktiviere die Verarbeitung wiederkehrender Events
+        require_once __DIR__ . '/../../lib/ICal.php';
+        $parsedIcs = new \ICal\ICal($testFile, 'MO', false, true);
+        
+        // Aktiviere Zeitzonenberücksichtigung für wiederkehrende Events
+        $parsedIcs->useTimeZoneWithRRules = true;
+        
+        // Setze einen Testzeitraum für 6 Monate (Mai bis Oktober 2025)
+        $startDate = '20250501';
+        $endDate = '20251031';
+        $events = $parsedIcs->eventsFromRange($startDate, $endDate);
+        
+        // Filtere die monatlichen Events
+        $monthlyEvents = array_filter($events, function($event) {
+            return strpos($event->summary, 'Neander-Stammtisch-Freifunk') !== false;
+        });
+        
+        // Debugging-Ausgabe für alle gefundenen Events mit ihrer Zeit
+        echo "Gefundene Neander-Stammtisch-Events:\n";
+        foreach ($monthlyEvents as $key => $event) {
+            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->dtstart);
+            echo date('Y-m-d (D) H:i', $timestamp) . " - Event {$key}\n";
+        }
+        
+        // Gruppiere Events nach Monat
+        $eventsByMonth = [];
+        foreach ($monthlyEvents as $event) {
+            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->dtstart);
+            $month = date('Y-m', $timestamp);
+            
+            if (!isset($eventsByMonth[$month])) {
+                $eventsByMonth[$month] = [];
+            }
+            
+            $eventsByMonth[$month][] = $event;
+        }
+        
+        // Prüfe, dass es genau 6 Events gibt (Mai bis Oktober 2025)
+        $this->assertEquals(6, count($eventsByMonth), 'Es sollten genau 6 Monate mit Events sein');
+        
+        // Zeige die Anzahl der Events pro Monat
+        echo "\nEvents pro Monat:\n";
+        foreach ($eventsByMonth as $month => $monthEvents) {
+            echo "{$month}: " . count($monthEvents) . " Events\n";
+            
+            // Wir erwarten nur ein Event pro Monat
+            $this->assertEquals(1, count($monthEvents), "Für Monat {$month} sollte es nur ein Event geben");
+        }
+        
+        // Prüfe, dass jedes Event tatsächlich am 3. Donnerstag stattfindet
+        foreach ($monthlyEvents as $event) {
+            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->dtstart);
+            $dayOfWeek = (int)date('N', $timestamp); // 1 (Montag) bis 7 (Sonntag)
+            $dayOfMonth = (int)date('j', $timestamp);
+            $monthName = date('F Y', $timestamp);
+            
+            // Prüfe, dass es ein Donnerstag ist (Tag 4 in ISO-8601)
+            $this->assertEquals(4, $dayOfWeek, "Das Event am {$dayOfMonth}. im {$monthName} sollte an einem Donnerstag stattfinden");
+            
+            // Berechne, ob es sich um den dritten Donnerstag handelt
+            // Erster Tag des Monats
+            $firstDayOfMonth = strtotime(date('Y-m-01', $timestamp));
+            // Wochentag des ersten Tags (1-7)
+            $firstDayWeekday = (int)date('N', $firstDayOfMonth);
+            
+            // Tage bis zum ersten Donnerstag
+            $daysToFirstThursday = (4 - $firstDayWeekday + 7) % 7;
+            // Datum des ersten Donnerstags
+            $firstThursday = $firstDayOfMonth + $daysToFirstThursday * 86400;
+            // Datum des dritten Donnerstags
+            $thirdThursday = $firstThursday + 14 * 86400;
+            $thirdThursdayDay = (int)date('j', $thirdThursday);
+            
+            $this->assertEquals($thirdThursdayDay, $dayOfMonth, 
+                "Das Event am {$dayOfMonth}. im {$monthName} sollte am dritten Donnerstag ({$thirdThursdayDay}.) stattfinden");
+        }
+    }
 }

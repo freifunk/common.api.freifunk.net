@@ -1086,6 +1086,27 @@ class ICal
                                         . gmdate('F Y H:i:s', $monthRecurringTimestamp);
                                 }
                                 $lastDayTimestamp = strtotime($lastDayDesc);
+                                
+                                // Bei BYSETPOS nur den korrekten Tag akzeptieren
+                                if (isset($rrules['BYSETPOS'])) {
+                                    // Berechne den genauen Tag für diesen Monat
+                                    $currentMonth = date('F Y', $monthRecurringTimestamp);
+                                    $firstDayOfMonth = strtotime('first day of ' . $currentMonth);
+                                    $firstWeekdayOfMonth = date('w', $firstDayOfMonth);
+                                    
+                                    // Berechne den Tag des ersten vorkommenden Wochentags
+                                    $weekdayNum = array('SU' => 0, 'MO' => 1, 'TU' => 2, 'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6);
+                                    $dayDiff = ($weekdayNum[$weekday] - $firstWeekdayOfMonth + 7) % 7;
+                                    $firstSpecificWeekday = $firstDayOfMonth + $dayDiff * 86400;
+                                    
+                                    // Berechne den exakten Tag für den n-ten Wochentag (BYSETPOS)
+                                    $targetDayTimestamp = $firstSpecificWeekday + ($dayNumber - 1) * 7 * 86400;
+                                    $targetDay = date('j', $targetDayTimestamp);
+                                    
+                                    // Setze den Startzeitstempel genau auf diesen Tag
+                                    $eventStartTimestamp = strtotime(date('Y-m-', $monthRecurringTimestamp) . $targetDay . date(' H:i:s', $eventStartTimestamp));
+                                    $lastDayTimestamp = $eventStartTimestamp; // Nur ein Tag erlaubt
+                                }
 
                                 do {
                                     // Prevent 5th day of a month from showing up on the next month

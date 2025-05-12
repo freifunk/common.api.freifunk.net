@@ -22,4 +22,38 @@ RRULE:FREQ=WEEKLY;UNTIL=20240601T140000Z;BYDAY=MO,WE,FR
 DESCRIPTION:This event repeats weekly on Monday, Wednesday, Friday until June 1
 LOCATION:Another Test Location
 END:VEVENT
+BEGIN:VEVENT
+CREATED:20250511T190025Z
+LAST-MODIFIED:20250511T190025Z
+DTSTAMP:20250511T190025Z
+UID:708f8dce-c520-445b-95f1-7773138fb4d3
+SUMMARY:Neander-Stammtisch-Freifunk
+STATUS:CONFIRMED
+RRULE:FREQ=MONTHLY;BYDAY=TH;BYSETPOS=3;UNTIL=20260510T220000Z
+CATEGORIES:Treffen
+X-MOZ-LASTACK:20230926T205335Z
+DTSTART;TZID=Europe/Berlin:20250515T190000
+DTEND;TZID=Europe/Berlin:20250515T220000
+SEQUENCE:0
+LOCATION:Mettmanner Hof\, Breite Str. 1\, Mettmann
+DESCRIPTION:Freifunk-Stammtisch jeden dritten Donnerstag\, 19:00 Uhr im Met
+ tmanner Hof\, Breite Str. 1\, 40822 Mettmann\nhttps://www.mettmanner-hof.d
+ e\nJeder der sich für Freifunk interessiert\, sich informieren will oder
+ Fragen hat ist herzlich willkommen.\nWenn Du neu bei Freifunk bist\, berei
+ ts einen Router einrichten möchtest oder einfach nur mehr über das Proje
+ kt erfahren willst\, komm' einfach zu einem persönlichen Gespräch ab 19:
+ 00 Uhr vorbei. Wir freuen uns auf deinen Besuch!
+COLOR:orchid
+TRANSP:TRANSPARENT
+X-MOZ-SNOOZE-TIME-1695315600000000:20230926T205835Z
+X-MOZ-GENERATION:1
+RELATED-TO;RELTYPE=SIBLING:c2d9f903-a78b-4408-aa31-a4cfe3aab3ec
+RELATED-TO;RELTYPE=SIBLING:6dc10467-3898-48d1-8a54-6eac25c2d86a
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT15M
+DESCRIPTION:Mozilla Standardbeschreibung
+SUMMARY:Neander-Stammtisch-Freifunk
+END:VALARM
+END:VEVENT
 END:VCALENDAR
