@@ -947,98 +947,118 @@ class ICal
     }
 
     /**
-     * Returns a sorted array of the events in a given range,
+     * Returns a sorted array of events in a given date range,
      * or false if no events exist in the range.
      *
-     * Events will be returned if the start or end date is contained within the
-     * range (inclusive), or if the event starts before and end after the range.
-     *
-     * If a start date is not specified or of a valid format, then the start
-     * of the range will default to the current time and date of the server.
-     *
-     * If an end date is not specified or of a valid format, the the end of
-     * the range will default to the current time and date of the server,
-     * plus 20 years.
-     *
-     * Note that this function makes use of UNIX timestamps. This might be a
-     * problem for events on, during, or after January the 29th, 2038.
-     * See http://en.wikipedia.org/wiki/Unix_time#Representing_the_number
-     *
-     * @param  string $rangeStart Start date of the search range.
-     * @param  string $rangeEnd   End date of the search range.
+     * @param  string $rangeStart Start date in YYYY-MM-DD format
+     * @param  string $rangeEnd End date in YYYY-MM-DD format
      * @return array of EventObjects
      */
     public function eventsFromRange($rangeStart = false, $rangeEnd = false, $setCache = false)
     {
-        if ($this->useCache) {
-            $events = $this->cache_get("filtered");
+        // Einzigartiger Cache-Schlüssel basierend auf den Parametern
+        $filterCacheKey = md5('range_' . (string)$rangeStart . '_' . (string)$rangeEnd);
+        $filterCacheFile = self::TMP_PATH . $this->calFilename . "_filter_" . $filterCacheKey;
+        
+        // Prüfe, ob eine gecachte Filterung existiert und gültig ist
+        if (file_exists($filterCacheFile) && (!$this->absoluteCalFilename || 
+            filemtime($filterCacheFile) >= filemtime($this->absoluteCalFilename))) {
+            @include $filterCacheFile;
+            if (isset($filteredEvents) && is_array($filteredEvents)) {
+                return $filteredEvents;
+            }
         }
-        if (!$events) {
+        
+        // Nehme gecachte Events, wenn verfügbar
+        if ($this->useCache) {
+            $events = $this->cache_get("processed");
+        }
+        
+        // Ansonsten lade und sortiere Events
+        if (!isset($events) || !$events) {
             $events = $this->sortEventsWithOrder($this->events(), SORT_ASC);
         }
 
-
+        // Früher Ausstieg, wenn keine Events vorhanden
         if (empty($events)) {
             return array();
         }
 
+        // Optimierter Array für die Ergebnisse
         $extendedEvents = array();
-
+        
+        // Konvertiere Datumsstrings zu Timestamps einmalig 
+        $rangeStartTs = false;
+        $rangeEndTs = false;
+        
         if ($rangeStart) {
             try {
                 $rangeStart = new \DateTime($rangeStart);
+                $rangeStartTs = $rangeStart->getTimestamp();
             } catch (\Exception $e) {
-                // Keine Fehlermeldungen mehr ausgeben
-                $rangeStart = false;
+                // Silent fail, use false
             }
         }
-        if (!$rangeStart) {
+        if (!$rangeStartTs) {
             $rangeStart = new \DateTime();
+            $rangeStartTs = $rangeStart->getTimestamp();
         }
 
         if ($rangeEnd) {
             try {
                 $rangeEnd = new \DateTime($rangeEnd);
+                $rangeEndTs = $rangeEnd->getTimestamp();
             } catch (\Exception $e) {
-                // Keine Fehlermeldungen mehr ausgeben
-                $rangeEnd = false;
+                // Silent fail, use false
             }
         }
-        if (!$rangeEnd) {
+        if (!$rangeEndTs) {
             $rangeEnd = new \DateTime();
-            $rangeEnd->modify('+20 years');
+            $rangeEnd->modify('+6 months'); // Standard: 6 Monate
+            $rangeEndTs = $rangeEnd->getTimestamp();
         }
 
-        // If start and end are identical and are dates with no times...
-        if ($rangeEnd->format('His') == 0 && $rangeStart->getTimestamp() == $rangeEnd->getTimestamp()) {
+        // Wenn Start und Ende identisch sind und es sich um Datumsangaben ohne Zeiten handelt...
+        if ($rangeEnd->format('His') == 0 && $rangeStartTs == $rangeEndTs) {
             $rangeEnd->modify('+1 day');
+            $rangeEndTs = $rangeEnd->getTimestamp();
         }
-
-        $rangeStart = $rangeStart->getTimestamp();
-        $rangeEnd   = $rangeEnd->getTimestamp();
-
+        
+        // Optimierte Schleife mit frühen Ausstiegsmöglichkeiten
         foreach ($events as $anEvent) {
+            // Schneller Zugriff auf Start- und Endzeitstempel
             $eventStart = $anEvent->dtstart_array[2];
-            $eventEnd   = (isset($anEvent->dtend_array[2])) ? $anEvent->dtend_array[2] : null;
-
-            if (($eventStart >= $rangeStart && $eventStart < $rangeEnd)         // Event start date contained in the range
-                || ($eventEnd !== null
-                    && (
-                        ($eventEnd > $rangeStart && $eventEnd <= $rangeEnd)     // Event end date contained in the range
-                        || ($eventStart < $rangeStart && $eventEnd > $rangeEnd) // Event starts before and finishes after range
-                    )
-                )
-            ) {
+            
+            // Wenn das Event nach dem Enddatum beginnt, können wir abbrechen (da die Events sortiert sind)
+            if ($eventStart > $rangeEndTs) {
+                break;
+            }
+            
+            // Wenn das Event innerhalb des Bereichs beginnt, hinzufügen
+            if ($eventStart >= $rangeStartTs && $eventStart < $rangeEndTs) {
+                $extendedEvents[] = $anEvent;
+                continue;
+            }
+            
+            // Prüfe End-Datum nur für Events, die außerhalb des Bereichs beginnen
+            $eventEnd = isset($anEvent->dtend_array[2]) ? $anEvent->dtend_array[2] : null;
+            
+            // Wenn das Event-Ende im Bereich liegt oder das Event den gesamten Bereich umfasst
+            if ($eventEnd !== null && (
+                ($eventEnd > $rangeStartTs && $eventEnd <= $rangeEndTs) || 
+                ($eventStart < $rangeStartTs && $eventEnd > $rangeEndTs)
+            )) {
                 $extendedEvents[] = $anEvent;
             }
         }
 
-        if (empty($extendedEvents)) {
-            return array();
+        // Cache die gefilterten Ergebnisse
+        if ($this->useCache || $setCache) {
+            $filteredEvents = $extendedEvents;
+            $content = '<?php $filteredEvents = ' . var_export($filteredEvents, true) . ';';
+            file_put_contents($filterCacheFile, $content, LOCK_EX);
         }
-        if ($this->useCache && $setCache) {
-            $this->cache_set("filtered", $extendedEvents);
-        }
+        
         return $extendedEvents;
     }
 

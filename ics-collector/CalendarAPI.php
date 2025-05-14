@@ -152,6 +152,16 @@ class CalendarAPI {
         }
         
         /**
+         * Memory cleanup function to help with large datasets
+         */
+        protected function cleanupMemory(): void
+        {
+            if (function_exists('gc_collect_cycles')) {
+                gc_collect_cycles();
+            }
+        }
+        
+        /**
          * Process the API request
          */
         public function processRequest(): void {
@@ -225,6 +235,9 @@ class CalendarAPI {
                 
                 // Validate and ensure ICS file integrity before processing
                 $this->validateAndRepairIcsFile('data/ffMerged.ics');
+                
+                // Aufräumen nach der Validierung
+                $this->cleanupMemory();
                 
                 // Hier keine expliziten Output-Buffer-Operationen mehr, 
                 // das wird in den Output-Methoden erledigt
@@ -311,6 +324,29 @@ class CalendarAPI {
          * Process the calendar data and output the response
          */
         protected function processCalendar(): void {
+            // Cache-Schlüssel basierend auf den Anfrageparametern generieren
+            $cacheKey = md5(json_encode($this->parameters));
+            $cacheFile = sys_get_temp_dir() . '/ff_calendar_' . $cacheKey . '.cache';
+            $cacheLifetime = 3600; // 1 Stunde Cache-Lebensdauer (in Sekunden)
+            
+            // Prüfe, ob ein gültiger Cache existiert
+            if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheLifetime)) {
+                $cachedData = file_get_contents($cacheFile);
+                if ($cachedData) {
+                    $cachedResult = unserialize($cachedData);
+                    if ($cachedResult) {
+                        // HTTP-Header setzen
+                        header('Content-type: ' . $cachedResult['contentType'] . '; charset=UTF-8');
+                        header('Access-Control-Allow-Origin: *');
+                        header('X-Cache: HIT');
+                        
+                        // Ausgabe aus dem Cache
+                        echo $cachedResult['data'];
+                        exit;
+                    }
+                }
+            }
+            
             // Debugging-Ausgaben unterdrücken
             $oldErrorReporting = error_reporting();
             error_reporting(E_ERROR | E_PARSE); // Nur schwerwiegende Fehler anzeigen
@@ -400,7 +436,7 @@ class CalendarAPI {
                 foreach ($events as $event) {
                     // Prüfe, ob der Event in den erlaubten Quellen ist
                     if ($hasAllSource || 
-                        (isset($event->xWrSource) && isset($allowedSources[$event->xWrSource]))) {
+                       (isset($event->xWrSource) && isset($allowedSources[$event->xWrSource]))) {
                         $filteredEvents[] = $event;
                     }
                 }
@@ -420,12 +456,31 @@ class CalendarAPI {
                 // Ursprüngliche Fehlerbehandlung wiederherstellen
                 error_reporting($oldErrorReporting);
                 
-                // Ausgabe basierend auf dem Format
+                // Ergebnisdaten vorbereiten für Cache und Ausgabe
+                $result = [];
+                
+                // Ausgabe erzeugen und ins Cache schreiben
+                ob_start();
                 if ($this->parameters['format'] === 'json') {
-                    $this->outputJson($events);
+                    $result['contentType'] = 'application/json';
+                    $this->outputJsonForCache($events, $result);
                 } else {
-                    $this->outputIcs($parsedIcs, $events);
+                    $result['contentType'] = 'text/calendar';
+                    $this->outputIcsForCache($parsedIcs, $events, $result);
                 }
+                $result['data'] = ob_get_contents();
+                ob_end_clean();
+                
+                // In Cache-Datei speichern
+                file_put_contents($cacheFile, serialize($result), LOCK_EX);
+                
+                // Ergebnis ausgeben
+                header('Content-type: ' . $result['contentType'] . '; charset=UTF-8');
+                header('Access-Control-Allow-Origin: *');
+                header('X-Cache: MISS');
+                echo $result['data'];
+                exit;
+                
             } catch (\Exception $e) {
                 // Ursprüngliche Fehlerbehandlung wiederherstellen
                 error_reporting($oldErrorReporting);
@@ -434,16 +489,12 @@ class CalendarAPI {
         }
         
         /**
-         * Output JSON response
+         * Output JSON response for cache
          * 
          * @param array<EventObject> $events Array of EventObject instances
+         * @param array &$result Reference to result array for cache
          */
-        protected function outputJson(array $events): void {
-            // Stelle sicher, dass bisher keine Ausgabe erfolgt ist
-            if (ob_get_length() > 0) {
-                ob_clean();
-            }
-            
+        protected function outputJsonForCache(array $events, array &$result): void {
             $jsonResult = [];
             foreach ($events as $event) {
                 $selectedEvent = [];
@@ -459,34 +510,18 @@ class CalendarAPI {
                 $this->throwAPIError('No result found');
             }
             
-            // HTTP-Header setzen
-            header('Content-type: application/json; charset=UTF-8');
-            header('Access-Control-Allow-Origin: *');
-            
-            // Nur eine einzige Ausgabe machen
             echo json_encode($jsonResult);
-            exit; // Beenden, um weitere Ausgaben zu verhindern
         }
         
         /**
-         * Output ICS response
+         * Output ICS response for cache
          * 
          * @param ICal $parsedIcs The parsed ICal object
          * @param array<EventObject> $events Array of EventObject instances
+         * @param array &$result Reference to result array for cache
          */
-        protected function outputIcs(ICal $parsedIcs, array $events): void {
-            // Stelle sicher, dass bisher keine Ausgabe erfolgt ist
-            if (ob_get_length() > 0) {
-                ob_clean();
-            }
-            
-            // HTTP-Header setzen
-            header('Content-type: text/calendar; charset=UTF-8');
-            header('Access-Control-Allow-Origin: *');
-            
-            // Nur eine einzige Ausgabe machen
+        protected function outputIcsForCache(ICal $parsedIcs, array $events, array &$result): void {
             echo $this->toString($parsedIcs, $events);
-            exit; // Beenden, um weitere Ausgaben zu verhindern
         }
         
         /**

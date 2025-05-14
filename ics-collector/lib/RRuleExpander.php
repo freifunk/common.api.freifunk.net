@@ -36,8 +36,25 @@ class RRuleExpander implements RecurrenceExpanderInterface
      */
     public function expandRecurringEvent(array $event, ?string $rangeStart = null, ?string $rangeEnd = null, string $defaultTimezone = 'UTC'): array
     {
+        // Schnelle Rückgabe, wenn keine RRULE vorhanden
         if (!$this->isRecurringEvent($event)) {
-            return [$event]; // Nicht wiederkehrendes Event wird unverändert zurückgegeben
+            return [$event];
+        }
+        
+        // Cache-Schlüssel für wiederkehrende Events erstellen
+        $cacheKey = md5($event['UID'] . $event['DTSTART'] . $event['RRULE'] . $rangeStart . $rangeEnd);
+        $cacheFile = sys_get_temp_dir() . '/rrule_' . $cacheKey . '.cache';
+        $cacheLifetime = 86400; // 24 Stunden Cache für wiederkehrende Events
+        
+        // Prüfe, ob ein gültiger Cache existiert
+        if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheLifetime)) {
+            $cachedData = file_get_contents($cacheFile);
+            if ($cachedData) {
+                $expandedEvents = unserialize($cachedData);
+                if (is_array($expandedEvents) && !empty($expandedEvents)) {
+                    return $expandedEvents;
+                }
+            }
         }
 
         // Hole die Zeitzone aus dem Event oder verwende den Default
@@ -46,8 +63,16 @@ class RRuleExpander implements RecurrenceExpanderInterface
             $timeZone = $event['DTSTART_array'][0]['TZID'];
         }
 
+        // Begrenze die maximale Anzahl von zu generierenden Events (Performanceschutz)
+        $maxOccurrences = 52; // Standardmäßig maximal 52 Wiederholungen (z.B. für ein Jahr bei wöchentlichen Events)
+        
         // Parse die RRULE aus dem Event
         $rruleOptions = $this->parseRruleString($event['RRULE']);
+        
+        // Prüfe auf COUNT-Parameter in RRULE (begrenzt Anzahl der Wiederholungen)
+        if (isset($rruleOptions['COUNT'])) {
+            $maxOccurrences = min((int)$rruleOptions['COUNT'], $maxOccurrences);
+        }
         
         // Hole das Startdatum für das wiederkehrende Event
         $dtstart = $event['DTSTART_array'][1];
@@ -66,18 +91,27 @@ class RRuleExpander implements RecurrenceExpanderInterface
         
         if ($rangeEnd) {
             $to = $this->parseDateTimeString($rangeEnd, $timeZone);
+        } else {
+            // Wenn kein Enddatum angegeben, setze ein vernünftiges Maximum
+            // (6 Monate ab jetzt oder vom Startdatum, falls in der Zukunft)
+            $now = new DateTime('now', new DateTimeZone($timeZone));
+            $maxEnd = clone ($startDateTime > $now ? $startDateTime : $now);
+            $maxEnd->modify('+6 months');
+            $to = $maxEnd;
         }
 
         try {
-            // Erstelle RRule-Objekt
+            // Erstelle RRule-Objekt mit Optimierungen
             $rule = new RRule($rruleOptions);
             
-            // Hole alle Vorkommen im angegebenen Zeitbereich
+            // Hole alle Vorkommen im angegebenen Zeitbereich mit Limit
             $occurrences = [];
             if ($from !== null && $to !== null) {
-                $occurrences = $rule->getOccurrencesBetween($from, $to);
+                // Begrenze die Anzahl der zurückgegebenen Vorkommen
+                $occurrences = array_slice($rule->getOccurrencesBetween($from, $to), 0, $maxOccurrences);
             } else {
-                $occurrences = $rule->getOccurrences();
+                // Begrenze die Anzahl der zurückgegebenen Vorkommen
+                $occurrences = array_slice($rule->getOccurrences(), 0, $maxOccurrences);
             }
             
             // Original-Event (ohne RRULE) zum Ergebnis hinzufügen
@@ -88,35 +122,29 @@ class RRuleExpander implements RecurrenceExpanderInterface
             // Eventdauer berechnen
             $duration = $this->calculateEventDuration($event);
             
-            // Prüfe, ob wir ein Original-Event haben und es innerhalb des Bereichs liegt
-            $originalIncluded = false;
-            $originalDateTime = clone $startDateTime;
+            // Verwende präallozierten Array für bessere Performance
+            $expandedEvents = array_fill(0, count($occurrences), null);
+            $eventCount = 0;
             
-            // Für jedes Vorkommen ein neues Event erstellen
+            // Optimierte Schleife ohne unnötige Checks bei jeder Iteration
             foreach ($occurrences as $occurrence) {
-                // Prüfe, ob dieses Vorkommen der Originalzeit entspricht
-                $isSameAsOriginal = $this->isSameDateTime($occurrence, $originalDateTime);
-                
-                if ($isSameAsOriginal) {
-                    // Wenn es das Original ist, füge das Original-Event hinzu (aber nur einmal)
-                    if (!$originalIncluded) {
-                        $expandedEvents[] = $originalEvent;
-                        $originalIncluded = true;
-                    }
-                } else {
-                    // Füge ein neues Event für diese Wiederholung hinzu
-                    $newEvent = $this->createEventOccurrence($event, $occurrence, $duration);
-                    $expandedEvents[] = $newEvent;
-                }
+                // Erstellte ein neues Event für diese Wiederholung
+                $newEvent = $this->createEventOccurrence($event, $occurrence, $duration);
+                $expandedEvents[$eventCount++] = $newEvent;
             }
             
-            // Wenn kein Original hinzugefügt wurde (weil es außerhalb des Bereichs liegt),
-            // aber es Wiederholungen gibt, füge das Original hinzu
-            if (!$originalIncluded && empty($expandedEvents) && 
-                ($from === null || $startDateTime >= $from) && 
-                ($to === null || $startDateTime <= $to)) {
+            // Entferne nicht verwendete Array-Elemente
+            if ($eventCount < count($expandedEvents)) {
+                $expandedEvents = array_slice($expandedEvents, 0, $eventCount);
+            }
+            
+            // Wenn keine Events erzeugt wurden, füge das Original hinzu
+            if (empty($expandedEvents)) {
                 $expandedEvents[] = $originalEvent;
             }
+            
+            // Speichere die expandierten Events im Cache
+            file_put_contents($cacheFile, serialize($expandedEvents), LOCK_EX);
             
             return $expandedEvents;
         } catch (\Exception $e) {
