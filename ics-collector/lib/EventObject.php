@@ -103,11 +103,14 @@ class EventObject
             'RRULE'           => $this->rrule ?? '',
         ];
         
-        // Erst null-Werte durch leere Strings ersetzen, dann trimmen
+        // Erst null-Werte filtern, dann trimmen (nur Strings)
         $standardFieldsTrimmed = [];
         foreach ($standardFields as $key => $value) {
-            if (is_string($value) && trim($value) !== '') {
-                $standardFieldsTrimmed[$key] = trim($value);
+            if (is_string($value)) {
+                $trimmed = trim($value);
+                if ($trimmed !== '') {
+                    $standardFieldsTrimmed[$key] = $trimmed;
+                }
             }
         }
         $data = array_merge($data, $standardFieldsTrimmed);
@@ -173,7 +176,7 @@ class EventObject
             'ATTENDEE(S)'   => $this->attendee ?? '',
         ];
 
-        // Erst null-Werte durch leere Strings ersetzen, dann trimmen
+        // Verarbeite nur gültige Strings
         $data = array_map(function($value) {
             // Nur trimmen, wenn es ein String ist, sonst unverändert zurückgeben
             if (is_string($value)) {

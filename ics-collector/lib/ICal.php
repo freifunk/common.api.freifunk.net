@@ -258,7 +258,7 @@ class ICal
             // Überspringe die Community-Informationen, die nicht Teil des iCalendar-Formats sind
             if (!is_array($value) && strpos($key, 'X-WR-') === 0 || 
                 in_array($key, ['VERSION', 'PRODID', 'X-WR-TIMEZONE', 'X-WR-CALNAME', 'X-WR-CALDESC'])) {
-                $str .= $key . ":" . $value . "\r\n";
+            $str .= $key . ":" . $value . "\r\n";
             }
         }
         return $str;

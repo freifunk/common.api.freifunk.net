@@ -316,39 +316,65 @@ class CalendarAPI {
             error_reporting(E_ERROR | E_PARSE); // Nur schwerwiegende Fehler anzeigen
             
             try {
-                // Lese die ICS-Datei und bereinige den Inhalt
+                // Lese und verarbeite die ICS-Datei effizient
                 $icsFile = 'data/ffMerged.ics';
                 $icsContent = file_get_contents($icsFile);
-                $cleanedContent = ICal::cleanIcsContent($icsContent);
                 
-                // Temporäre Datei erstellen, wenn der Inhalt bereinigt wurde
-                $tempFile = $icsFile;
-                if ($icsContent !== $cleanedContent) {
-                    $tempFile = tempnam(sys_get_temp_dir(), 'ics_');
-                    file_put_contents($tempFile, $cleanedContent);
+                // Nutze direkten String-Input anstelle von temporären Dateien, wenn möglich
+                $useStringInput = method_exists('ICal\ICal', 'initString');
+                
+                if (!$useStringInput) {
+                    // Fallback zur alten Methode mit Temp-Dateien
+                    $cleanedContent = ICal::cleanIcsContent($icsContent);
+                    $tempFile = $icsFile;
+                    if ($icsContent !== $cleanedContent) {
+                        $tempFile = tempnam(sys_get_temp_dir(), 'ics_');
+                        file_put_contents($tempFile, $cleanedContent);
+                    }
+                } else {
+                    // Bereinige den Inhalt ohne temporäre Datei
+                    $cleanedContent = ICal::cleanIcsContent($icsContent);
+                    $tempFile = null;
                 }
                 
-                // Verarbeite wiederkehrende Ereignisse (true als 4. Parameter)
-                $parsedIcs = new ICal($tempFile, 'MO', true, true);
-                
-                // Temporäre Datei löschen, wenn sie erstellt wurde
-                if ($tempFile !== $icsFile) {
-                    unlink($tempFile);
+                // ICal-Objekt erstellen, bevorzuge String-Input statt Dateien
+                if ($useStringInput) {
+                    $parsedIcs = new ICal(false, 'MO', true, true);
+                    $parsedIcs->initString($cleanedContent);
+                } else {
+                    // Verarbeite wiederkehrende Ereignisse (true als 4. Parameter)
+                    $parsedIcs = new ICal($tempFile, 'MO', true, true);
+                    
+                    // Temporäre Datei löschen, wenn sie erstellt wurde
+                    if ($tempFile !== null && $tempFile !== $icsFile) {
+                        unlink($tempFile);
+                    }
                 }
                 
+                // Effiziente Parameter-Verarbeitung mit Standardwerten
                 $from = false;
                 $to = false;
                 
-                if (array_key_exists('from', $this->parameters) && strpos($this->parameters['from'], "weeks") !== false) {
-                    $from = "now " . $this->parameters['from'];
-                } elseif (array_key_exists('from', $this->parameters)){
-                    $from = $this->parameters['from'];
+                // Extrahiere häufig verwendete Parameter einmalig
+                $hasFrom = array_key_exists('from', $this->parameters);
+                $hasTo = array_key_exists('to', $this->parameters);
+                
+                if ($hasFrom) {
+                    $fromValue = $this->parameters['from'];
+                    if (strpos($fromValue, "weeks") !== false) {
+                        $from = "now " . $fromValue;
+                    } else {
+                        $from = $fromValue;
+                    }
                 }
                 
-                if (array_key_exists('to', $this->parameters) && strpos($this->parameters['to'], "weeks") !== false) {
-                    $to = "now " . $this->parameters['to'];
-                } elseif (array_key_exists('to', $this->parameters)){
-                    $to = $this->parameters['to'];
+                if ($hasTo) {
+                    $toValue = $this->parameters['to'];
+                    if (strpos($toValue, "weeks") !== false) {
+                        $to = "now " . $toValue;
+                    } else {
+                        $to = $toValue;
+                    }
                 } else {
                     // Standardwert: 6 Monate in die Zukunft
                     $to = date('Y-m-d', strtotime('+6 months'));
@@ -364,19 +390,31 @@ class CalendarAPI {
                     $events = $parsedIcs->events();
                 }
                 
-                foreach ($events as $key => $value) {
-                    // this filter is to skip all events that don't match the criteria
-                    // and shouldn't be added to the output result
-                    if (!in_array('all', $this->sources, true)) {
-                        if ($value->xWrSource === null || !in_array($value->xWrSource, $this->sources, true)) {
-                            unset($events[$key]);
-                            continue;
-                        }
+                // Optimiere Event-Filterung
+                $hasAllSource = in_array('all', $this->sources, true);
+                $filteredEvents = [];
+                
+                // Schnellere Quellprüfung durch Indexierung der erlaubten Quellen
+                $allowedSources = array_flip($this->sources);
+                
+                foreach ($events as $event) {
+                    // Prüfe, ob der Event in den erlaubten Quellen ist
+                    if ($hasAllSource || 
+                        (isset($event->xWrSource) && isset($allowedSources[$event->xWrSource]))) {
+                        $filteredEvents[] = $event;
                     }
                 }
-
-                if (array_key_exists('limit', $this->parameters) && count($events) > (int)$this->parameters['limit']) {
-                    $events = array_slice($events, 0, (int)$this->parameters['limit'], true);
+                
+                // Ersetze die Events mit gefilterten
+                $events = $filteredEvents;
+                
+                // Begrenze die Anzahl der Events, wenn nötig
+                $hasLimit = array_key_exists('limit', $this->parameters);
+                if ($hasLimit) {
+                    $limit = (int)$this->parameters['limit'];
+                    if (count($events) > $limit) {
+                        $events = array_slice($events, 0, $limit);
+                    }
                 }
                 
                 // Ursprüngliche Fehlerbehandlung wiederherstellen
