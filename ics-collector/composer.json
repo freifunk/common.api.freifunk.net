@@ -6,11 +6,7 @@
     "autoload": {
         "psr-4": {
             "ICal\\": "lib/"
-        },
-        "files": [
-            "CalendarAPI.php",
-            "ics-collector.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
@@ -19,7 +15,8 @@
     },
     "require": {
         "php": ">=8.3",
-        "rlanvin/php-rrule": "^2.6"
+        "rlanvin/php-rrule": "^2.6",
+        "eluceo/ical": "^2.14"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.0"

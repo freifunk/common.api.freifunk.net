@@ -84,26 +84,33 @@ class EventObject
         
         // Standardfelder
         $standardFields = [
-            'SUMMARY'         => $this->summary,
-            'DURATION'        => $this->duration,
-            'DTSTAMP'         => $this->dtstamp,
-            'UID'             => $this->uid,
-            'CREATED'         => $this->created,
-            'LAST-MODIFIED'   => $this->lastmodified,
-            'DESCRIPTION'     => $this->description,
-            'LOCATION'        => $this->location,
-            'SEQUENCE'        => $this->sequence,
-            'STATUS'          => $this->status,
-            'TRANSP'          => $this->transp,
-            'ORGANISER'       => $this->organizer,
-            'URL'             => $this->url,
-            'CATEGORIES'      => $this->categories,
-            'X-WR-SOURCE'     => $this->xWrSource,
-            'X-WR-SOURCE-URL' => $this->xWrSourceUrl,
-            'RRULE'           => $this->rrule,
+            'SUMMARY'         => $this->summary ?? '',
+            'DURATION'        => $this->duration ?? '',
+            'DTSTAMP'         => $this->dtstamp ?? '',
+            'UID'             => $this->uid ?? '',
+            'CREATED'         => $this->created ?? '',
+            'LAST-MODIFIED'   => $this->lastmodified ?? '',
+            'DESCRIPTION'     => $this->description ?? '',
+            'LOCATION'        => $this->location ?? '',
+            'SEQUENCE'        => $this->sequence ?? '',
+            'STATUS'          => $this->status ?? '',
+            'TRANSP'          => $this->transp ?? '',
+            'ORGANISER'       => $this->organizer ?? '',
+            'URL'             => $this->url ?? '',
+            'CATEGORIES'      => $this->categories ?? '',
+            'X-WR-SOURCE'     => $this->xWrSource ?? '',
+            'X-WR-SOURCE-URL' => $this->xWrSourceUrl ?? '',
+            'RRULE'           => $this->rrule ?? '',
         ];
         
-        $data = array_merge($data, array_filter(array_map('trim', $standardFields)));
+        // Erst null-Werte durch leere Strings ersetzen, dann trimmen
+        $standardFieldsTrimmed = [];
+        foreach ($standardFields as $key => $value) {
+            if (is_string($value) && trim($value) !== '') {
+                $standardFieldsTrimmed[$key] = trim($value);
+            }
+        }
+        $data = array_merge($data, $standardFieldsTrimmed);
         
         // Spezialbehandlung für Felder mit Zeitzone
         $output = "BEGIN:VEVENT".$crlf;
@@ -147,27 +154,35 @@ class EventObject
     public function printData(string $html = '<p>%s: %s</p>'): string
     {
         $data = [
-            'SUMMARY'       => $this->summary,
-            'DTSTART'       => $this->dtstart,
-            'DTEND'         => $this->dtend,
-            'DTSTART_TZ'    => $this->dtstart_tz,
-            'DTEND_TZ'      => $this->dtend_tz,
-            'DURATION'      => $this->duration,
-            'DTSTAMP'       => $this->dtstamp,
-            'UID'           => $this->uid,
-            'CREATED'       => $this->created,
-            'LAST-MODIFIED' => $this->lastmodified,
-            'DESCRIPTION'   => $this->description,
-            'LOCATION'      => $this->location,
-            'SEQUENCE'      => $this->sequence,
-            'STATUS'        => $this->status,
-            'TRANSP'        => $this->transp,
-            'ORGANISER'     => $this->organizer,
-            'ATTENDEE(S)'   => $this->attendee,
+            'SUMMARY'       => $this->summary ?? '',
+            'DTSTART'       => $this->dtstart ?? '',
+            'DTEND'         => $this->dtend ?? '',
+            'DTSTART_TZ'    => $this->dtstart_tz ?? '',
+            'DTEND_TZ'      => $this->dtend_tz ?? '',
+            'DURATION'      => $this->duration ?? '',
+            'DTSTAMP'       => $this->dtstamp ?? '',
+            'UID'           => $this->uid ?? '',
+            'CREATED'       => $this->created ?? '',
+            'LAST-MODIFIED' => $this->lastmodified ?? '',
+            'DESCRIPTION'   => $this->description ?? '',
+            'LOCATION'      => $this->location ?? '',
+            'SEQUENCE'      => $this->sequence ?? '',
+            'STATUS'        => $this->status ?? '',
+            'TRANSP'        => $this->transp ?? '',
+            'ORGANISER'     => $this->organizer ?? '',
+            'ATTENDEE(S)'   => $this->attendee ?? '',
         ];
 
-        $data   = array_map('trim', $data); // Trim all values
-        $data   = array_filter($data);      // Remove any blank values
+        // Erst null-Werte durch leere Strings ersetzen, dann trimmen
+        $data = array_map(function($value) {
+            // Nur trimmen, wenn es ein String ist, sonst unverändert zurückgeben
+            if (is_string($value)) {
+                return trim($value);
+            }
+            return $value;
+        }, $data);
+        
+        $data = array_filter($data);  // Remove any blank values
         $output = '';
 
         foreach ($data as $key => $value) {
@@ -175,5 +190,62 @@ class EventObject
         }
 
         return $output;
+    }
+
+    /**
+     * Fixes event data by setting default values for missing properties:
+     * - Sets DTEND to 1 hour after DTSTART if missing
+     */
+    public function fixEventData(): void
+    {
+        // Wenn DTEND und DURATION fehlen, setze DTEND auf DTSTART + 1 Stunde
+        if (!isset($this->dtend) && !isset($this->duration)) {
+            if (isset($this->dtstart_array)) {
+                // Kopiere das DTSTART_array in das DTEND_array und erhöhe Timestamp um 1 Stunde
+                $this->dtend_array = $this->dtstart_array;
+                $this->dtend_array[2] = $this->dtstart_array[2] + 3600; // +1 Stunde
+                
+                // Setze DTEND auf Basis von DTSTART mit +1 Stunde
+                $dtEnd = $this->dtstart;
+                
+                // Bei Datumsformaten mit T (Zeit)
+                if (strpos($dtEnd, 'T') !== false) {
+                    $format = strlen($dtEnd) > 13 ? 'Ymd\THis' : 'Ymd\THi'; // Mit oder ohne Sekunden
+                    $date = \DateTime::createFromFormat($format, $dtEnd);
+                    if ($date) {
+                        $date->modify('+1 hour');
+                        $this->dtend = $date->format($format);
+                    } else {
+                        // Fallback: String-Manipulation für andere Formate
+                        // Format: 20240101T120000
+                        $dateString = substr($dtEnd, 0, 8); // YYYYMMDD
+                        $timeString = substr($dtEnd, 9); // HHMMSS or HHMM
+                        
+                        if (strlen($timeString) >= 4) {
+                            $hours = intval(substr($timeString, 0, 2));
+                            $mins = substr($timeString, 2, 2);
+                            $secs = strlen($timeString) > 4 ? substr($timeString, 4) : '';
+                            
+                            $hours = ($hours + 1) % 24;
+                            $this->dtend = $dateString . 'T' . sprintf('%02d', $hours) . $mins . $secs;
+                        } else {
+                            // Wenn das Zeitformat nicht erkannt wird, füge einfach 1 Stunde als String hinzu
+                            $this->dtend = $dtEnd;
+                        }
+                    }
+                } else {
+                    // Wenn nur Datum ohne Zeit: +1 Tag
+                    $format = 'Ymd';
+                    $date = \DateTime::createFromFormat($format, $dtEnd);
+                    if ($date) {
+                        $date->modify('+1 day');
+                        $this->dtend = $date->format($format);
+                    } else {
+                        // Fallback: Einfach den gleichen Wert verwenden
+                        $this->dtend = $dtEnd;
+                    }
+                }
+            }
+        }
     }
 }

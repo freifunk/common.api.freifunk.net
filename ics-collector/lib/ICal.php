@@ -12,6 +12,16 @@
 
 namespace ICal;
 
+// Composer Autoloader einbinden, um externe Abhängigkeiten zu laden
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
+
+// Benötigte Klassen einbinden
+require_once __DIR__ . '/EventObject.php';
+require_once __DIR__ . '/RecurrenceExpanderInterface.php';
+require_once __DIR__ . '/RRuleExpander.php';
+
 use ICal\EventObject;
 use ICal\RecurrenceExpanderInterface;
 use ICal\RRuleExpander;
@@ -245,7 +255,11 @@ class ICal
     public function printVcalendarDataAsIcs() {
         $str = "";
         foreach ($this->cal['VCALENDAR'] as $key => $value) {
-            $str .= $key . ":" . $value . "\r\n";
+            // Überspringe die Community-Informationen, die nicht Teil des iCalendar-Formats sind
+            if (!is_array($value) && strpos($key, 'X-WR-') === 0 || 
+                in_array($key, ['VERSION', 'PRODID', 'X-WR-TIMEZONE', 'X-WR-CALNAME', 'X-WR-CALDESC'])) {
+                $str .= $key . ":" . $value . "\r\n";
+            }
         }
         return $str;
     }
@@ -549,7 +563,10 @@ class ICal
          */
         if (stripos($icalDate, 'TZID') === false) {
             $date = date_create($icalDate);
-		if (gettype($date) === "boolean") error_log($icalDate);
+            // Wenn das Datum ungültig ist, geben wir null zurück
+            if (!$date) {
+                return null;
+            }
             return date_timestamp_get($date);
         }
 
@@ -697,7 +714,12 @@ class ICal
                     if (isset($anEvent[$type . '_array'][0]['TZID'])) {
                         $date = 'TZID=' . $anEvent[$type . '_array'][0]['TZID'] . ':' . $date;
                     }
-			if (gettype($date) === "boolean"){print_r($anEvent);}
+                    
+                    // Überspringe ungültige Datumswerte
+                    if (gettype($date) === "boolean") {
+                        continue;
+                    }
+                    
                     $anEvent[$type . '_array'][2] = $this->iCalDateToUnixTimestamp($date);
                 }
             }
@@ -718,7 +740,7 @@ class ICal
 
     /**
      * Verarbeite wiederkehrende Events mit Hilfe des RecurrenceExpander
-     * 
+     *
      * @return bool true, wenn Events verarbeitet wurden, sonst false
      */
     public function processRecurrences()
@@ -727,7 +749,7 @@ class ICal
         if (!$this->processRecurrences || !isset($this->recurrenceExpander)) {
             return false;
         }
-        
+
         // Prüfe, ob Events vorhanden sind
         if (!isset($this->cal['VEVENT']) || empty($this->cal['VEVENT'])) {
             return false;
@@ -809,7 +831,6 @@ class ICal
     {
         $cachedEvents = $this->cache_get("processed");
         if ($cachedEvents) {
-            error_log("use cached events");
             return $cachedEvents;
         }
         $array = $this->cal;
@@ -818,7 +839,10 @@ class ICal
 
         if (!empty($array)) {
             foreach ($array as $event) {
-                $events[] = new EventObject($event);
+                $eventObj = new EventObject($event);
+                // Fehlende DTEND-Werte automatisch ergänzen
+                $eventObj->fixEventData();
+                $events[] = $eventObj;
             }
         }
         $this->cache_set("processed", $events);
@@ -964,7 +988,7 @@ class ICal
             try {
                 $rangeStart = new \DateTime($rangeStart);
             } catch (\Exception $e) {
-                error_log('ICal::eventsFromRange: Invalid date passed (' . $rangeStart . ')');
+                // Keine Fehlermeldungen mehr ausgeben
                 $rangeStart = false;
             }
         }
@@ -976,7 +1000,7 @@ class ICal
             try {
                 $rangeEnd = new \DateTime($rangeEnd);
             } catch (\Exception $e) {
-                error_log('ICal::eventsFromRange: Invalid date passed (' . $rangeEnd . ')');
+                // Keine Fehlermeldungen mehr ausgeben
                 $rangeEnd = false;
             }
         }
@@ -1158,5 +1182,24 @@ class ICal
 
         return $dayOrdinals[$dayNumber * -1];
     }
-
+    
+    /**
+     * Bereinigt den Inhalt einer ICS-Datei, indem alles nach END:VCALENDAR entfernt wird
+     *
+     * @param string $content Der Inhalt der ICS-Datei
+     * @return string Der bereinigte Inhalt
+     */
+    public static function cleanIcsContent(string $content): string
+    {
+        // Finde die Position von END:VCALENDAR
+        $pos = strpos($content, "END:VCALENDAR");
+        
+        // Wenn gefunden, schneide alles danach ab
+        if ($pos !== false) {
+            return substr($content, 0, $pos + 12); // 12 ist die Länge von "END:VCALENDAR"
+        }
+        
+        // Wenn nicht gefunden, gib den ursprünglichen Inhalt zurück
+        return $content;
+    }
 }

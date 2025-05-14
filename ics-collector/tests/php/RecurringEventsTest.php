@@ -34,12 +34,6 @@ class RecurringEventsTest extends TestCase
             return strpos($event->summary, 'Weekly Recurring Event') !== false;
         });
         $this->assertNotEmpty($weeklyEvents, 'Es sollten wöchentliche Events vorhanden sein');
-        
-        // Debug-Ausgabe für ein Event, um die Struktur zu sehen
-        if (!empty($events)) {
-            echo "Beispiel-Event-Struktur für erstes Event:\n";
-            print_r($events[0]);
-        }
     }
 
     public function testRecurringEventsWithTimezone()
@@ -119,13 +113,6 @@ class RecurringEventsTest extends TestCase
             return strpos($event->summary, 'Neander-Stammtisch-Freifunk') !== false;
         });
         
-        // Debugging-Ausgabe für alle gefundenen Events mit ihrer Zeit
-        echo "Gefundene Neander-Stammtisch-Events:\n";
-        foreach ($monthlyEvents as $key => $event) {
-            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->dtstart);
-            echo date('Y-m-d (D) H:i', $timestamp) . " - Event {$key}\n";
-        }
-        
         // Gruppiere Events nach Monat
         $eventsByMonth = [];
         foreach ($monthlyEvents as $event) {
@@ -142,11 +129,8 @@ class RecurringEventsTest extends TestCase
         // Prüfe, dass es genau 6 Events gibt (Mai bis Oktober 2025)
         $this->assertEquals(6, count($eventsByMonth), 'Es sollten genau 6 Monate mit Events sein');
         
-        // Zeige die Anzahl der Events pro Monat
-        echo "\nEvents pro Monat:\n";
+        // Für jeden Monat prüfen
         foreach ($eventsByMonth as $month => $monthEvents) {
-            echo "{$month}: " . count($monthEvents) . " Events\n";
-            
             // Wir erwarten nur ein Event pro Monat
             $this->assertEquals(1, count($monthEvents), "Für Monat {$month} sollte es nur ein Event geben");
         }
