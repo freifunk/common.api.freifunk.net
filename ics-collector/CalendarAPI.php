@@ -1,14 +1,14 @@
 <?php
-// Composer Autoloader einbinden
+// Include Composer Autoloader
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
-// Verhindern, dass PHP-Fehler in die Ausgabe gelangen
+// Prevent PHP errors from appearing in output
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Stelle sicher, dass keine Ausgabe erfolgt ist
+// Ensure no output has occurred yet
 if (ob_get_level() == 0) ob_start();
 
 require_once 'lib/EventObject.php';
@@ -23,6 +23,11 @@ use ICal\IcsValidator;
  * CalendarAPI class for handling iCal data and generating responses
  */
 class CalendarAPI {
+        /**
+         * Path to the merged ICS file
+         */
+        protected const ICS_MERGED_FILE = 'data/ffMerged.ics';
+        
         /**
          * Supported HTTP methods
          * @var array<string>
@@ -40,30 +45,7 @@ class CalendarAPI {
          * @var array<string, string>
          */
         protected array $defaultValues = [
-            'format' => 'json'
-        ];
-        
-        /**
-         * Ics properties of a VEVENT that will be converted & included in json result (if exist)
-         * $icsKey => [$jsonKey, $include]
-         * $icsKey : ics property name
-         * $jsonKey : json key name (null <=> copy ics property name as json key, lower case)
-         * $include : boolean indicating that if the field should be included by default in the result
-         * @var array<string, array{0: ?string, 1: bool}>
-         */
-        protected array $jsonEventFields = [
-            'dtstart' => ['start', true],
-            'dtend' => ['end', true],
-            'summary' => [null, true],
-            'description' => [null, true],
-            'dtstamp' => ['stamp', false],
-            'created' => [null, false],
-            'lastmodified' => [null, false],
-            'location' => [null, true],
-            'geo' => ['geolocation', false],
-            'xWrSource' => ['source', false],
-            'url' => [null, false],
-            'xWrSourceUrl' => ['sourceurl', false]
+            'format' => 'ics'
         ];
         
         /**
@@ -114,16 +96,7 @@ class CalendarAPI {
          */
         protected array $sources = [];
         
-        /**
-         * Whether the fields parameter exists
-         */
-        protected bool $fieldsParameterExists = false;
-        
-        /**
-         * Fields to include in the output
-         * @var array<string>
-         */
-        protected array $fields = [];
+
         
         /**
          * ICS-Validator instance
@@ -134,19 +107,6 @@ class CalendarAPI {
          * Constructor
          */
         public function __construct() {
-            // Prepare JSON event fields
-            foreach ($this->jsonEventFields as $key => &$value) {
-                if ($value[0] === null) {
-                    $value[0] = strtolower($key);
-                }
-            }
-            unset($value);
-            
-            // Initialize supported multiple values
-            $this->supportedMultipleValues = [
-                'fields' => array_map(fn($v) => $v[0], $this->jsonEventFields)
-            ];
-            
             // Initialize validator
             $this->validator = new IcsValidator();
         }
@@ -221,20 +181,9 @@ class CalendarAPI {
                 
                 // source can have multiple values, separated by comma
                 $this->sources = explode(',', $this->parameters['source']);
-
-                if (array_key_exists('fields', $this->parameters)) {
-                    // fields can have multiple values, separated by comma
-                    $this->fields = explode(',', $this->parameters['fields']);
-                    foreach ($this->fields as $field) {
-                        if (!in_array($field, $this->supportedMultipleValues['fields'], true)) {
-                            $this->throwAPIError('Field not supported : ' . $field);
-                        }
-                    }
-                    $this->fieldsParameterExists = true;
-                }
                 
                 // Validate and ensure ICS file integrity before processing
-                $this->validateAndRepairIcsFile('data/ffMerged.ics');
+                $this->validateAndRepairIcsFile(self::ICS_MERGED_FILE);
                 
                 // Aufräumen nach der Validierung
                 $this->cleanupMemory();
@@ -324,74 +273,50 @@ class CalendarAPI {
          * Process the calendar data and output the response
          */
         protected function processCalendar(): void {
-            // Cache-Schlüssel basierend auf den Anfrageparametern generieren
+            // Generate cache key based on request parameters
             $cacheKey = md5(json_encode($this->parameters));
             $cacheFile = sys_get_temp_dir() . '/ff_calendar_' . $cacheKey . '.cache';
-            $cacheLifetime = 3600; // 1 Stunde Cache-Lebensdauer (in Sekunden)
+            $cacheLifetime = 3600; // 1 hour cache lifetime (in seconds)
             
-            // Prüfe, ob ein gültiger Cache existiert
+            // Check if a valid cache exists
             if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheLifetime)) {
                 $cachedData = file_get_contents($cacheFile);
                 if ($cachedData) {
                     $cachedResult = unserialize($cachedData);
                     if ($cachedResult) {
-                        // HTTP-Header setzen
+                        // Set HTTP headers
                         header('Content-type: ' . $cachedResult['contentType'] . '; charset=UTF-8');
                         header('Access-Control-Allow-Origin: *');
                         header('X-Cache: HIT');
                         
-                        // Ausgabe aus dem Cache
+                        // Output from cache
                         echo $cachedResult['data'];
                         exit;
                     }
                 }
             }
             
-            // Debugging-Ausgaben unterdrücken
+            // Suppress debug output
             $oldErrorReporting = error_reporting();
-            error_reporting(E_ERROR | E_PARSE); // Nur schwerwiegende Fehler anzeigen
+            error_reporting(E_ERROR | E_PARSE); // Show only severe errors
             
             try {
-                // Lese und verarbeite die ICS-Datei effizient
-                $icsFile = 'data/ffMerged.ics';
+                // Read and process the ICS file efficiently
+                $icsFile = self::ICS_MERGED_FILE;
                 $icsContent = file_get_contents($icsFile);
                 
-                // Nutze direkten String-Input anstelle von temporären Dateien, wenn möglich
-                $useStringInput = method_exists('ICal\ICal', 'initString');
+                // Clean the content for processing
+                $cleanedContent = ICal::cleanIcsContent($icsContent);
                 
-                if (!$useStringInput) {
-                    // Fallback zur alten Methode mit Temp-Dateien
-                    $cleanedContent = ICal::cleanIcsContent($icsContent);
-                    $tempFile = $icsFile;
-                    if ($icsContent !== $cleanedContent) {
-                        $tempFile = tempnam(sys_get_temp_dir(), 'ics_');
-                        file_put_contents($tempFile, $cleanedContent);
-                    }
-                } else {
-                    // Bereinige den Inhalt ohne temporäre Datei
-                    $cleanedContent = ICal::cleanIcsContent($icsContent);
-                    $tempFile = null;
-                }
+                // Create ICal object with string input
+                $parsedIcs = new ICal(false, 'MO', true, true);
+                $parsedIcs->initString($cleanedContent);
                 
-                // ICal-Objekt erstellen, bevorzuge String-Input statt Dateien
-                if ($useStringInput) {
-                    $parsedIcs = new ICal(false, 'MO', true, true);
-                    $parsedIcs->initString($cleanedContent);
-                } else {
-                    // Verarbeite wiederkehrende Ereignisse (true als 4. Parameter)
-                    $parsedIcs = new ICal($tempFile, 'MO', true, true);
-                    
-                    // Temporäre Datei löschen, wenn sie erstellt wurde
-                    if ($tempFile !== null && $tempFile !== $icsFile) {
-                        unlink($tempFile);
-                    }
-                }
-                
-                // Effiziente Parameter-Verarbeitung mit Standardwerten
+                // Efficient parameter processing with default values
                 $from = false;
                 $to = false;
                 
-                // Extrahiere häufig verwendete Parameter einmalig
+                // Extract frequently used parameters only once
                 $hasFrom = array_key_exists('from', $this->parameters);
                 $hasTo = array_key_exists('to', $this->parameters);
                 
@@ -412,11 +337,11 @@ class CalendarAPI {
                         $to = $toValue;
                     }
                 } else {
-                    // Standardwert: 6 Monate in die Zukunft
+                    // Default value: 6 months into the future
                     $to = date('Y-m-d', strtotime('+6 months'));
                 }
                 
-                // Setze die Start- und Enddaten für die Verarbeitung von wiederkehrenden Ereignissen
+                // Set start and end dates for processing recurring events
                 $parsedIcs->startDate = $from;
                 $parsedIcs->endDate = $to;
                 
@@ -426,25 +351,25 @@ class CalendarAPI {
                     $events = $parsedIcs->events();
                 }
                 
-                // Optimiere Event-Filterung
+                // Optimize event filtering
                 $hasAllSource = in_array('all', $this->sources, true);
                 $filteredEvents = [];
                 
-                // Schnellere Quellprüfung durch Indexierung der erlaubten Quellen
+                // Faster source checking through indexing of allowed sources
                 $allowedSources = array_flip($this->sources);
                 
                 foreach ($events as $event) {
-                    // Prüfe, ob der Event in den erlaubten Quellen ist
+                    // Check if the event is in the allowed sources
                     if ($hasAllSource || 
                        (isset($event->xWrSource) && isset($allowedSources[$event->xWrSource]))) {
                         $filteredEvents[] = $event;
                     }
                 }
                 
-                // Ersetze die Events mit gefilterten
+                // Replace events with filtered ones
                 $events = $filteredEvents;
                 
-                // Begrenze die Anzahl der Events, wenn nötig
+                // Limit the number of events if necessary
                 $hasLimit = array_key_exists('limit', $this->parameters);
                 if ($hasLimit) {
                     $limit = (int)$this->parameters['limit'];
@@ -453,31 +378,35 @@ class CalendarAPI {
                     }
                 }
                 
-                // Ursprüngliche Fehlerbehandlung wiederherstellen
+                // Restore original error handling
                 error_reporting($oldErrorReporting);
                 
-                // Ergebnisdaten vorbereiten für Cache und Ausgabe
+                // Prepare result data for cache and output
                 $result = [];
                 
-                // Ausgabe erzeugen und ins Cache schreiben
+                // Generate output and write to cache
                 ob_start();
-                if ($this->parameters['format'] === 'json') {
-                    $result['contentType'] = 'application/json';
-                    $this->outputJsonForCache($events, $result);
-                } else {
-                    $result['contentType'] = 'text/calendar';
-                    $this->outputIcsForCache($parsedIcs, $events, $result);
-                }
+                
+                // Always output ICS format, regardless of requested format
+                $result['contentType'] = 'text/calendar';
+                $this->outputIcsForCache($parsedIcs, $events, $result);
+                
                 $result['data'] = ob_get_contents();
                 ob_end_clean();
                 
-                // In Cache-Datei speichern
+                // Save to cache file
                 file_put_contents($cacheFile, serialize($result), LOCK_EX);
                 
-                // Ergebnis ausgeben
+                // Output result
                 header('Content-type: ' . $result['contentType'] . '; charset=UTF-8');
                 header('Access-Control-Allow-Origin: *');
                 header('X-Cache: MISS');
+                
+                // Add warning as HTTP header if JSON was requested
+                if ($this->parameters['format'] === 'json') {
+                    header('X-Format-Warning: JSON format is deprecated and will be removed in future versions. Please use the ICS format.');
+                }
+                
                 echo $result['data'];
                 exit;
                 
@@ -486,31 +415,6 @@ class CalendarAPI {
                 error_reporting($oldErrorReporting);
                 throw $e; // Exception weiterreichen
             }
-        }
-        
-        /**
-         * Output JSON response for cache
-         * 
-         * @param array<EventObject> $events Array of EventObject instances
-         * @param array &$result Reference to result array for cache
-         */
-        protected function outputJsonForCache(array $events, array &$result): void {
-            $jsonResult = [];
-            foreach ($events as $event) {
-                $selectedEvent = [];
-                foreach ($event as $propertyKey => $propertyValue) {
-                    if ($this->isRequiredField($propertyKey)) {
-                        $selectedEvent[$this->jsonEventFields[$propertyKey][0]] = $this->getICSPropertyValue($propertyValue);
-                    }
-                }
-                $jsonResult[] = $selectedEvent;
-            }
-            
-            if (count($jsonResult) === 0) {
-                $this->throwAPIError('No result found');
-            }
-            
-            echo json_encode($jsonResult);
         }
         
         /**
@@ -532,55 +436,24 @@ class CalendarAPI {
          * @return string ICS-formatted string
          */
         protected function toString(ICal $ical, array $events): string {
-            // Beginne den iCalendar
+            // Begin the iCalendar
             $str = 'BEGIN:VCALENDAR' . "\r\n";
             
-            // Füge Kalender-Metadaten hinzu
+            // Add calendar metadata
             $str .= $ical->printVcalendarDataAsIcs();
             
-            // Füge alle Events hinzu
+            // Add all events
             foreach ($events as $event) {
                 $str .= $event->printIcs();
             }
             
-            // Beende den iCalendar mit korrekter CRLF-Formatierung
+            // End the iCalendar with proper CRLF formatting
             $str .= "END:VCALENDAR\r\n";
             
             return $str;
         }
         
-        /**
-         * Check if a field is required
-         * 
-         * @param string $propertyKey The property key to check
-         * @return bool True if the field is required
-         */
-        protected function isRequiredField(string $propertyKey): bool {
-            if ($this->fieldsParameterExists) {
-                return array_key_exists($propertyKey, $this->jsonEventFields) && in_array($this->jsonEventFields[$propertyKey][0], $this->fields, true);
-            }
-            return array_key_exists($propertyKey, $this->jsonEventFields) && $this->isDefaultJSONField($propertyKey);
-        }
-        
-        /**
-         * Check if a field is a default JSON field
-         * 
-         * @param string $icsKey The ICS key to check
-         * @return bool True if the field is a default JSON field
-         */
-        protected function isDefaultJSONField(string $icsKey): bool {
-            return $this->jsonEventFields[$icsKey][1];
-        }
-        
-        /**
-         * Get property value from ICS
-         * 
-         * @param mixed $value The property value
-         * @return mixed The extracted property value
-         */
-        protected function getICSPropertyValue(mixed $value): mixed {
-            return is_array($value) ? $value['value'] : $value;
-        }
+
         
         /**
          * Get request parameters
