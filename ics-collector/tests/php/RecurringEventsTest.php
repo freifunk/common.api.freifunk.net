@@ -103,10 +103,14 @@ class RecurringEventsTest extends TestCase
         // Aktiviere Zeitzonenberücksichtigung für wiederkehrende Events
         $parsedIcs->useTimeZoneWithRRules = true;
         
-        // Setze einen Testzeitraum für 6 Monate (Mai bis Oktober 2025)
-        $startDate = '20250501';
-        $endDate = '20251031';
-        $events = $parsedIcs->eventsFromRange($startDate, $endDate);
+        $today = new \DateTime();
+        $inSixMonths = clone $today;
+        $inSixMonths->modify('+7 months');
+        
+        // Formate für die verschiedenen Anforderungen
+        $fromDateIcs = $today->format('Ymd');
+        $toDateIcs = $inSixMonths->format('Ymd');
+        $events = $parsedIcs->eventsFromRange($fromDateIcs, $toDateIcs);
         
         // Filtere die monatlichen Events
         $monthlyEvents = array_filter($events, function($event) {

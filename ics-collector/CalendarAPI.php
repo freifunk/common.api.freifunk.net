@@ -26,7 +26,12 @@ class CalendarAPI {
         /**
          * Path to the merged ICS file
          */
-        protected const ICS_MERGED_FILE = 'data/ffMerged.ics';
+        protected const DEFAULT_ICS_MERGED_FILE = 'data/ffMerged.ics';
+        
+        /**
+         * Path to the merged ICS file, kann durch Konstruktor überschrieben werden
+         */
+        protected string $icsMergedFile;
         
         /**
          * Supported HTTP methods
@@ -104,11 +109,24 @@ class CalendarAPI {
         protected IcsValidator $validator;
         
         /**
-         * Constructor
+         * Determines whether recurring events should be processed and expanded
          */
-        public function __construct() {
+        protected bool $processRecurrences = false;
+        
+        /**
+         * Constructor
+         * 
+         * @param string|null $icsMergedFile Optional Pfad zur Merged-ICS-Datei (für Tests)
+         */
+        public function __construct(?string $icsMergedFile = null, bool $processRecurrences = true) {
             // Initialize validator
             $this->validator = new IcsValidator();
+            
+            // Set merged ICS file path
+            $this->icsMergedFile = $icsMergedFile ?? self::DEFAULT_ICS_MERGED_FILE;
+            
+            // Set recurring events processing
+            $this->processRecurrences = $processRecurrences;
         }
         
         /**
@@ -183,7 +201,7 @@ class CalendarAPI {
                 $this->sources = explode(',', $this->parameters['source']);
                 
                 // Validate and ensure ICS file integrity before processing
-                $this->validateAndRepairIcsFile(self::ICS_MERGED_FILE);
+                $this->validateAndRepairIcsFile($this->icsMergedFile);
                 
                 // Aufräumen nach der Validierung
                 $this->cleanupMemory();
@@ -291,36 +309,49 @@ class CalendarAPI {
                         
                         // Output from cache
                         echo $cachedResult['data'];
-                        exit;
+                        return;
                     }
                 }
             }
             
+            // Process the calendar and get the result
+            $result = $this->processCalendarData();
+            
+            // Save to cache file
+            file_put_contents($cacheFile, serialize($result), LOCK_EX);
+            
+            // Output result
+            header('Content-type: ' . $result['contentType'] . '; charset=UTF-8');
+            header('Access-Control-Allow-Origin: *');
+            header('X-Cache: MISS');
+            
+            // Add warning as HTTP header if JSON was requested
+            if (isset($this->parameters['format']) && $this->parameters['format'] === 'json') {
+                header('X-Format-Warning: JSON format is deprecated and will be removed in future versions. Please use the ICS format.');
+            }
+            
+            echo $result['data'];
+        }
+        
+        /**
+         * Process the calendar data and return the result without outputting
+         * 
+         * @return array Associative array with contentType and data
+         */
+        protected function processCalendarData(): array {
             // Suppress debug output
             $oldErrorReporting = error_reporting();
             error_reporting(E_ERROR | E_PARSE); // Show only severe errors
             
             try {
-                // Read and process the ICS file efficiently
-                $icsFile = self::ICS_MERGED_FILE;
-                $icsContent = file_get_contents($icsFile);
+                // Read the ICS file
+                $icsFile = $this->icsMergedFile;
                 
-                // Clean the content for processing
-                $cleanedContent = ICal::cleanIcsContent($icsContent);
-                
-                // Create ICal object with string input
-                $parsedIcs = new ICal(false, 'MO', true, true);
-                $parsedIcs->initString($cleanedContent);
-                
-                // Efficient parameter processing with default values
+                // Parse date parameters
                 $from = false;
                 $to = false;
                 
-                // Extract frequently used parameters only once
-                $hasFrom = array_key_exists('from', $this->parameters);
-                $hasTo = array_key_exists('to', $this->parameters);
-                
-                if ($hasFrom) {
+                if (array_key_exists('from', $this->parameters)) {
                     $fromValue = $this->parameters['from'];
                     if (strpos($fromValue, "weeks") !== false) {
                         $from = "now " . $fromValue;
@@ -329,7 +360,7 @@ class CalendarAPI {
                     }
                 }
                 
-                if ($hasTo) {
+                if (array_key_exists('to', $this->parameters)) {
                     $toValue = $this->parameters['to'];
                     if (strpos($toValue, "weeks") !== false) {
                         $to = "now " . $toValue;
@@ -337,41 +368,29 @@ class CalendarAPI {
                         $to = $toValue;
                     }
                 } else {
-                    // Default value: 6 months into the future
+                    // Default: 6 months into the future
                     $to = date('Y-m-d', strtotime('+6 months'));
                 }
                 
-                // Set start and end dates for processing recurring events
-                $parsedIcs->startDate = $from;
-                $parsedIcs->endDate = $to;
+                // Create ICal object - directly with processRecurrences = true
+                $parsedIcs = new ICal($icsFile, 'MO', true, $this->processRecurrences);
                 
-                if ($from || $to) {
-                    $events = $parsedIcs->eventsFromRange($from, $to);
-                } else {
-                    $events = $parsedIcs->events();
+                // Essential: Enable timezone handling for recurring events
+                $parsedIcs->useTimeZoneWithRRules = true;
+                
+                // Get events for the specified date range - simple and direct approach
+                $events = $parsedIcs->eventsFromRange($from, $to);
+                
+                // Filter events by source if needed
+                if (!in_array('all', $this->sources, true)) {
+                    $allowedSources = array_flip($this->sources);
+                    $events = array_filter($events, function($event) use ($allowedSources) {
+                        return isset($event->xWrSource) && isset($allowedSources[$event->xWrSource]);
+                    });
                 }
                 
-                // Optimize event filtering
-                $hasAllSource = in_array('all', $this->sources, true);
-                $filteredEvents = [];
-                
-                // Faster source checking through indexing of allowed sources
-                $allowedSources = array_flip($this->sources);
-                
-                foreach ($events as $event) {
-                    // Check if the event is in the allowed sources
-                    if ($hasAllSource || 
-                       (isset($event->xWrSource) && isset($allowedSources[$event->xWrSource]))) {
-                        $filteredEvents[] = $event;
-                    }
-                }
-                
-                // Replace events with filtered ones
-                $events = $filteredEvents;
-                
-                // Limit the number of events if necessary
-                $hasLimit = array_key_exists('limit', $this->parameters);
-                if ($hasLimit) {
+                // Apply limit if specified
+                if (array_key_exists('limit', $this->parameters)) {
                     $limit = (int)$this->parameters['limit'];
                     if (count($events) > $limit) {
                         $events = array_slice($events, 0, $limit);
@@ -381,39 +400,20 @@ class CalendarAPI {
                 // Restore original error handling
                 error_reporting($oldErrorReporting);
                 
-                // Prepare result data for cache and output
+                // Prepare result data
                 $result = [];
-                
-                // Generate output and write to cache
-                ob_start();
-                
-                // Always output ICS format, regardless of requested format
                 $result['contentType'] = 'text/calendar';
+                
+                // Generate the ICS output
+                ob_start();
                 $this->outputIcsForCache($parsedIcs, $events, $result);
+                $result['data'] = ob_get_clean();
                 
-                $result['data'] = ob_get_contents();
-                ob_end_clean();
-                
-                // Save to cache file
-                file_put_contents($cacheFile, serialize($result), LOCK_EX);
-                
-                // Output result
-                header('Content-type: ' . $result['contentType'] . '; charset=UTF-8');
-                header('Access-Control-Allow-Origin: *');
-                header('X-Cache: MISS');
-                
-                // Add warning as HTTP header if JSON was requested
-                if ($this->parameters['format'] === 'json') {
-                    header('X-Format-Warning: JSON format is deprecated and will be removed in future versions. Please use the ICS format.');
-                }
-                
-                echo $result['data'];
-                exit;
-                
+                return $result;
             } catch (\Exception $e) {
-                // Ursprüngliche Fehlerbehandlung wiederherstellen
+                // Restore original error handling
                 error_reporting($oldErrorReporting);
-                throw $e; // Exception weiterreichen
+                throw $e;
             }
         }
         
