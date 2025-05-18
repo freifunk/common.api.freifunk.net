@@ -373,13 +373,34 @@ class CalendarAPI {
                 }
                 
                 // Create ICal object - directly with processRecurrences = true
-                $parsedIcs = new ICal($icsFile, 'MO', true, $this->processRecurrences);
+                $parsedIcs = new ICal($icsFile, 'MO', false, $this->processRecurrences);
                 
                 // Essential: Enable timezone handling for recurring events
                 $parsedIcs->useTimeZoneWithRRules = true;
                 
+                // Setze explizit die Start- und End-Datumsgrenzen
+                // Bei der Verarbeitung von Datumswerten strtotime() vermeiden
+                if ($from) {
+                    // Falls from ein String wie 'now' oder '+2 weeks' ist
+                    if (in_array($from, ['now']) || strpos($from, '+') === 0) {
+                        $parsedIcs->startDate = date('Y-m-d');
+                    } else {
+                        // Falls from ein konkretes Datum ist
+                        $parsedIcs->startDate = $from;
+                    }
+                } else {
+                    $parsedIcs->startDate = date('Y-m-d');
+                }
+                
+                // Ähnlich für endDate
+                if (in_array($to, ['now']) || strpos($to, '+') === 0) {
+                    $parsedIcs->endDate = date('Y-m-d', strtotime($to));
+                } else {
+                    $parsedIcs->endDate = $to;
+                }
+                
                 // Get events for the specified date range - simple and direct approach
-                $events = $parsedIcs->eventsFromRange($from, $to);
+                $events = $parsedIcs->eventsFromRange($parsedIcs->startDate, $parsedIcs->endDate);
                 
                 // Filter events by source if needed
                 if (!in_array('all', $this->sources, true)) {

@@ -36,9 +36,25 @@ echo "<h2>Systeminformation</h2>";
 debug("PHP Version", phpversion());
 debug("PHP Zeitzone", date_default_timezone_get());
 debug("Aktuelles Datum/Zeit", date('Y-m-d H:i:s'));
+debug("Aktueller Timestamp", time());
+debug("Timestamp in 6 Monaten", strtotime('+6 months'));
+debug("Datum in 6 Monaten", date('Y-m-d', strtotime('+6 months')));
+
+// Teste DateTimeZone Verarbeitung (kann PHP-Versionsunterschiede aufzeigen)
+$tz = new DateTimeZone(date_default_timezone_get());
+$dt = new DateTime('now', $tz);
+debug("DateTime jetzt", $dt->format('Y-m-d H:i:s'));
+debug("DateTime strtotime now", (new DateTime(strtotime('now')))->format('Y-m-d H:i:s'));
+debug("DateTime +6 months", (new DateTime())->modify('+6 months')->format('Y-m-d H:i:s'));
+
 debug("Server Software", $_SERVER['SERVER_SOFTWARE'] ?? 'Nicht verfügbar');
 debug("Dokumentenroot", $_SERVER['DOCUMENT_ROOT'] ?? 'Nicht verfügbar');
 debug("Skriptpfad", __FILE__);
+
+// PHP Extensions prüfen
+$extensions = get_loaded_extensions();
+sort($extensions);
+debug("Geladene PHP Extensions", $extensions);
 
 // Laden der benötigten Dateien
 try {
@@ -109,6 +125,30 @@ try {
             // Überprüfe auf wiederkehrende Events
             $rruleCount = substr_count($icsContent, "RRULE:");
             debug("Anzahl RRULE-Einträge", $rruleCount);
+            
+            // Überprüfe weimarnetz-spezifische Events
+            $weimarEvents = substr_count($icsContent, "X-WR-SOURCE:weimarnetz");
+            debug("Anzahl weimarnetz Events", $weimarEvents);
+            
+            // Zeige einige Beispiel-Events an
+            preg_match_all('/BEGIN:VEVENT(.*?)END:VEVENT/s', $icsContent, $matches);
+            if (!empty($matches[0])) {
+                debug("Anzahl gefundener Events", count($matches[0]));
+                
+                // Zeige das erste weimarnetz-Event
+                $weimarEventFound = false;
+                foreach ($matches[0] as $idx => $event) {
+                    if (strpos($event, "X-WR-SOURCE:weimarnetz") !== false) {
+                        debug("Beispiel-Event (weimarnetz)", $event);
+                        $weimarEventFound = true;
+                        break;
+                    }
+                }
+                
+                if (!$weimarEventFound && count($matches[0]) > 0) {
+                    debug("Erstes Event (nicht weimarnetz)", $matches[0][0]);
+                }
+            }
         }
     }
     
@@ -155,6 +195,11 @@ try {
         $sourcesProperty = $reflection->getProperty('sources');
         $sourcesProperty->setAccessible(true);
         $sourcesProperty->setValue($api, explode(',', $_GET['source'] ?? 'weimarnetz'));
+        
+        // Zugriff auf startDate und endDate für bessere Diagnose
+        $processRecurrencesProperty = $reflection->getProperty('processRecurrences');
+        $processRecurrencesProperty->setAccessible(true);
+        debug("processRecurrences Flag", $processRecurrencesProperty->getValue($api));
         
         // Direkte Ausführung der processCalendarData-Methode
         try {
@@ -211,6 +256,49 @@ try {
     debug("Gefundene Calendar-Cache Dateien", count($calendarCacheFiles));
     if (count($calendarCacheFiles) > 0) {
         debug("Cache-Dateien", array_slice($calendarCacheFiles, 0, 10)); // Zeige max. 10 Dateien
+    }
+    
+    // Teste direkt den ICal-Klassen-Konstruktor und eventsFromRange-Methode
+    if (file_exists($icalPath)) {
+        require_once $icalPath;
+        echo "<h2>Direkte ICal-Klassentests</h2>";
+        
+        try {
+            // Parameter gleich wie in CalendarAPI->processCalendarData()
+            $ical = new ICal\ICal($absDefaultIcsPath, 'MO', false, true);
+            
+            // Wichtig: Die Parameter startDate und endDate explizit setzen
+            $ical->startDate = date('Y-m-d');
+            $ical->endDate = date('Y-m-d', strtotime('+6 months'));
+            
+            debug("ICal startDate", $ical->startDate);
+            debug("ICal endDate", $ical->endDate);
+            
+            // Zeitzone für wiederkehrende Events aktivieren
+            $ical->useTimeZoneWithRRules = true;
+            
+            $ical->processRecurrences();
+            
+            debug("Anzahl wiederkehrender Events", $ical->recurringEventCount);
+            
+            // Hole Events für Weimarnetz im gleichen Datumsbereich
+            $events = $ical->eventsFromRange(date('Y-m-d'), date('Y-m-d', strtotime('+6 months')));
+            $filteredEvents = array_filter($events, function($event) {
+                return isset($event->xWrSource) && $event->xWrSource === 'weimarnetz';
+            });
+            
+            debug("Anzahl gefundener Events (gesamt)", count($events));
+            debug("Anzahl gefundener Events (weimarnetz)", count($filteredEvents));
+            
+            if (count($filteredEvents) > 0) {
+                $firstEvent = reset($filteredEvents);
+                debug("Erstes weimarnetz Event (Titel)", $firstEvent->summary);
+                debug("Erstes weimarnetz Event (Start)", $firstEvent->dtstart);
+                debug("Erstes weimarnetz Event (End)", $firstEvent->dtend);
+            }
+        } catch (Exception $e) {
+            debug("Fehler beim direkten Test der ICal-Klasse", $e->getMessage() . "\n" . $e->getTraceAsString());
+        }
     }
     
 } catch (Exception $e) {
