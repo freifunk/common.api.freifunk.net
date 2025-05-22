@@ -12,12 +12,12 @@
 
 namespace ICal;
 
-// Composer Autoloader einbinden, um externe Abhängigkeiten zu laden
+// Load Composer Autoloader to include external dependencies
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require_once __DIR__ . '/../vendor/autoload.php';
 }
 
-// Benötigte Klassen einbinden
+// Include required classes
 require_once __DIR__ . '/EventObject.php';
 require_once __DIR__ . '/RecurrenceExpanderInterface.php';
 require_once __DIR__ . '/RRuleExpander.php';
@@ -223,7 +223,7 @@ class ICal
         $this->useCache = $useCache;
         $this->processRecurrences = $processRecurrences;
         
-        // Initialisiere den RecurrenceExpander, wenn Recurring Events verarbeitet werden sollen
+        // Initialize the RecurrenceExpander if recurring events should be processed
         if ($processRecurrences) {
             $this->recurrenceExpander = $expander ?? new RRuleExpander();
         }
@@ -252,10 +252,15 @@ class ICal
         }
     }
 
+    /**
+     * Returns calendar data as iCalendar formatted string
+     * 
+     * @return string iCalendar formatted string
+     */
     public function printVcalendarDataAsIcs() {
         $str = "";
         foreach ($this->cal['VCALENDAR'] as $key => $value) {
-            // Überspringe die Community-Informationen, die nicht Teil des iCalendar-Formats sind
+            // Skip the community information that is not part of the iCalendar format
             if (!is_array($value) && strpos($key, 'X-WR-') === 0 || 
                 in_array($key, ['VERSION', 'PRODID', 'X-WR-TIMEZONE', 'X-WR-CALNAME', 'X-WR-CALDESC'])) {
             $str .= $key . ":" . $value . "\r\n";
@@ -563,7 +568,7 @@ class ICal
          */
         if (stripos($icalDate, 'TZID') === false) {
             $date = date_create($icalDate);
-            // Wenn das Datum ungültig ist, geben wir null zurück
+            // If the date is invalid, return null
             if (!$date) {
                 return null;
             }
@@ -639,9 +644,9 @@ class ICal
         $dateArray = $event[$key . '_array'];
         $date = $event[$key];
         
-        // Verhindern, dass ein Datum mit _tz genutzt wird
+        // Prevent using a date with _tz
         if (strpos($date, '_tz:') !== false) {
-            // Datum ist fehlerhaft formatiert, nur den ersten Teil verwenden
+            // Date is incorrectly formatted, use only the first part
             $date = substr($date, 0, strpos($date, '_tz:'));
         }
 
@@ -693,9 +698,7 @@ class ICal
     }
 
     /**
-     * Performs some admin tasks on all events as taken straight from the ics file.
-     * Adds a Unix timestamp to all `{DTSTART|DTEND|RECURRENCE-ID}_array` arrays
-     * Makes a note of modified recurrence-instances
+     * Processes the events array
      *
      * @return void or false if no Events exist
      */
@@ -715,7 +718,7 @@ class ICal
                         $date = 'TZID=' . $anEvent[$type . '_array'][0]['TZID'] . ':' . $date;
                     }
                     
-                    // Überspringe ungültige Datumswerte
+                    // Skip invalid date values
                     if (gettype($date) === "boolean") {
                         continue;
                     }
@@ -739,18 +742,18 @@ class ICal
     }
 
     /**
-     * Verarbeite wiederkehrende Events mit Hilfe des RecurrenceExpander
+     * Process recurring events using the RecurrenceExpander
      *
-     * @return bool true, wenn Events verarbeitet wurden, sonst false
+     * @return bool true if events were processed, false otherwise
      */
     public function processRecurrences()
     {
-        // Prüfe, ob wir wiederkehrende Events verarbeiten sollen
+        // Check if we should process recurring events
         if (!$this->processRecurrences || !isset($this->recurrenceExpander)) {
             return false;
         }
 
-        // Prüfe, ob Events vorhanden sind
+        // Check if events exist
         if (!isset($this->cal['VEVENT']) || empty($this->cal['VEVENT'])) {
             return false;
         }
@@ -758,13 +761,13 @@ class ICal
         $events = $this->cal['VEVENT'];
         $expandedEvents = [];
         
-        // Hole die Standard-Zeitzone
+        // Get the default timezone
         $defaultTimezone = $this->calendarTimeZone();
         
         foreach ($events as $event) {
-            // Prüfe, ob es sich um ein wiederkehrendes Event handelt
+            // Check if this is a recurring event
             if ($this->recurrenceExpander->isRecurringEvent($event)) {
-                // Erweitere das wiederkehrende Event in Einzel-Events
+                // Expand the recurring event into individual events
                 $expandedOccurrences = $this->recurrenceExpander->expandRecurringEvent(
                     $event,
                     $this->startDate,
@@ -772,20 +775,20 @@ class ICal
                     $defaultTimezone
                 );
                 
-                // Alle Vorkommen des Events zum Ergebnis hinzufügen
+                // Add all occurrences to the result
                 foreach ($expandedOccurrences as $occurrence) {
                     $expandedEvents[] = $occurrence;
                 }
                 
-                // Zähle die hinzugefügten wiederkehrenden Events
-                $this->recurringEventCount += count($expandedOccurrences) - 1; // Minus das Original-Event
+                // Count the added recurring events
+                $this->recurringEventCount += count($expandedOccurrences) - 1; // Minus the original event
             } else {
-                // Nicht-wiederkehrendes Event direkt zum Ergebnis hinzufügen
+                // Add non-recurring event directly to the result
                 $expandedEvents[] = $event;
             }
         }
         
-        // Ersetze die Events in der Kalender-Struktur
+        // Replace the events in the calendar structure
         $this->cal['VEVENT'] = $expandedEvents;
         
         return true;
@@ -822,10 +825,9 @@ class ICal
     }
 
     /**
-     * Returns an array of EventObjects. Every event is a class
-     * with the event details being properties within it.
+     * Returns an array of EventObject instances for all events in the calendar
      *
-     * @return array of EventObjects
+     * @return array Array of EventObject instances
      */
     public function events()
     {
@@ -833,18 +835,47 @@ class ICal
         if ($cachedEvents) {
             return $cachedEvents;
         }
+        
         $array = $this->cal;
         $array = isset($array['VEVENT']) ? $array['VEVENT'] : array();
         $events = array();
 
         if (!empty($array)) {
             foreach ($array as $event) {
-                $eventObj = new EventObject($event);
-                // Fehlende DTEND-Werte automatisch ergänzen
+                // Use the EventObjectBuilder to create EventObject instances with all properties
+                $builder = (new \ICal\EventObjectBuilder())
+                    ->summary($event['SUMMARY'] ?? null)
+                    ->dtstart($event['DTSTART'] ?? null)
+                    ->dtend($event['DTEND'] ?? null)
+                    ->duration($event['DURATION'] ?? null)
+                    ->dtstamp($event['DTSTAMP'] ?? null)
+                    ->uid($event['UID'] ?? null)
+                    ->created($event['CREATED'] ?? null)
+                    ->lastmodified($event['LAST-MODIFIED'] ?? null)
+                    ->description($event['DESCRIPTION'] ?? null)
+                    ->location($event['LOCATION'] ?? null)
+                    ->sequence($event['SEQUENCE'] ?? null)
+                    ->status($event['STATUS'] ?? null)
+                    ->transp($event['TRANSP'] ?? null)
+                    ->organizer($event['ORGANIZER'] ?? null)
+                    ->attendee($event['ATTENDEE'] ?? null)
+                    ->url($event['URL'] ?? null)
+                    ->categories($event['CATEGORIES'] ?? null)
+                    ->rrule($event['RRULE'] ?? null)
+                    ->dtstartArray($event['DTSTART_array'] ?? null)
+                    ->dtendArray($event['DTEND_array'] ?? null)
+                    ->dtstartTz($event['DTSTART_tz'] ?? null)
+                    ->dtendTz($event['DTEND_tz'] ?? null);
+                
+                // Build the event object
+                $eventObj = $builder->build();
+                
+                // Fix missing DTEND values automatically
                 $eventObj->fixEventData();
                 $events[] = $eventObj;
             }
         }
+        
         $this->cache_set("processed", $events);
 
         return $events;
@@ -956,11 +987,11 @@ class ICal
      */
     public function eventsFromRange($rangeStart = false, $rangeEnd = false, $setCache = false)
     {
-        // Einzigartiger Cache-Schlüssel basierend auf den Parametern
+        // Unique cache key based on parameters
         $filterCacheKey = md5('range_' . (string)$rangeStart . '_' . (string)$rangeEnd);
         $filterCacheFile = self::TMP_PATH . $this->calFilename . "_filter_" . $filterCacheKey;
         
-        // Prüfe, ob eine gecachte Filterung existiert und gültig ist
+        // Check if a cached filter exists and is valid
         if (file_exists($filterCacheFile) && (!$this->absoluteCalFilename || 
             filemtime($filterCacheFile) >= filemtime($this->absoluteCalFilename))) {
             @include $filterCacheFile;
@@ -969,25 +1000,25 @@ class ICal
             }
         }
         
-        // Nehme gecachte Events, wenn verfügbar
+        // Use cached events if available
         if ($this->useCache) {
             $events = $this->cache_get("processed");
         }
         
-        // Ansonsten lade und sortiere Events
+        // Otherwise load and sort events
         if (!isset($events) || !$events) {
             $events = $this->sortEventsWithOrder($this->events(), SORT_ASC);
         }
 
-        // Früher Ausstieg, wenn keine Events vorhanden
+        // Early exit if no events exist
         if (empty($events)) {
             return array();
         }
 
-        // Optimierter Array für die Ergebnisse
+        // Optimized array for results
         $extendedEvents = array();
         
-        // Konvertiere Datumsstrings zu Timestamps einmalig 
+        // Convert date strings to timestamps once
         $rangeStartTs = false;
         $rangeEndTs = false;
         
@@ -1014,36 +1045,37 @@ class ICal
         }
         if (!$rangeEndTs) {
             $rangeEnd = new \DateTime();
-            $rangeEnd->modify('+6 months'); // Standard: 6 Monate
+            $rangeEnd->modify('+6 months'); // Default: 6 months
             $rangeEndTs = $rangeEnd->getTimestamp();
         }
 
-        // Wenn Start und Ende identisch sind und es sich um Datumsangaben ohne Zeiten handelt...
+        // If start and end are identical and are date values without times...
         if ($rangeEnd->format('His') == 0 && $rangeStartTs == $rangeEndTs) {
             $rangeEnd->modify('+1 day');
             $rangeEndTs = $rangeEnd->getTimestamp();
         }
         
-        // Optimierte Schleife mit frühen Ausstiegsmöglichkeiten
+        // Optimized loop with early exit options
         foreach ($events as $anEvent) {
-            // Schneller Zugriff auf Start- und Endzeitstempel
-            $eventStart = $anEvent->dtstart_array[2];
+            // Fast access to start and end timestamps
+            $eventStart = $anEvent->getDtstartArray()[2];
             
-            // Wenn das Event nach dem Enddatum beginnt, können wir abbrechen (da die Events sortiert sind)
+            // If the event starts after the end date, we can break (since events are sorted)
             if ($eventStart > $rangeEndTs) {
                 break;
             }
             
-            // Wenn das Event innerhalb des Bereichs beginnt, hinzufügen
+            // If the event starts within the range, add it
             if ($eventStart >= $rangeStartTs && $eventStart < $rangeEndTs) {
                 $extendedEvents[] = $anEvent;
                 continue;
             }
             
-            // Prüfe End-Datum nur für Events, die außerhalb des Bereichs beginnen
-            $eventEnd = isset($anEvent->dtend_array[2]) ? $anEvent->dtend_array[2] : null;
+            // Only check end date for events that start outside the range
+            $dtendArray = $anEvent->getDtendArray();
+            $eventEnd = isset($dtendArray[2]) ? $dtendArray[2] : null;
             
-            // Wenn das Event-Ende im Bereich liegt oder das Event den gesamten Bereich umfasst
+            // If the event end is in the range or the event spans the entire range
             if ($eventEnd !== null && (
                 ($eventEnd > $rangeStartTs && $eventEnd <= $rangeEndTs) || 
                 ($eventStart < $rangeStartTs && $eventEnd > $rangeEndTs)
@@ -1052,7 +1084,7 @@ class ICal
             }
         }
 
-        // Cache die gefilterten Ergebnisse
+        // Cache the filtered results
         if ($this->useCache || $setCache) {
             $filteredEvents = $extendedEvents;
             $content = '<?php $filteredEvents = ' . var_export($filteredEvents, true) . ';';
@@ -1094,7 +1126,8 @@ class ICal
 
         foreach ($events as $key => $anEvent) {
             $extendedEvents[] = $anEvent;
-            $timestamp[$key] = $anEvent->dtstart_array[2];
+            $dtstartArray = $anEvent->getDtstartArray();
+            $timestamp[$key] = $dtstartArray[2];
         }
 
         array_multisort($timestamp, $sortOrder, $extendedEvents);
@@ -1204,22 +1237,22 @@ class ICal
     }
     
     /**
-     * Bereinigt den Inhalt einer ICS-Datei, indem alles nach END:VCALENDAR entfernt wird
+     * Cleans the content of an ICS file by removing everything after END:VCALENDAR
      *
-     * @param string $content Der Inhalt der ICS-Datei
-     * @return string Der bereinigte Inhalt
+     * @param string $content The content of the ICS file
+     * @return string The cleaned content
      */
     public static function cleanIcsContent(string $content): string
     {
-        // Finde die Position von END:VCALENDAR
+        // Find the position of END:VCALENDAR
         $pos = strpos($content, "END:VCALENDAR");
         
-        // Wenn gefunden, schneide alles danach ab
+        // If found, cut everything after it
         if ($pos !== false) {
-            return substr($content, 0, $pos + 12); // 12 ist die Länge von "END:VCALENDAR"
+            return substr($content, 0, $pos + 12); // 12 is the length of "END:VCALENDAR"
         }
         
-        // Wenn nicht gefunden, gib den ursprünglichen Inhalt zurück
+        // If not found, return the original content
         return $content;
     }
 }

@@ -6,68 +6,89 @@
 
 namespace ICal;
 
+/**
+ * Represents an iCalendar event
+ */
 class EventObject
 {
-    public ?string $summary = null;
-    public ?string $dtstart = null;
-    public ?string $dtend = null;
-    public ?string $duration = null;
-    public ?string $dtstamp = null;
-    public ?string $uid = null;
-    public ?string $created = null;
-    public ?string $lastmodified = null;
-    public ?string $description = null;
-    public ?string $location = null;
-    public ?string $sequence = null;
-    public ?string $status = null;
-    public ?string $transp = null;
-    public ?string $organizer = null;
-    public ?string $attendee = null;
-    public ?string $url = null;
-    public ?string $categories = null;
-    public ?string $xWrSource = null;
-    public ?string $xWrSourceUrl = null;
-    public ?string $rrule = null;
+    private ?string $summary = null;
+    private ?string $dtstart = null;
+    private ?string $dtend = null;
+    private ?string $duration = null;
+    private ?string $dtstamp = null;
+    private ?string $uid = null;
+    private ?string $created = null;
+    private ?string $lastmodified = null;
+    private ?string $description = null;
+    private ?string $location = null;
+    private ?string $sequence = null;
+    private ?string $status = null;
+    private ?string $transp = null;
+    private ?string $organizer = null;
+    private ?string $attendee = null;
+    private ?string $url = null;
+    private ?string $categories = null;
+    private ?string $xWrSource = null;
+    private ?string $xWrSourceUrl = null;
+    private ?string $rrule = null;
     
-    // Array-Versionen der Datumsfelder
-    public ?array $dtstart_array = null;
-    public ?array $dtend_array = null;
-    public ?string $dtstart_tz = null;
-    public ?string $dtend_tz = null;
+    // Array versions of date fields
+    private ?array $dtstart_array = null;
+    private ?array $dtend_array = null;
+    private ?string $dtstart_tz = null;
+    private ?string $dtend_tz = null;
 
     /**
-     * EventObject constructor
-     * 
-     * @param array<string, mixed> $data Event data array
+     * EventObject constructor - empty by default as we use the builder pattern
      */
-    public function __construct(array $data = [])
+    public function __construct()
     {
-        if (!empty($data)) {
-            foreach ($data as $key => $value) {
-                if (!property_exists($this, $key)) {
-                    $variable = lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', strtolower($key)))));
-                } else {
-                    $variable = $key;
-                }
-
-                if (is_array($value)) {
-                     $this->{$variable} = $value;
-                } else {
-                    $this->{$variable} = stripslashes(trim(str_replace('\n', "\n", $value)));
-                }
-            }
+        // Empty constructor - use setters for property initialization
+    }
+    
+    /**
+     * Normalizes a property key to match class property names
+     * 
+     * @param string $key The property key to normalize
+     * @return string The normalized key
+     */
+    private function normalizeKey(string $key): string
+    {
+        // Handle special cases
+        if ($key === 'LAST-MODIFIED') {
+            return 'lastmodified';
+        } elseif ($key === 'X-WR-SOURCE') {
+            return 'xWrSource';
+        } elseif ($key === 'X-WR-SOURCE-URL') {
+            return 'xWrSourceUrl';
+        } else {
+            return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', strtolower($key)))));
         }
     }
 
     /**
      * Magic method for var_export() serialization
      * 
+     * Required for ICal class caching functionality, where EventObject instances
+     * are serialized to PHP code using var_export() and later reconstructed
+     * from cache files.
+     * 
      * @param array<string, mixed> $anArray Exported array representation
      * @return self
      */
     public static function __set_state(array $anArray): self
     {
-        $eventObject = new self($anArray);
+        $eventObject = new self();
+        
+        foreach ($anArray as $key => $value) {
+            $normalizedKey = $eventObject->normalizeKey($key);
+            $setter = 'set' . ucfirst($normalizedKey);
+            
+            if (method_exists($eventObject, $setter)) {
+                $eventObject->$setter($value);
+            }
+        }
+        
         return $eventObject;
     }
 
@@ -84,23 +105,23 @@ class EventObject
         
         // Standardfelder
         $standardFields = [
-            'SUMMARY'         => $this->summary ?? '',
-            'DURATION'        => $this->duration ?? '',
-            'DTSTAMP'         => $this->dtstamp ?? '',
-            'UID'             => $this->uid ?? '',
-            'CREATED'         => $this->created ?? '',
-            'LAST-MODIFIED'   => $this->lastmodified ?? '',
-            'DESCRIPTION'     => $this->description ?? '',
-            'LOCATION'        => $this->location ?? '',
-            'SEQUENCE'        => $this->sequence ?? '',
-            'STATUS'          => $this->status ?? '',
-            'TRANSP'          => $this->transp ?? '',
-            'ORGANISER'       => $this->organizer ?? '',
-            'URL'             => $this->url ?? '',
-            'CATEGORIES'      => $this->categories ?? '',
-            'X-WR-SOURCE'     => $this->xWrSource ?? '',
-            'X-WR-SOURCE-URL' => $this->xWrSourceUrl ?? '',
-            'RRULE'           => $this->rrule ?? '',
+            'SUMMARY'         => $this->getSummary() ?? '',
+            'DURATION'        => $this->getDuration() ?? '',
+            'DTSTAMP'         => $this->getDtstamp() ?? '',
+            'UID'             => $this->getUid() ?? '',
+            'CREATED'         => $this->getCreated() ?? '',
+            'LAST-MODIFIED'   => $this->getLastmodified() ?? '',
+            'DESCRIPTION'     => $this->getDescription() ?? '',
+            'LOCATION'        => $this->getLocation() ?? '',
+            'SEQUENCE'        => $this->getSequence() ?? '',
+            'STATUS'          => $this->getStatus() ?? '',
+            'TRANSP'          => $this->getTransp() ?? '',
+            'ORGANISER'       => $this->getOrganizer() ?? '',
+            'URL'             => $this->getUrl() ?? '',
+            'CATEGORIES'      => $this->getCategories() ?? '',
+            'X-WR-SOURCE'     => $this->getXWrSource() ?? '',
+            'X-WR-SOURCE-URL' => $this->getXWrSourceUrl() ?? '',
+            'RRULE'           => $this->getRrule() ?? '',
         ];
         
         // Erst null-Werte filtern, dann trimmen (nur Strings)
@@ -119,23 +140,23 @@ class EventObject
         $output = "BEGIN:VEVENT".$crlf;
         
         // DTSTART mit TZID
-        if (isset($this->dtstart) && isset($this->dtstart_array) && isset($this->dtstart_array[0]['TZID'])) {
+        if ($this->getDtstart() && $this->getDtstartArray() && isset($this->getDtstartArray()[0]['TZID'])) {
             $output .= sprintf("DTSTART;TZID=%s:%s%s", 
-                $this->dtstart_array[0]['TZID'], 
-                $this->dtstart_array[1], 
+                $this->getDtstartArray()[0]['TZID'], 
+                $this->getDtstartArray()[1], 
                 $crlf);
-        } elseif (isset($this->dtstart)) {
-            $output .= sprintf("DTSTART:%s%s", $this->dtstart, $crlf);
+        } elseif ($this->getDtstart()) {
+            $output .= sprintf("DTSTART:%s%s", $this->getDtstart(), $crlf);
         }
         
         // DTEND mit TZID
-        if (isset($this->dtend) && isset($this->dtend_array) && isset($this->dtend_array[0]['TZID'])) {
+        if ($this->getDtend() && $this->getDtendArray() && isset($this->getDtendArray()[0]['TZID'])) {
             $output .= sprintf("DTEND;TZID=%s:%s%s", 
-                $this->dtend_array[0]['TZID'], 
-                $this->dtend_array[1], 
+                $this->getDtendArray()[0]['TZID'], 
+                $this->getDtendArray()[1], 
                 $crlf);
-        } elseif (isset($this->dtend)) {
-            $output .= sprintf("DTEND:%s%s", $this->dtend, $crlf);
+        } elseif ($this->getDtend()) {
+            $output .= sprintf("DTEND:%s%s", $this->getDtend(), $crlf);
         }
         
         // Alle anderen Felder ausgeben
@@ -157,23 +178,23 @@ class EventObject
     public function printData(string $html = '<p>%s: %s</p>'): string
     {
         $data = [
-            'SUMMARY'       => $this->summary ?? '',
-            'DTSTART'       => $this->dtstart ?? '',
-            'DTEND'         => $this->dtend ?? '',
-            'DTSTART_TZ'    => $this->dtstart_tz ?? '',
-            'DTEND_TZ'      => $this->dtend_tz ?? '',
-            'DURATION'      => $this->duration ?? '',
-            'DTSTAMP'       => $this->dtstamp ?? '',
-            'UID'           => $this->uid ?? '',
-            'CREATED'       => $this->created ?? '',
-            'LAST-MODIFIED' => $this->lastmodified ?? '',
-            'DESCRIPTION'   => $this->description ?? '',
-            'LOCATION'      => $this->location ?? '',
-            'SEQUENCE'      => $this->sequence ?? '',
-            'STATUS'        => $this->status ?? '',
-            'TRANSP'        => $this->transp ?? '',
-            'ORGANISER'     => $this->organizer ?? '',
-            'ATTENDEE(S)'   => $this->attendee ?? '',
+            'SUMMARY'       => $this->getSummary() ?? '',
+            'DTSTART'       => $this->getDtstart() ?? '',
+            'DTEND'         => $this->getDtend() ?? '',
+            'DTSTART_TZ'    => $this->getDtstartTz() ?? '',
+            'DTEND_TZ'      => $this->getDtendTz() ?? '',
+            'DURATION'      => $this->getDuration() ?? '',
+            'DTSTAMP'       => $this->getDtstamp() ?? '',
+            'UID'           => $this->getUid() ?? '',
+            'CREATED'       => $this->getCreated() ?? '',
+            'LAST-MODIFIED' => $this->getLastmodified() ?? '',
+            'DESCRIPTION'   => $this->getDescription() ?? '',
+            'LOCATION'      => $this->getLocation() ?? '',
+            'SEQUENCE'      => $this->getSequence() ?? '',
+            'STATUS'        => $this->getStatus() ?? '',
+            'TRANSP'        => $this->getTransp() ?? '',
+            'ORGANISER'     => $this->getOrganizer() ?? '',
+            'ATTENDEE(S)'   => $this->getAttendee() ?? '',
         ];
 
         // Verarbeite nur gültige Strings
@@ -201,25 +222,27 @@ class EventObject
      */
     public function fixEventData(): void
     {
-        // Wenn DTEND und DURATION fehlen, setze DTEND auf DTSTART + 1 Stunde
-        if (!isset($this->dtend) && !isset($this->duration)) {
-            if (isset($this->dtstart_array)) {
-                // Kopiere das DTSTART_array in das DTEND_array und erhöhe Timestamp um 1 Stunde
-                $this->dtend_array = $this->dtstart_array;
-                $this->dtend_array[2] = $this->dtstart_array[2] + 3600; // +1 Stunde
+        // If DTEND and DURATION are missing, set DTEND to DTSTART + 1 hour
+        if (!$this->getDtend() && !$this->getDuration()) {
+            if ($this->getDtstartArray()) {
+                // Copy the DTSTART_array to DTEND_array and increase timestamp by 1 hour
+                $dtstartArray = $this->getDtstartArray();
+                $dtendArray = $dtstartArray;
+                $dtendArray[2] = $dtstartArray[2] + 3600; // +1 hour
+                $this->setDtendArray($dtendArray);
                 
-                // Setze DTEND auf Basis von DTSTART mit +1 Stunde
-                $dtEnd = $this->dtstart;
+                // Set DTEND based on DTSTART with +1 hour
+                $dtEnd = $this->getDtstart();
                 
-                // Bei Datumsformaten mit T (Zeit)
+                // For date formats with T (time)
                 if (strpos($dtEnd, 'T') !== false) {
-                    $format = strlen($dtEnd) > 13 ? 'Ymd\THis' : 'Ymd\THi'; // Mit oder ohne Sekunden
+                    $format = strlen($dtEnd) > 13 ? 'Ymd\THis' : 'Ymd\THi'; // With or without seconds
                     $date = \DateTime::createFromFormat($format, $dtEnd);
                     if ($date) {
                         $date->modify('+1 hour');
-                        $this->dtend = $date->format($format);
+                        $this->setDtend($date->format($format));
                     } else {
-                        // Fallback: String-Manipulation für andere Formate
+                        // Fallback: String manipulation for other formats
                         // Format: 20240101T120000
                         $dateString = substr($dtEnd, 0, 8); // YYYYMMDD
                         $timeString = substr($dtEnd, 9); // HHMMSS or HHMM
@@ -230,25 +253,306 @@ class EventObject
                             $secs = strlen($timeString) > 4 ? substr($timeString, 4) : '';
                             
                             $hours = ($hours + 1) % 24;
-                            $this->dtend = $dateString . 'T' . sprintf('%02d', $hours) . $mins . $secs;
+                            $this->setDtend($dateString . 'T' . sprintf('%02d', $hours) . $mins . $secs);
                         } else {
-                            // Wenn das Zeitformat nicht erkannt wird, füge einfach 1 Stunde als String hinzu
-                            $this->dtend = $dtEnd;
+                            // If time format is not recognized, just add 1 hour as string
+                            $this->setDtend($dtEnd);
                         }
                     }
                 } else {
-                    // Wenn nur Datum ohne Zeit: +1 Tag
+                    // If only date without time: +1 day
                     $format = 'Ymd';
                     $date = \DateTime::createFromFormat($format, $dtEnd);
                     if ($date) {
                         $date->modify('+1 day');
-                        $this->dtend = $date->format($format);
+                        $this->setDtend($date->format($format));
                     } else {
-                        // Fallback: Einfach den gleichen Wert verwenden
-                        $this->dtend = $dtEnd;
+                        // Fallback: Just use the same value
+                        $this->setDtend($dtEnd);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Helper method for formatting values
+     * 
+     * @param mixed $value The value to format
+     * @return mixed The formatted value
+     */
+    private function formatValue($value)
+    {
+        if (is_array($value)) {
+            return $value;
+        } else {
+            return stripslashes(trim(str_replace('\n', "\n", $value ?? '')));
+        }
+    }
+
+    // Getter und Setter für alle Properties
+    
+    public function getSummary(): ?string
+    {
+        return $this->summary;
+    }
+
+    public function setSummary($value): self
+    {
+        $this->summary = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getDtstart(): ?string
+    {
+        return $this->dtstart;
+    }
+
+    public function setDtstart($value): self
+    {
+        $this->dtstart = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getDtend(): ?string
+    {
+        return $this->dtend;
+    }
+
+    public function setDtend($value): self
+    {
+        $this->dtend = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getDuration(): ?string
+    {
+        return $this->duration;
+    }
+
+    public function setDuration($value): self
+    {
+        $this->duration = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getDtstamp(): ?string
+    {
+        return $this->dtstamp;
+    }
+
+    public function setDtstamp($value): self
+    {
+        $this->dtstamp = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->uid;
+    }
+
+    public function setUid($value): self
+    {
+        $this->uid = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getCreated(): ?string
+    {
+        return $this->created;
+    }
+
+    public function setCreated($value): self
+    {
+        $this->created = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getLastmodified(): ?string
+    {
+        return $this->lastmodified;
+    }
+
+    public function setLastmodified($value): self
+    {
+        $this->lastmodified = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription($value): self
+    {
+        $this->description = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    public function setLocation($value): self
+    {
+        $this->location = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getSequence(): ?string
+    {
+        return $this->sequence;
+    }
+
+    public function setSequence($value): self
+    {
+        $this->sequence = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus($value): self
+    {
+        $this->status = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getTransp(): ?string
+    {
+        return $this->transp;
+    }
+
+    public function setTransp($value): self
+    {
+        $this->transp = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getOrganizer(): ?string
+    {
+        return $this->organizer;
+    }
+
+    public function setOrganizer($value): self
+    {
+        $this->organizer = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getAttendee(): ?string
+    {
+        return $this->attendee;
+    }
+
+    public function setAttendee($value): self
+    {
+        $this->attendee = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl($value): self
+    {
+        $this->url = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getCategories(): ?string
+    {
+        return $this->categories;
+    }
+
+    public function setCategories($value): self
+    {
+        $this->categories = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getXWrSource(): ?string
+    {
+        return $this->xWrSource;
+    }
+
+    public function setXWrSource($value): self
+    {
+        $this->xWrSource = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getXWrSourceUrl(): ?string
+    {
+        return $this->xWrSourceUrl;
+    }
+
+    public function setXWrSourceUrl($value): self
+    {
+        $this->xWrSourceUrl = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getRrule(): ?string
+    {
+        return $this->rrule;
+    }
+
+    public function setRrule($value): self
+    {
+        $this->rrule = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getDtstartArray(): ?array
+    {
+        return $this->dtstart_array;
+    }
+
+    public function setDtstartArray($value): self
+    {
+        $this->dtstart_array = $value;
+        return $this;
+    }
+
+    public function getDtendArray(): ?array
+    {
+        return $this->dtend_array;
+    }
+
+    public function setDtendArray($value): self
+    {
+        $this->dtend_array = $value;
+        return $this;
+    }
+
+    public function getDtstartTz(): ?string
+    {
+        return $this->dtstart_tz;
+    }
+
+    public function setDtstartTz($value): self
+    {
+        $this->dtstart_tz = $this->formatValue($value);
+        return $this;
+    }
+
+    public function getDtendTz(): ?string
+    {
+        return $this->dtend_tz;
+    }
+
+    public function setDtendTz($value): self
+    {
+        $this->dtend_tz = $this->formatValue($value);
+        return $this;
     }
 }

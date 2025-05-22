@@ -25,13 +25,13 @@ class RecurringEventsTest extends TestCase
         
         // Teste das tägliche Event mit COUNT=5
         $dailyEvents = array_filter($events, function($event) {
-            return strpos($event->summary, 'Daily Recurring Event') !== false;
+            return strpos($event->getSummary(), 'Daily Recurring Event') !== false;
         });
         $this->assertEquals(5, count($dailyEvents), 'Das tägliche Event sollte genau 5 mal wiederholt werden');
         
         // Teste das wöchentliche Event (bis 1. Juni)
         $weeklyEvents = array_filter($events, function($event) {
-            return strpos($event->summary, 'Weekly Recurring Event') !== false;
+            return strpos($event->getSummary(), 'Weekly Recurring Event') !== false;
         });
         $this->assertNotEmpty($weeklyEvents, 'Es sollten wöchentliche Events vorhanden sein');
     }
@@ -58,29 +58,27 @@ class RecurringEventsTest extends TestCase
         
         // Grundlegende Tests für wiederkehrende Events
         $dailyEvents = array_filter($events, function($event) {
-            return strpos($event->summary, 'Daily Recurring Event') !== false;
+            return strpos($event->getSummary(), 'Daily Recurring Event') !== false;
         });
         $this->assertEquals(5, count($dailyEvents), 'Das tägliche Event sollte genau 5 mal wiederholt werden');
         
         // Prüfe, ob die Events korrekt verarbeitet wurden
         foreach ($events as $event) {
             // Prüfe, ob der Timestamp im richtigen Format ist
-            $this->assertMatchesRegularExpression('/^\d{8}T\d{6}$/', $event->dtstart, 'dtstart sollte im Format YYYYMMDDTHHmmss sein');
+            $this->assertMatchesRegularExpression('/^\d{8}T\d{6}$/', $event->getDtstart(), 'dtstart sollte im Format YYYYMMDDTHHmmss sein');
             
             // Überprüfe, ob das Event korrekt verarbeitet wird
-            $this->assertNotEmpty($event->dtstart, 'Event sollte ein Startdatum haben');
-            $this->assertNotEmpty($event->dtend, 'Event sollte ein Enddatum haben');
+            $this->assertNotEmpty($event->getDtstart(), 'Event sollte ein Startdatum haben');
+            $this->assertNotEmpty($event->getDtend(), 'Event sollte ein Enddatum haben');
             
             // Prüfe, ob die Zeitzonenkonvertierung funktioniert hat
-            if (property_exists($event, 'dtstart_tz')) {
-                $this->assertNotEmpty($event->dtstart_tz, 'Event sollte ein konvertiertes Startdatum mit Zeitzone haben');
-            }
+            $this->assertNotNull($event->getDtstartTz(), 'Event sollte ein konvertiertes Startdatum mit Zeitzone haben');
             
             // Prüfe bei täglichen Events, ob die Datumsfolge stimmt
-            if (strpos($event->summary, 'Daily Recurring Event') !== false) {
+            if (strpos($event->getSummary(), 'Daily Recurring Event') !== false) {
                 // Erwartete Zeit: 10:00 Berlin entspricht 8:00 UTC
                 // Ein Timestamp für 08:00 UTC eines bestimmten Datums kann direkt geprüft werden
-                $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->dtstart, false);
+                $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->getDtstart(), false);
                 $this->assertIsInt($timestamp, 'Der Timestamp sollte eine ganze Zahl sein');
                 
                 // Prüfe, ob die Stunde im Timestamp der Erwartung entspricht
@@ -103,24 +101,24 @@ class RecurringEventsTest extends TestCase
         // Aktiviere Zeitzonenberücksichtigung für wiederkehrende Events
         $parsedIcs->useTimeZoneWithRRules = true;
         
-        $today = new \DateTime();
-        $inSixMonths = clone $today;
-        $inSixMonths->modify('+7 months');
+        // Definiere einen festen Zeitraum für den Test (Mai bis November 2025)
+        $fromDate = new \DateTime('2025-05-01');
+        $toDate = new \DateTime('2025-11-30');
         
         // Formate für die verschiedenen Anforderungen
-        $fromDateIcs = $today->format('Ymd');
-        $toDateIcs = $inSixMonths->format('Ymd');
+        $fromDateIcs = $fromDate->format('Ymd');
+        $toDateIcs = $toDate->format('Ymd');
         $events = $parsedIcs->eventsFromRange($fromDateIcs, $toDateIcs);
         
         // Filtere die monatlichen Events
         $monthlyEvents = array_filter($events, function($event) {
-            return strpos($event->summary, 'Neander-Stammtisch-Freifunk') !== false;
+            return strpos($event->getSummary(), 'Neander-Stammtisch-Freifunk') !== false;
         });
         
         // Gruppiere Events nach Monat
         $eventsByMonth = [];
         foreach ($monthlyEvents as $event) {
-            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->dtstart);
+            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->getDtstart());
             $month = date('Y-m', $timestamp);
             
             if (!isset($eventsByMonth[$month])) {
@@ -130,8 +128,8 @@ class RecurringEventsTest extends TestCase
             $eventsByMonth[$month][] = $event;
         }
         
-        // Prüfe, dass es genau 6 Events gibt (Mai bis Oktober 2025)
-        $this->assertEquals(6, count($eventsByMonth), 'Es sollten genau 6 Monate mit Events sein');
+        // Prüfe, dass es genau 7 Events gibt (Mai bis November 2025)
+        $this->assertEquals(7, count($eventsByMonth), 'Es sollten genau 7 Monate mit Events sein');
         
         // Für jeden Monat prüfen
         foreach ($eventsByMonth as $month => $monthEvents) {
@@ -141,10 +139,13 @@ class RecurringEventsTest extends TestCase
         
         // Prüfe, dass jedes Event tatsächlich am 3. Donnerstag stattfindet
         foreach ($monthlyEvents as $event) {
-            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->dtstart);
+            $timestamp = $parsedIcs->iCalDateToUnixTimestamp($event->getDtstart());
             $dayOfWeek = (int)date('N', $timestamp); // 1 (Montag) bis 7 (Sonntag)
             $dayOfMonth = (int)date('j', $timestamp);
             $monthName = date('F Y', $timestamp);
+            
+            // Gibt das Ereignis aus (nur für Debugging)
+            echo "Event: " . date('Y-m-d (D)', $timestamp) . " - 3. Donnerstag: " . $dayOfMonth . "\n";
             
             // Prüfe, dass es ein Donnerstag ist (Tag 4 in ISO-8601)
             $this->assertEquals(4, $dayOfWeek, "Das Event am {$dayOfMonth}. im {$monthName} sollte an einem Donnerstag stattfinden");

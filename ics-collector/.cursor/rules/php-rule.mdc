@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+please remind, that phpunit doesn't have a -v flag
