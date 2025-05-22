@@ -1,0 +1,61 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//FREIFUNK//Freifunk Test Calendar//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:test-source-1@example.com
+DTSTAMP:20240430T144722Z
+SUMMARY:Source A Event 1
+DTSTART;TZID=Europe/Berlin:20240501T100000
+DTEND;TZID=Europe/Berlin:20240501T110000
+DESCRIPTION:This event is from Source A
+LOCATION:Test Location A
+X-WR-SOURCE:source-a
+X-WR-SOURCE-URL:https://example.com/source-a
+END:VEVENT
+BEGIN:VEVENT
+UID:test-source-2@example.com
+DTSTAMP:20240430T144722Z
+SUMMARY:Source A Event 2
+DTSTART;TZID=Europe/Berlin:20240502T100000
+DTEND;TZID=Europe/Berlin:20240502T110000
+DESCRIPTION:This event is also from Source A
+LOCATION:Test Location A
+X-WR-SOURCE:source-a
+X-WR-SOURCE-URL:https://example.com/source-a
+END:VEVENT
+BEGIN:VEVENT
+UID:test-source-3@example.com
+DTSTAMP:20240430T144722Z
+SUMMARY:Source B Event 1
+DTSTART;TZID=Europe/Berlin:20240503T120000
+DTEND;TZID=Europe/Berlin:20240503T130000
+DESCRIPTION:This event is from Source B
+LOCATION:Test Location B
+X-WR-SOURCE:source-b
+X-WR-SOURCE-URL:https://example.com/source-b
+END:VEVENT
+BEGIN:VEVENT
+UID:test-source-4@example.com
+DTSTAMP:20240430T144722Z
+SUMMARY:Source B Event 2 (recurring)
+DTSTART;TZID=Europe/Berlin:20240505T140000
+DTEND;TZID=Europe/Berlin:20240505T150000
+RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=SU
+DESCRIPTION:This event is from Source B and repeats weekly 3 times
+LOCATION:Test Location B
+X-WR-SOURCE:source-b
+X-WR-SOURCE-URL:https://example.com/source-b
+END:VEVENT
+BEGIN:VEVENT
+UID:test-source-5@example.com
+DTSTAMP:20240430T144722Z
+SUMMARY:Source C Event 1
+DTSTART;TZID=Europe/Berlin:20240510T090000
+DTEND;TZID=Europe/Berlin:20240510T100000
+DESCRIPTION:This event is from Source C
+LOCATION:Test Location C
+X-WR-SOURCE:source-c
+X-WR-SOURCE-URL:https://example.com/source-c
+END:VEVENT
+END:VCALENDAR 

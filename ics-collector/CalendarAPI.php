@@ -373,7 +373,7 @@ class CalendarAPI {
                 }
                 
                 // Create ICal object - directly with processRecurrences = true
-                $parsedIcs = new ICal($icsFile, 'MO', false, $this->processRecurrences);
+                $parsedIcs = new ICal($icsFile, 'MO', true, $this->processRecurrences);
                 
                 // Essential: Enable timezone handling for recurring events
                 $parsedIcs->useTimeZoneWithRRules = true;
@@ -406,7 +406,7 @@ class CalendarAPI {
                 if (!in_array('all', $this->sources, true)) {
                     $allowedSources = array_flip($this->sources);
                     $events = array_filter($events, function($event) use ($allowedSources) {
-                        return isset($event->xWrSource) && isset($allowedSources[$event->xWrSource]);
+                        return isset($allowedSources[$event->getXWrSource()]);
                     });
                 }
                 

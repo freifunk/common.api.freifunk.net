@@ -65,9 +65,6 @@ class PhpRruleTest extends TestCase
             
             $this->assertEquals($thirdThursday, $dayOfMonth, 
                 "Das Event am {$dayOfMonth}. im {$month} sollte am dritten Donnerstag ({$thirdThursday}.) stattfinden");
-            
-            // Ausgabe der Event-Details für die Diagnose
-            echo "Event: " . $occurrence->format('Y-m-d (D)') . " - 3. Donnerstag: {$thirdThursday}\n";
         }
     }
     
@@ -81,33 +78,10 @@ class PhpRruleTest extends TestCase
         $icsContent = file_get_contents($testFile);
         $events = $this->parseIcsEvents($icsContent);
         
-        // Debug-Ausgabe aller Events
-        echo "Gefundene Events in der ICS-Datei:" . PHP_EOL;
-        foreach ($events as $key => $event) {
-            echo "Event #{$key}:" . PHP_EOL;
-            if (isset($event['SUMMARY'])) {
-                echo "  SUMMARY: " . $event['SUMMARY'] . PHP_EOL;
-            }
-            if (isset($event['UID'])) {
-                echo "  UID: " . $event['UID'] . PHP_EOL;
-            }
-            if (isset($event['RRULE'])) {
-                echo "  RRULE: " . $event['RRULE'] . PHP_EOL;
-            }
-        }
-        
         // Wir wissen, dass das dritte Event das Monatliche Stammtisch-Event ist
         $stammtischEvent = null;
         if (count($events) >= 3) {
             $stammtischEvent = $events[2]; // Das dritte Event in der ICS-Datei
-            echo "Verwende Event #2 als Stammtisch-Event" . PHP_EOL;
-            
-            if (isset($stammtischEvent['SUMMARY'])) {
-                echo "Event-Summary: " . $stammtischEvent['SUMMARY'] . PHP_EOL;
-            }
-            if (isset($stammtischEvent['RRULE'])) {
-                echo "Event-RRULE: " . $stammtischEvent['RRULE'] . PHP_EOL;
-            }
         }
         
         $this->assertNotNull($stammtischEvent, 'Es sollten mindestens 3 Events in der ICS-Datei vorhanden sein');
@@ -117,7 +91,6 @@ class PhpRruleTest extends TestCase
             foreach ($events as $event) {
                 if (isset($event['RRULE']) && strpos($event['RRULE'], 'MONTHLY') !== false) {
                     $stammtischEvent = $event;
-                    echo "Verwende alternatives monatliches Event: " . ($event['SUMMARY'] ?? 'Unbekannt') . PHP_EOL;
                     break;
                 }
             }
@@ -140,10 +113,8 @@ class PhpRruleTest extends TestCase
             // Konvertiere das DTSTART-Format von YYYYMMDDTHHMMSS zu YYYY-MM-DD HH:MM:SS
             $startDateFormatted = preg_replace('/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})$/', '$1-$2-$3 $4:$5:$6', $startDateStr);
             $startDate = new \DateTime($startDateFormatted);
-            echo "Verwende DTSTART mit TZID: " . $startDate->format('Y-m-d H:i:s') . PHP_EOL;
         } elseif (isset($stammtischEvent['DTSTART'])) {
             $startDate = new \DateTime($stammtischEvent['DTSTART']);
-            echo "Verwende DTSTART ohne TZID: " . $startDate->format('Y-m-d H:i:s') . PHP_EOL;
         } else {
             $this->markTestSkipped('Event hat kein DTSTART');
             return;
@@ -154,8 +125,6 @@ class PhpRruleTest extends TestCase
         $ruleOptions = $this->parseRrule($rrule);
         $ruleOptions['DTSTART'] = $startDate->format('Y-m-d\TH:i:s');
         
-        echo "Parsed RRULE Options: " . json_encode($ruleOptions) . PHP_EOL;
-        
         $rule = new RRule($ruleOptions);
         
         // Setze einen Testzeitraum für 6 Monate ab dem Startdatum
@@ -165,12 +134,6 @@ class PhpRruleTest extends TestCase
         
         // Hole alle Occurrences innerhalb des Zeitraums
         $occurrences = $rule->getOccurrencesBetween($after, $before);
-        
-        // Debug-Ausgabe der Occurrences
-        echo "Gefundene Occurrences:" . PHP_EOL;
-        foreach ($occurrences as $occurrence) {
-            echo $occurrence->format('Y-m-d (D)') . PHP_EOL;
-        }
         
         // Prüfe, dass Events gefunden wurden
         $this->assertGreaterThan(0, count($occurrences), 'Es sollten wiederkehrende Events gefunden werden');
@@ -268,8 +231,6 @@ class PhpRruleTest extends TestCase
                             // Speichere auch ohne Parameter für einfacheren Zugriff
                             $currentEvent[$key] = $value;
                             
-                            // Für Debug-Zwecke
-                            echo "Parsed property: {$key}{$params} = {$value}\n";
                         } else {
                             // Fallback für den Fall, dass der Regex nicht passt
                             $key = substr($line, 0, $colonPos);
