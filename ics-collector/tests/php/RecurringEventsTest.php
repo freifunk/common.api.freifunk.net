@@ -144,28 +144,17 @@ class RecurringEventsTest extends TestCase
             $dayOfMonth = (int)date('j', $timestamp);
             $monthName = date('F Y', $timestamp);
             
-            // Gibt das Ereignis aus (nur für Debugging)
-            echo "Event: " . date('Y-m-d (D)', $timestamp) . " - 3. Donnerstag: " . $dayOfMonth . "\n";
-            
-            // Prüfe, dass es ein Donnerstag ist (Tag 4 in ISO-8601)
-            $this->assertEquals(4, $dayOfWeek, "Das Event am {$dayOfMonth}. im {$monthName} sollte an einem Donnerstag stattfinden");
-            
-            // Berechne, ob es sich um den dritten Donnerstag handelt
-            // Erster Tag des Monats
-            $firstDayOfMonth = strtotime(date('Y-m-01', $timestamp));
-            // Wochentag des ersten Tags (1-7)
-            $firstDayWeekday = (int)date('N', $firstDayOfMonth);
-            
-            // Tage bis zum ersten Donnerstag
-            $daysToFirstThursday = (4 - $firstDayWeekday + 7) % 7;
-            // Datum des ersten Donnerstags
-            $firstThursday = $firstDayOfMonth + $daysToFirstThursday * 86400;
-            // Datum des dritten Donnerstags
+            // Verifiziere, dass es sich um den dritten Donnerstag im Monat handelt
+            $startOfMonth = strtotime(date('Y-m-01', $timestamp));
+            $daysUntilFirstThursday = (4 - date('N', $startOfMonth) + 7) % 7;
+            $firstThursday = $startOfMonth + $daysUntilFirstThursday * 86400;
             $thirdThursday = $firstThursday + 14 * 86400;
             $thirdThursdayDay = (int)date('j', $thirdThursday);
+
+            $this->assertEquals($thirdThursdayDay, $dayOfMonth, "Das Event am $dayOfMonth. sollte der dritte Donnerstag im $month sein ($thirdThursdayDay)");
             
-            $this->assertEquals($thirdThursdayDay, $dayOfMonth, 
-                "Das Event am {$dayOfMonth}. im {$monthName} sollte am dritten Donnerstag ({$thirdThursdayDay}.) stattfinden");
+            // Zusätzliche Prüfung für Donnerstagsverifizierung
+            $this->assertEquals(4, (int)date('N', $timestamp), "Das Event muss an einem Donnerstag stattfinden");
         }
     }
 }
