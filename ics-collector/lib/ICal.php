@@ -861,6 +861,8 @@ class ICal
                     ->attendee($event['ATTENDEE'] ?? null)
                     ->url($event['URL'] ?? null)
                     ->categories($event['CATEGORIES'] ?? null)
+                    ->xWrSource($event['X-WR-SOURCE'] ?? null)
+                    ->xWrSourceUrl($event['X-WR-SOURCE-URL'] ?? null)
                     ->rrule($event['RRULE'] ?? null)
                     ->dtstartArray($event['DTSTART_array'] ?? null)
                     ->dtendArray($event['DTEND_array'] ?? null)
