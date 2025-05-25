@@ -167,31 +167,4 @@ ICS;
         $this->assertStringContainsString('END:VEVENT', $outputIcs);
         $this->assertStringContainsString('END:VCALENDAR', $outputIcs);
     }
-    
-    public function testCanConvertEventsToJsonArray(): void
-    {
-        $icsContent = <<<ICS
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Test//Test//EN
-BEGIN:VEVENT
-UID:test@example.com
-DTSTART:20231201T120000Z
-DTEND:20231201T130000Z
-SUMMARY:Test Event
-DESCRIPTION:Test Description
-END:VEVENT
-END:VCALENDAR
-ICS;
-        
-        $events = $this->handler->parseIcsString($icsContent);
-        $jsonArray = $this->handler->eventsToJsonArray($events);
-        
-        $this->assertCount(1, $jsonArray);
-        $this->assertEquals('test@example.com', $jsonArray[0]['uid']);
-        $this->assertEquals('Test Event', $jsonArray[0]['summary']);
-        $this->assertEquals('Test Description', $jsonArray[0]['description']);
-        $this->assertArrayHasKey('dtstart', $jsonArray[0]);
-        $this->assertArrayHasKey('dtend', $jsonArray[0]);
-    }
 } 

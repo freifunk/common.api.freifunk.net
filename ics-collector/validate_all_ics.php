@@ -15,7 +15,7 @@
  * Für Cron-Job: 0 1-5 * * * php /pfad/zu/validate_all_ics.php
  */
 
-require_once 'lib/ics-validator.php';
+require_once 'lib/IcsValidator.php';
 
 use ICal\IcsValidator;
 

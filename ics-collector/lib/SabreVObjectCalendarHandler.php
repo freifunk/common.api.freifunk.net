@@ -167,39 +167,6 @@ class SabreVObjectCalendarHandler
     }
 
     /**
-     * Convert events to JSON array
-     * 
-     * @param VEvent[] $events
-     * @return array
-     */
-    public function eventsToJsonArray(array $events): array
-    {
-        $jsonEvents = [];
-
-        foreach ($events as $event) {
-            $jsonEvent = [
-                'uid' => (string)$event->UID,
-                'summary' => (string)$event->SUMMARY,
-                'description' => isset($event->DESCRIPTION) ? (string)$event->DESCRIPTION : '',
-                'dtstart' => $event->DTSTART->getDateTime()->format('c'),
-                'dtend' => isset($event->DTEND) ? $event->DTEND->getDateTime()->format('c') : null,
-                'location' => isset($event->LOCATION) ? (string)$event->LOCATION : '',
-                'url' => isset($event->URL) ? (string)$event->URL : '',
-                'organizer' => isset($event->ORGANIZER) ? (string)$event->ORGANIZER : ''
-            ];
-
-            // Add RRULE if present
-            if (isset($event->RRULE)) {
-                $jsonEvent['rrule'] = (string)$event->RRULE;
-            }
-
-            $jsonEvents[] = $jsonEvent;
-        }
-
-        return $jsonEvents;
-    }
-
-    /**
      * Parse ICS file and return array of VEvent objects
      * 
      * @param string $filePath Path to ICS file
@@ -407,13 +374,8 @@ class SabreVObjectCalendarHandler
 
         // Generate output
         $result = [];
-        if ($format === 'json') {
-            $result['contentType'] = 'application/json';
-            $result['data'] = json_encode($this->eventsToJsonArray($events), JSON_PRETTY_PRINT);
-        } else {
-            $result['contentType'] = 'text/calendar';
-            $result['data'] = $this->eventsToIcsString($events);
-        }
+        $result['contentType'] = 'text/calendar';
+        $result['data'] = $this->eventsToIcsString($events);
 
         return $result;
     }

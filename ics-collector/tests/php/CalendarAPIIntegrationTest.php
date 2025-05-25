@@ -98,52 +98,6 @@ ICS;
         $this->assertStringContainsString('TZID=Europe/Berlin', $result['data']);
     }
     
-    public function testSabreVObjectWithJsonOutput(): void
-    {
-        // Test JSON output with Sabre VObject (default)
-        $api = new \CalendarAPI($this->testIcsFile);
-        
-        // Simulate request parameters for JSON
-        $_GET = [
-            'source' => 'all',
-            'from' => '2023-12-01',
-            'to' => '2023-12-31',
-            'format' => 'json'
-        ];
-        
-        // Use reflection to call protected method
-        $reflection = new \ReflectionClass($api);
-        $method = $reflection->getMethod('processCalendarData');
-        $method->setAccessible(true);
-        
-        // Set up sources for the API
-        $sourcesProperty = $reflection->getProperty('sources');
-        $sourcesProperty->setAccessible(true);
-        $sourcesProperty->setValue($api, ['all']);
-        
-        // Set up parameters
-        $parametersProperty = $reflection->getProperty('parameters');
-        $parametersProperty->setAccessible(true);
-        $parametersProperty->setValue($api, $_GET);
-        
-        $result = $method->invoke($api);
-        
-        $this->assertArrayHasKey('contentType', $result);
-        $this->assertArrayHasKey('data', $result);
-        $this->assertEquals('application/json', $result['contentType']);
-        
-        $jsonData = json_decode($result['data'], true);
-        $this->assertIsArray($jsonData);
-        $this->assertNotEmpty($jsonData);
-        
-        // Check that events have expected structure
-        $firstEvent = $jsonData[0];
-        $this->assertArrayHasKey('uid', $firstEvent);
-        $this->assertArrayHasKey('summary', $firstEvent);
-        $this->assertArrayHasKey('dtstart', $firstEvent);
-        $this->assertArrayHasKey('dtend', $firstEvent);
-    }
-    
     public function testRecurringEventExpansion(): void
     {
         // Test that recurring events are properly expanded with Sabre VObject (default)
@@ -153,7 +107,7 @@ ICS;
             'source' => 'all',
             'from' => '2023-12-05',
             'to' => '2023-12-08', // Extended range to ensure we get all 3 events
-            'format' => 'json'
+            'format' => 'ics'
         ];
         
         // Use reflection to call protected method
@@ -173,15 +127,12 @@ ICS;
         
         $result = $method->invoke($api);
         
-        $jsonData = json_decode($result['data'], true);
+        // Count recurring events in ICS output
+        $recurringEventCount = substr_count($result['data'], 'Recurring Event');
         
         // Should have recurring events (may be 2 or 3 depending on exact date handling)
-        $recurringEvents = array_filter($jsonData, function($event) {
-            return strpos($event['summary'], 'Recurring Event') !== false;
-        });
-        
-        $this->assertGreaterThanOrEqual(2, count($recurringEvents));
-        $this->assertLessThanOrEqual(3, count($recurringEvents));
+        $this->assertGreaterThanOrEqual(2, $recurringEventCount);
+        $this->assertLessThanOrEqual(3, $recurringEventCount);
     }
     
     public function testSourceFiltering(): void
@@ -193,7 +144,7 @@ ICS;
             'source' => 'sourceA',
             'from' => '2023-12-01',
             'to' => '2023-12-31',
-            'format' => 'json'
+            'format' => 'ics'
         ];
         
         // Use reflection to call protected method
@@ -213,14 +164,8 @@ ICS;
         
         $result = $method->invoke($api);
         
-        $jsonData = json_decode($result['data'], true);
-        
-        // Should only have events from sourceA
-        $this->assertGreaterThan(0, count($jsonData));
-        
-        // Check that no events from sourceB are included
-        foreach ($jsonData as $event) {
-            $this->assertNotEquals('Test Event 2', $event['summary']);
-        }
+        // Should contain events from sourceA but not sourceB
+        $this->assertStringContainsString('Test Event 1', $result['data']);
+        $this->assertStringNotContainsString('Test Event 2', $result['data']);
     }
 } 

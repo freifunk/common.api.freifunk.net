@@ -56,14 +56,8 @@ class CalendarAPI {
          * @var array<string, array<string>>
          */
         protected array $supportedValues = [
-            'format' => ['ics', 'json']
+            'format' => ['ics']  // Removed JSON support - deprecated
         ];
-        
-        /**
-         * Supported set of values for some parameters that could have multiple values, separated by commas
-         * @var array<string, array<string>>
-         */
-        protected array $supportedMultipleValues = [];
         
         /**
          * Supported formats (in regexp) for some parameters
@@ -107,16 +101,6 @@ class CalendarAPI {
         protected IcsValidator $validator;
         
         /**
-         * Determines whether recurring events should be processed and expanded
-         */
-        protected bool $processRecurrences = false;
-        
-        /**
-         * Use new Sabre VObject handler (always enabled now)
-         */
-        // Removed: protected bool $useSabreVObject = false;
-        
-        /**
          * Sabre VObject Calendar Handler instance
          */
         protected SabreVObjectCalendarHandler $sabreHandler;
@@ -125,17 +109,13 @@ class CalendarAPI {
          * Constructor
          * 
          * @param string|null $icsMergedFile Optional Pfad zur Merged-ICS-Datei (für Tests)
-         * @param bool $processRecurrences Whether to process recurring events
          */
-        public function __construct(?string $icsMergedFile = null, bool $processRecurrences = true) {
+        public function __construct(?string $icsMergedFile = null) {
             // Initialize validator
             $this->validator = new IcsValidator();
             
             // Set merged ICS file path
             $this->icsMergedFile = $icsMergedFile ?? self::DEFAULT_ICS_MERGED_FILE;
-            
-            // Set recurring events processing
-            $this->processRecurrences = $processRecurrences;
             
             // Initialize Sabre handler (always enabled now)
             $this->sabreHandler = new SabreVObjectCalendarHandler('Europe/Berlin');
@@ -336,11 +316,6 @@ class CalendarAPI {
             header('Content-type: ' . $result['contentType'] . '; charset=UTF-8');
             header('Access-Control-Allow-Origin: *');
             header('X-Cache: MISS');
-            
-            // Add warning as HTTP header if JSON was requested
-            if (isset($this->parameters['format']) && $this->parameters['format'] === 'json') {
-                header('X-Format-Warning: JSON format is deprecated and will be removed in future versions. Please use the ICS format.');
-            }
             
             echo $result['data'];
         }
