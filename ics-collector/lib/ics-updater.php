@@ -1,7 +1,7 @@
 <?php
 
 require (realpath(dirname(__FILE__))  . '/ics-merger.php');
-require_once (realpath(dirname(__FILE__))  . '/ics-validator.php');
+require_once (realpath(dirname(__FILE__))  . '/IcsValidator.php');
 
 use ICal\IcsValidator;
 
@@ -36,6 +36,8 @@ $validator = new IcsValidator();
 
 $summary = file_get_contents($configs['COMPONENT_URL']['ICS_COLLECTOR_URL'] . '?format=json');
 $summary = json_decode($summary, true);
+
+// Modernized IcsMerger with Sabre VObject
 $merger = new IcsMerger($configs['MERGED_ICS_HEADER']);
 
 $validationStats = [
@@ -134,7 +136,7 @@ foreach($summary as $key => $value) {
 logMessage('Merge all ics files..');
 $mergedFilePath = realpath(dirname(__FILE__)) . MERGED_FILE_NAME;
 $fp = fopen($mergedFilePath, 'w+');
-fwrite($fp, IcsMerger::getRawText($merger->getResult()));
+fwrite($fp, $merger->getIcsString());
 fclose($fp);
 
 // Validiere die zusammengeführte Datei als zusätzliche Sicherheit
@@ -147,8 +149,6 @@ if (!$isValid) {
 } else {
 	logMessage("Die zusammengeführte Datei ist gültig.");
 }
-
-$merger->warmupCache(realpath(dirname(__FILE__)) . MERGED_FILE_NAME);
 
 // Zusammenfassung der Validierungsstatistik
 logMessage("\nZusammenfassung der ICS-Validierung:");

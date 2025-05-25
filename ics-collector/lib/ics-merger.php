@@ -1,17 +1,22 @@
 <?php
-require_once 'EventObject.php';
-require_once 'ICal.php';
 
-use ICal\ICal;
+// Load Composer Autoloader to include Sabre VObject
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
+
+use Sabre\VObject\Reader;
+use Sabre\VObject\Component\VCalendar;
+use Sabre\VObject\Component\VEvent;
 
 /**
- * Class IcsMerger
+ * Class IcsMerger - Modern implementation using Sabre VObject directly
  */
 class IcsMerger {
 
-	private $inputs = array();
-	private $defaultHeader = array();
-	private $defaultTimezone;
+	private VCalendar $mergedCalendar;
+	private array $defaultHeader = array();
+	
 	const CONFIG_FILENAME = 'ics-merger-config.ini';
 
     /**
@@ -26,195 +31,109 @@ class IcsMerger {
 			$this->defaultHeader = $configs['ICS_HEADER'];
 		}
 		
-		$this->defaultTimezone = new DateTimeZone($this->defaultHeader['X-WR-TIMEZONE']);
+		// Create a new empty calendar with default headers
+		$this->mergedCalendar = new VCalendar();
+		
+		// Set default calendar properties
+		foreach ($this->defaultHeader as $key => $value) {
+			$this->mergedCalendar->add($key, $value);
+		}
 	}
-
-
-	public function warmupCache(string $mergedFileName) {
-	    error_log("warmup cache for merged calendars");
-	    $ical = new ICal($mergedFileName, 'MO', true, true);
-	    $ical->eventsFromRange("now", "now + 4 months", true);
-    }
 
 	/**
 	 * Add text string in ics format to the merger
 	 * @param string $text
 	 * @param null|array $options
 	 */
-	public function add($text, $options = null) {
-		$ical = new ICal(explode("\n", $text), 'MO');
-		if ($options != null) {
-			/*
-			$options = IcsMerger::arrayToIcs($options);
-			$insertPos = stripos($text, 'VEVENT') + strlen('VEVENT');
-			$text = substr_replace($text, "\n" . $options, $insertPos, 1);
-			*/
-			foreach ($options as $key => $value) {
-				if (is_null($ical->cal) || !array_key_exists('VEVENT',$ical->cal)){
-					continue;
-				}
-				foreach ($ical->cal['VEVENT'] as &$event) {
-					$event[$key] = $value;
+	public function add($text, $options = null): void {
+		try {
+			$calendar = Reader::read($text);
+			
+			// Add all events from this calendar to the merged calendar
+			if ($calendar->VEVENT) {
+				foreach ($calendar->VEVENT as $event) {
+					// Clone the event to avoid issues when moving between calendars
+					$clonedEvent = clone $event;
+					
+					// Add custom options to the event
+					if ($options !== null) {
+						foreach ($options as $key => $value) {
+							$clonedEvent->add($key, $value);
+						}
+					}
+					
+					// Add the event to our merged calendar
+					$this->mergedCalendar->add($clonedEvent);
 				}
 			}
+		} catch (\Exception $e) {
+			error_log("Error parsing ICS content: " . $e->getMessage());
+			// Skip invalid calendars
 		}
-		array_push($this->inputs, $ical);
+	}
+
+	/**
+	 * Return the result as a VCalendar object
+	 * @return VCalendar
+	 */
+	public function getCalendar(): VCalendar {
+		return $this->mergedCalendar;
 	}
 
 	/**
 	 * Return the result after parsing & merging inputs ics (added via IcsMerger::add)
-	 * @return array
+	 * @return array (Legacy compatibility - converts VCalendar back to array format)
 	 */
-	public function getResult() {
+	public function getResult(): array {
 		$result = array(
 			'VCALENDAR' => array(),
 			'VEVENTS' => array()
 		);
-		foreach ($this->inputs as $ical) {
-			//var_dump($ical);
-			$timezone = null;
-			if (! $ical->cal) {
-			    continue;
-            }
-			foreach($ical->cal as $key => $value) {
-				switch($key) {
-				case 'VCALENDAR' :
-					$result['VCALENDAR'] = array_merge($result['VCALENDAR'], $this->processCalendarHead($value, $timezone));
-					break;
-				case 'VEVENT' :
-					$result['VEVENTS'] = array_merge($result['VEVENTS'], $this->processEvents($value, $timezone));
-					break;
-				default : 
-					break;
-				}
-			}
-		}
-
-		foreach ($result['VCALENDAR'] as $key => $value) {
-			if (array_key_exists($key, $this->defaultHeader)) {
-				$result['VCALENDAR'][$key] = $this->defaultHeader[$key];
+		
+		// Extract calendar properties
+		foreach ($this->mergedCalendar->children() as $child) {
+			if ($child instanceof VEvent) {
+				// This is an event, process it later
+				continue;
 			} else {
-				unset($result['VCALENDAR'][$key]);
+				// This is a calendar property
+				$result['VCALENDAR'][$child->name] = (string)$child;
 			}
 		}
+		
+		// Extract events
+		foreach ($this->mergedCalendar->VEVENT as $event) {
+			$eventArray = [];
+			
+			// Get all properties from the event (exclude components like VALARM)
+			foreach ($event->children() as $child) {
+				// Skip components (like VALARM, VTIMEZONE), only process properties
+				if ($child instanceof \Sabre\VObject\Component) {
+					continue;
+				}
+				
+				$name = $child->name;
+				
+				// Handle special cases for date/time properties
+				if (in_array($name, ['DTSTART', 'DTEND'])) {
+					$tzidParam = $child->offsetGet('TZID');
+					if ($tzidParam) {
+						$eventArray[$name] = [
+							'value' => (string)$child,
+							'params' => ['TZID' => (string)$tzidParam]
+						];
+					} else {
+						$eventArray[$name] = (string)$child;
+					}
+				} else {
+					$eventArray[$name] = (string)$child;
+				}
+			}
+			
+			$result['VEVENTS'][] = $eventArray;
+		}
 
-		$callback = function($value) {
-			return $value;
-		};
-		// flatten array
-		$result['VEVENTS'] = array_map($callback, $result['VEVENTS']);
 		return $result;
-	}
-
-	// traverse calendar header to extract important informations : default timezone, etc.
-	private function processCalendarHead($calendarHead, &$timezone) {
-		foreach ($calendarHead as $key => $value) {
-			switch ($key) {
-				// google calendar
-				case 'X-WR-TIMEZONE':
-					$timezone = $value;
-					break;
-				case 'TZID':
-					$timezone = $value;
-					break;
-				default:
-					break;
-			}
-		}
-		return $calendarHead;
-	}
-
-
-	// traverse calendar events to perform modifications
-	// e.g : convert datetime to default timezone
-	private function processEvents($events, $timezone = null) {
-		foreach($events as &$event) {
-			foreach ($event as $key => &$value) {
-				if (!array_key_exists('DTSTAMP', $event)) {
-					$event['DTSTAMP'] = "19700101T000000Z";
-				}
-				switch($key) {
-				case 'ATTENDEE':
-					unset($event[$key]);
-					break;
-				// properties of type DATE / DATE-TIME
-				case 'CREATED':
-					if (preg_match("/^\d{8}T\d{6}$/", $event['CREATED']) ) {
-						$event['CREATED'] = $event['CREATED'] . "Z";
-					}
-					break;
-				case 'DTSTAMP':
-					if (preg_match("/^\d{8}T\d{6}$/", $event['DTSTAMP']) ) {
-						$event['DTSTAMP'] = $event['DTSTAMP'] . "Z";
-					}
-					break;
-				case 'DTSTART':
-					// Speichere den Original-String-Wert für die preg_match Prüfungen
-					$dtStartValue = $event[$key];
-					
-					if (isset($event['DTSTART_array']) && isset($event['DTSTART_array'][0]['TZID'])) {
-						$event[$key] = array(
-							'value' => $dtStartValue,
-							'params' => array('TZID' => $event['DTSTART_array'][0]['TZID'])
-						);
-					} else if (!preg_match("/^\d{8}T\d{6}/", $dtStartValue) && 
-							preg_match("/^\d{8}$/", $dtStartValue)) {
-						$event[$key] = $dtStartValue . "T000000Z";
-					}
-					break;
-				case 'DTEND':
-					// Speichere den Original-String-Wert für die preg_match Prüfungen
-					$dtEndValue = $event[$key];
-					
-					if (isset($event['DTEND_array']) && isset($event['DTEND_array'][0]['TZID'])) {
-						$event[$key] = array(
-							'value' => $dtEndValue,
-							'params' => array('TZID' => $event['DTEND_array'][0]['TZID'])
-						);
-					} else if (array_key_exists("DTEND", $event) &&
-							!preg_match("/^\d{8}T\d{6}/", $dtEndValue) &&
-							preg_match("/^\d{8}$/", $dtEndValue)) {
-						$event[$key] = $dtEndValue . "T000000Z";
-					}
-					break;
-				case 'LAST-MODIFIED':
-					if (array_key_exists("LAST-MODIFIED", $event) &&
-						preg_match("/^\d{8}T\d{6}$/", $event['LAST-MODIFIED']) ) {
-						$event['LAST-MODIFIED'] = $event['LAST-MODIFIED'] . "Z";
-					}
-					break;
-				case 'RDATE':
-					// only local datime needs conversion
-					if (is_array($value) &&
-						array_key_exists('meta', $value) &&
-						array_key_exists('type', $value['meta'])
-						&& $value['meta']['type'] == 'DATE-TIME'
-						&& $value['meta']['format'] == 'LOCAL-TIME') {
-						$tz = null;
-						if (array_key_exists('tzid', $value['meta'])) {
-							$tz = new DateTimeZone($value['meta']['tzid']);
-						} else if ($timezone != null) {
-							$tz = new DateTimeZone($timezone);
-						}
-						if ($tz != null) {
-							try {
-								$time = new DateTime($value['value'], $tz);
-							} catch (Exception $e) {
-								echo $e->getMessage();
-								exit(1);
-							}
-							$time->setTimezone($this->defaultTimezone);
-							$value['value'] =  $time->format('Ymd\THis');
-						}
-					}
-					break;
-				default: 
-					// ignore others
-					break;
-				}
-			}
-		}
-		return $events;
 	}
 
 	/**
@@ -222,34 +141,50 @@ class IcsMerger {
 	 * @param array $icsMergerResult
 	 * @return string
 	 */
-	public static function getRawText($icsMergerResult) {
-		
-		$str = 'BEGIN:VCALENDAR' . "\r\n";
-		$str .= IcsMerger::arrayToIcs($icsMergerResult['VCALENDAR']);
-		foreach ($icsMergerResult['VEVENTS'] as $event) {
-			$str .= 'BEGIN:VEVENT' . "\r\n"; 
-			$str .= IcsMerger::arrayToIcs($event);
-			$str .= 'END:VEVENT' . "\r\n";
+	public static function getRawText($icsMergerResult): string {
+		// If we have a VCalendar object, use it directly
+		if ($icsMergerResult instanceof VCalendar) {
+			return $icsMergerResult->serialize();
 		}
-		$str .= 'END:VCALENDAR';
-		return $str;
-	}
-
-	// convert an array of property name - property value into valid ics
-	private static function arrayToIcs($array) {
-		$callback = function ($v, $k) {
-			if (is_array($v)) {
-				if (isset($v['params']) && isset($v['params']['TZID'])) {
-					return $k . ';TZID=' . $v['params']['TZID'] . ':' . $v['value'] . "\r\n";
-				} else if (array_key_exists('value', $v)) {
-					return $k . ':' . $v['value'] . "\r\n";
-				} else {
-					return '';
-				}
-			} else {
-				return $k . ':' . $v . "\r\n"; 
+		
+		// For legacy array format, create a temporary VCalendar and serialize it
+		// This ensures consistent formatting through Sabre VObject
+		$calendar = new VCalendar();
+		
+		// Add calendar properties
+		if (isset($icsMergerResult['VCALENDAR'])) {
+			foreach ($icsMergerResult['VCALENDAR'] as $key => $value) {
+				$calendar->add($key, $value);
 			}
-		};
-		return implode('', array_map($callback, $array, array_keys($array)));
+		}
+		
+		// Add events
+		if (isset($icsMergerResult['VEVENTS'])) {
+			foreach ($icsMergerResult['VEVENTS'] as $eventData) {
+				$event = $calendar->createComponent('VEVENT');
+				
+				foreach ($eventData as $key => $value) {
+					if (is_array($value) && isset($value['params']) && isset($value['params']['TZID'])) {
+						// Handle timezone parameters
+						$property = $event->add($key, $value['value']);
+						$property['TZID'] = $value['params']['TZID'];
+					} else {
+						$event->add($key, $value);
+					}
+				}
+				
+				$calendar->add($event);
+			}
+		}
+		
+		return $calendar->serialize();
+	}
+	
+	/**
+	 * Get the merged calendar as ICS string (modern approach)
+	 * @return string
+	 */
+	public function getIcsString(): string {
+		return $this->mergedCalendar->serialize();
 	}
 }

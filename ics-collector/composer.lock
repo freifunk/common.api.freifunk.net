@@ -4,72 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3342e20a93deb2be7f4b3b32293e06a",
+    "content-hash": "047c5b2d71f9f2089f92e6156034c1cb",
     "packages": [
-        {
-            "name": "eluceo/ical",
-            "version": "2.14.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/markuspoerschke/iCal.git",
-                "reference": "3123533f7ff0af015da1d788476204f936d18135"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/markuspoerschke/iCal/zipball/3123533f7ff0af015da1d788476204f936d18135",
-                "reference": "3123533f7ff0af015da1d788476204f936d18135",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
-                "symfony/deprecation-contracts": "^2.1 || ^3.0"
-            },
-            "conflict": {
-                "php": "7.4.6"
-            },
-            "require-dev": {
-                "ergebnis/composer-normalize": "^2.23.1",
-                "friendsofphp/php-cs-fixer": "^3.4",
-                "infection/infection": "^0.23 || ^0.26 || ^0.27",
-                "phpmd/phpmd": "^2.13",
-                "phpunit/phpunit": "^9.5",
-                "vimeo/psalm": "^4.8 || ^5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Eluceo\\iCal\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Markus Poerschke",
-                    "email": "markus@poerschke.nrw",
-                    "role": "Developer"
-                }
-            ],
-            "description": "The eluceo/iCal package offers an abstraction layer for creating iCalendars. You can easily create iCal files by using PHP objects instead of typing your *.ics file by hand. The output will follow RFC 5545 as best as possible.",
-            "homepage": "https://github.com/markuspoerschke/iCal",
-            "keywords": [
-                "calendar",
-                "iCalendar",
-                "ical",
-                "ics",
-                "php calendar"
-            ],
-            "support": {
-                "docs": "https://ical.poerschke.nrw",
-                "forum": "https://github.com/markuspoerschke/iCal/discussions",
-                "issues": "https://github.com/markuspoerschke/iCal/issues",
-                "source": "https://github.com/markuspoerschke/iCal"
-            },
-            "time": "2024-07-11T22:33:13+00:00"
-        },
         {
             "name": "rlanvin/php-rrule",
             "version": "v2.6.0",
@@ -120,71 +56,237 @@
             "time": "2025-04-25T07:40:09+00:00"
         },
         {
-            "name": "symfony/deprecation-contracts",
-            "version": "v3.5.1",
+            "name": "sabre/uri",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6"
+                "url": "https://github.com/sabre-io/uri.git",
+                "reference": "38eeab6ed9eec435a2188db489d4649c56272c51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
+                "url": "https://api.github.com/repos/sabre-io/uri/zipball/38eeab6ed9eec435a2188db489d4649c56272c51",
+                "reference": "38eeab6ed9eec435a2188db489d4649c56272c51",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1"
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^1.12",
+                "phpstan/phpstan-phpunit": "^1.4",
+                "phpstan/phpstan-strict-rules": "^1.6",
+                "phpunit/phpunit": "^9.6"
             },
             "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/contracts",
-                    "name": "symfony/contracts"
-                },
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                }
-            },
             "autoload": {
                 "files": [
-                    "function.php"
-                ]
+                    "lib/functions.php"
+                ],
+                "psr-4": {
+                    "Sabre\\Uri\\": "lib/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
+                    "name": "Evert Pot",
+                    "email": "me@evertpot.com",
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
                 }
             ],
-            "description": "A generic function and convention to trigger deprecation notices",
-            "homepage": "https://symfony.com",
+            "description": "Functions for making sense out of URIs.",
+            "homepage": "http://sabre.io/uri/",
+            "keywords": [
+                "rfc3986",
+                "uri",
+                "url"
+            ],
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.1"
+                "forum": "https://groups.google.com/group/sabredav-discuss",
+                "issues": "https://github.com/sabre-io/uri/issues",
+                "source": "https://github.com/fruux/sabre-uri"
             },
-            "funding": [
+            "time": "2024-09-04T15:30:08+00:00"
+        },
+        {
+            "name": "sabre/vobject",
+            "version": "4.5.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sabre-io/vobject.git",
+                "reference": "ff22611a53782e90c97be0d0bc4a5f98a5c0a12c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sabre-io/vobject/zipball/ff22611a53782e90c97be0d0bc4a5f98a5c0a12c",
+                "reference": "ff22611a53782e90c97be0d0bc4a5f98a5c0a12c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^8.0",
+                "sabre/xml": "^2.1 || ^3.0 || ^4.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.17.1",
+                "phpstan/phpstan": "^0.12 || ^1.12 || ^2.0",
+                "phpunit/php-invoker": "^2.0 || ^3.1",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.6"
+            },
+            "suggest": {
+                "hoa/bench": "If you would like to run the benchmark scripts"
+            },
+            "bin": [
+                "bin/vobject",
+                "bin/generate_vcards"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sabre\\VObject\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
                 {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
+                    "name": "Evert Pot",
+                    "email": "me@evertpot.com",
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
                 },
                 {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
+                    "name": "Dominik Tobschall",
+                    "email": "dominik@fruux.com",
+                    "homepage": "http://tobschall.de/",
+                    "role": "Developer"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
+                    "name": "Ivan Enderlin",
+                    "email": "ivan.enderlin@hoa-project.net",
+                    "homepage": "http://mnt.io/",
+                    "role": "Developer"
                 }
             ],
-            "time": "2024-09-25T14:20:29+00:00"
+            "description": "The VObject library for PHP allows you to easily parse and manipulate iCalendar and vCard objects",
+            "homepage": "http://sabre.io/vobject/",
+            "keywords": [
+                "availability",
+                "freebusy",
+                "iCalendar",
+                "ical",
+                "ics",
+                "jCal",
+                "jCard",
+                "recurrence",
+                "rfc2425",
+                "rfc2426",
+                "rfc2739",
+                "rfc4770",
+                "rfc5545",
+                "rfc5546",
+                "rfc6321",
+                "rfc6350",
+                "rfc6351",
+                "rfc6474",
+                "rfc6638",
+                "rfc6715",
+                "rfc6868",
+                "vCalendar",
+                "vCard",
+                "vcf",
+                "xCal",
+                "xCard"
+            ],
+            "support": {
+                "forum": "https://groups.google.com/group/sabredav-discuss",
+                "issues": "https://github.com/sabre-io/vobject/issues",
+                "source": "https://github.com/fruux/sabre-vobject"
+            },
+            "time": "2025-04-17T09:22:48+00:00"
+        },
+        {
+            "name": "sabre/xml",
+            "version": "4.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sabre-io/xml.git",
+                "reference": "a89257fd188ce30e456b841b6915f27905dfdbe3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sabre-io/xml/zipball/a89257fd188ce30e456b841b6915f27905dfdbe3",
+                "reference": "a89257fd188ce30e456b841b6915f27905dfdbe3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-xmlreader": "*",
+                "ext-xmlwriter": "*",
+                "lib-libxml": ">=2.6.20",
+                "php": "^7.4 || ^8.0",
+                "sabre/uri": ">=2.0,<4.0.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "phpstan/phpstan": "^1.12",
+                "phpunit/phpunit": "^9.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/Deserializer/functions.php",
+                    "lib/Serializer/functions.php"
+                ],
+                "psr-4": {
+                    "Sabre\\Xml\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Evert Pot",
+                    "email": "me@evertpot.com",
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Markus Staab",
+                    "email": "markus.staab@redaxo.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "sabre/xml is an XML library that you may not hate.",
+            "homepage": "https://sabre.io/xml/",
+            "keywords": [
+                "XMLReader",
+                "XMLWriter",
+                "dom",
+                "xml"
+            ],
+            "support": {
+                "forum": "https://groups.google.com/group/sabredav-discuss",
+                "issues": "https://github.com/sabre-io/xml/issues",
+                "source": "https://github.com/fruux/sabre-xml"
+            },
+            "time": "2024-09-06T08:00:55+00:00"
         }
     ],
     "packages-dev": [
@@ -749,16 +851,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.18",
+            "version": "11.5.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "fc3e887c7f3f9917e1bf61e523413d753db00a17"
+                "reference": "d565e2cdc21a7db9dc6c399c1fc2083b8010f289"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fc3e887c7f3f9917e1bf61e523413d753db00a17",
-                "reference": "fc3e887c7f3f9917e1bf61e523413d753db00a17",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d565e2cdc21a7db9dc6c399c1fc2083b8010f289",
+                "reference": "d565e2cdc21a7db9dc6c399c1fc2083b8010f289",
                 "shasum": ""
             },
             "require": {
@@ -768,7 +870,7 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.13.0",
+                "myclabs/deep-copy": "^1.13.1",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.2",
@@ -781,7 +883,7 @@
                 "sebastian/code-unit": "^3.0.3",
                 "sebastian/comparator": "^6.3.1",
                 "sebastian/diff": "^6.0.2",
-                "sebastian/environment": "^7.2.0",
+                "sebastian/environment": "^7.2.1",
                 "sebastian/exporter": "^6.3.0",
                 "sebastian/global-state": "^7.0.2",
                 "sebastian/object-enumerator": "^6.0.1",
@@ -830,7 +932,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.18"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.21"
             },
             "funding": [
                 {
@@ -854,7 +956,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-22T06:09:49+00:00"
+            "time": "2025-05-21T12:35:00+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -1233,23 +1335,23 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "7.2.0",
+            "version": "7.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "855f3ae0ab316bbafe1ba4e16e9f3c078d24a0c5"
+                "reference": "a5c75038693ad2e8d4b6c15ba2403532647830c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/855f3ae0ab316bbafe1ba4e16e9f3c078d24a0c5",
-                "reference": "855f3ae0ab316bbafe1ba4e16e9f3c078d24a0c5",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/a5c75038693ad2e8d4b6c15ba2403532647830c4",
+                "reference": "a5c75038693ad2e8d4b6c15ba2403532647830c4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.0"
+                "phpunit/phpunit": "^11.3"
             },
             "suggest": {
                 "ext-posix": "*"
@@ -1285,15 +1387,27 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/environment/issues",
                 "security": "https://github.com/sebastianbergmann/environment/security/policy",
-                "source": "https://github.com/sebastianbergmann/environment/tree/7.2.0"
+                "source": "https://github.com/sebastianbergmann/environment/tree/7.2.1"
             },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
                     "type": "github"
+                },
+                {
+                    "url": "https://liberapay.com/sebastianbergmann",
+                    "type": "liberapay"
+                },
+                {
+                    "url": "https://thanks.dev/u/gh/sebastianbergmann",
+                    "type": "thanks_dev"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/sebastian/environment",
+                    "type": "tidelift"
                 }
             ],
-            "time": "2024-07-03T04:54:44+00:00"
+            "time": "2025-05-21T11:55:47+00:00"
         },
         {
             "name": "sebastian/exporter",

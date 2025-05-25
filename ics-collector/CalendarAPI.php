@@ -11,13 +11,11 @@ error_reporting(E_ALL);
 // Ensure no output has occurred yet
 if (ob_get_level() == 0) ob_start();
 
-require_once 'lib/EventObject.php';
-require_once 'lib/ICal.php';
 require_once 'lib/IcsValidator.php';
+require_once 'lib/SabreVObjectCalendarHandler.php';
 
-use ICal\ICal;
-use ICal\EventObject;
 use ICal\IcsValidator;
+use ICal\SabreVObjectCalendarHandler;
 
 /**
  * CalendarAPI class for handling iCal data and generating responses
@@ -114,9 +112,20 @@ class CalendarAPI {
         protected bool $processRecurrences = false;
         
         /**
+         * Use new Sabre VObject handler (always enabled now)
+         */
+        // Removed: protected bool $useSabreVObject = false;
+        
+        /**
+         * Sabre VObject Calendar Handler instance
+         */
+        protected SabreVObjectCalendarHandler $sabreHandler;
+        
+        /**
          * Constructor
          * 
          * @param string|null $icsMergedFile Optional Pfad zur Merged-ICS-Datei (für Tests)
+         * @param bool $processRecurrences Whether to process recurring events
          */
         public function __construct(?string $icsMergedFile = null, bool $processRecurrences = true) {
             // Initialize validator
@@ -127,6 +136,9 @@ class CalendarAPI {
             
             // Set recurring events processing
             $this->processRecurrences = $processRecurrences;
+            
+            // Initialize Sabre handler (always enabled now)
+            $this->sabreHandler = new SabreVObjectCalendarHandler('Europe/Berlin');
         }
         
         /**
@@ -339,142 +351,57 @@ class CalendarAPI {
          * @return array Associative array with contentType and data
          */
         protected function processCalendarData(): array {
-            // Suppress debug output
-            $oldErrorReporting = error_reporting();
-            error_reporting(E_ERROR | E_PARSE); // Show only severe errors
+            // Process the calendar and get the result
+            $result = $this->processCalendarDataWithSabre();
             
+            return $result;
+        }
+        
+        /**
+         * Process calendar data using the new Sabre VObject handler
+         * 
+         * @return array Associative array with contentType and data
+         */
+        protected function processCalendarDataWithSabre(): array {
             try {
-                // Read the ICS file
-                $icsFile = $this->icsMergedFile;
+                // Prepare parameters for Sabre handler
+                $parameters = [];
                 
-                // Parse date parameters
-                $from = false;
-                $to = false;
-                
+                // Map 'from' parameter
                 if (array_key_exists('from', $this->parameters)) {
-                    $fromValue = $this->parameters['from'];
-                    if (strpos($fromValue, "weeks") !== false) {
-                        $from = "now " . $fromValue;
-                    } else {
-                        $from = $fromValue;
-                    }
+                    $parameters['from'] = $this->parameters['from'];
                 }
                 
+                // Map 'to' parameter
                 if (array_key_exists('to', $this->parameters)) {
-                    $toValue = $this->parameters['to'];
-                    if (strpos($toValue, "weeks") !== false) {
-                        $to = "now " . $toValue;
-                    } else {
-                        $to = $toValue;
-                    }
+                    $parameters['to'] = $this->parameters['to'];
                 } else {
                     // Default: 6 months into the future
-                    $to = date('Y-m-d', strtotime('+6 months'));
+                    $parameters['to'] = '+6 months';
                 }
                 
-                // Create ICal object - directly with processRecurrences = true
-                $parsedIcs = new ICal($icsFile, 'MO', true, $this->processRecurrences);
-                
-                // Essential: Enable timezone handling for recurring events
-                $parsedIcs->useTimeZoneWithRRules = true;
-                
-                // Setze explizit die Start- und End-Datumsgrenzen
-                // Bei der Verarbeitung von Datumswerten strtotime() vermeiden
-                if ($from) {
-                    // Falls from ein String wie 'now' oder '+2 weeks' ist
-                    if (in_array($from, ['now']) || strpos($from, '+') === 0) {
-                        $parsedIcs->startDate = date('Y-m-d');
-                    } else {
-                        // Falls from ein konkretes Datum ist
-                        $parsedIcs->startDate = $from;
-                    }
-                } else {
-                    $parsedIcs->startDate = date('Y-m-d');
+                // Map 'source' parameter
+                if (!empty($this->sources) && !in_array('all', $this->sources, true)) {
+                    $parameters['source'] = implode(',', $this->sources);
                 }
                 
-                // Ähnlich für endDate
-                if (in_array($to, ['now']) || strpos($to, '+') === 0) {
-                    $parsedIcs->endDate = date('Y-m-d', strtotime($to));
-                } else {
-                    $parsedIcs->endDate = $to;
-                }
-                
-                // Get events for the specified date range - simple and direct approach
-                $events = $parsedIcs->eventsFromRange($parsedIcs->startDate, $parsedIcs->endDate);
-                
-                // Filter events by source if needed
-                if (!in_array('all', $this->sources, true)) {
-                    $allowedSources = array_flip($this->sources);
-                    $events = array_filter($events, function($event) use ($allowedSources) {
-                        return isset($allowedSources[$event->getXWrSource()]);
-                    });
-                }
-                
-                // Apply limit if specified
+                // Map 'limit' parameter
                 if (array_key_exists('limit', $this->parameters)) {
-                    $limit = (int)$this->parameters['limit'];
-                    if (count($events) > $limit) {
-                        $events = array_slice($events, 0, $limit);
-                    }
+                    $parameters['limit'] = $this->parameters['limit'];
                 }
                 
-                // Restore original error handling
-                error_reporting($oldErrorReporting);
+                // Map 'format' parameter
+                $parameters['format'] = $this->parameters['format'] ?? 'ics';
                 
-                // Prepare result data
-                $result = [];
-                $result['contentType'] = 'text/calendar';
-                
-                // Generate the ICS output
-                ob_start();
-                $this->outputIcsForCache($parsedIcs, $events, $result);
-                $result['data'] = ob_get_clean();
+                // Use Sabre handler to process the request
+                $result = $this->sabreHandler->processCalendarRequest($this->icsMergedFile, $parameters);
                 
                 return $result;
+                
             } catch (\Exception $e) {
-                // Restore original error handling
-                error_reporting($oldErrorReporting);
                 throw $e;
             }
         }
-        
-        /**
-         * Output ICS response for cache
-         * 
-         * @param ICal $parsedIcs The parsed ICal object
-         * @param array<EventObject> $events Array of EventObject instances
-         * @param array &$result Reference to result array for cache
-         */
-        protected function outputIcsForCache(ICal $parsedIcs, array $events, array &$result): void {
-            echo $this->toString($parsedIcs, $events);
-        }
-        
-        /**
-         * Convert the ICal object into valid ics string
-         * 
-         * @param ICal $ical The ICal object
-         * @param array<EventObject> $events Array of EventObject instances
-         * @return string ICS-formatted string
-         */
-        protected function toString(ICal $ical, array $events): string {
-            // Begin the iCalendar
-            $str = 'BEGIN:VCALENDAR' . "\r\n";
-            
-            // Add calendar metadata
-            $str .= $ical->printVcalendarDataAsIcs();
-            
-            // Add all events
-            foreach ($events as $event) {
-                $str .= $event->printIcs();
-            }
-            
-            // End the iCalendar with proper CRLF formatting
-            $str .= "END:VCALENDAR\r\n";
-            
-            return $str;
-        }
-        
-
         
         /**
          * Get request parameters
