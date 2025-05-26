@@ -168,4 +168,69 @@ ICS;
         $this->assertStringContainsString('Test Event 1', $result['data']);
         $this->assertStringNotContainsString('Test Event 2', $result['data']);
     }
+
+    public function testCalendarAPIRemovesAttendeeFromRecurringEvents(): void
+    {
+        // Use the recurring_events_with_source fixture that contains ATTENDEE properties
+        $fixtureFile = __DIR__ . '/../fixtures/recurring_events_with_source.ics';
+        $api = new \CalendarAPI($fixtureFile);
+        
+        // Simulate request parameters for a date range that includes the recurring events
+        $_GET = [
+            'source' => 'all',
+            'from' => '2024-05-01',
+            'to' => '2024-06-30',
+            'format' => 'ics'
+        ];
+        
+        // Use reflection to call protected method
+        $reflection = new \ReflectionClass($api);
+        $method = $reflection->getMethod('processCalendarData');
+        $method->setAccessible(true);
+        
+        // Set up sources for the API
+        $sourcesProperty = $reflection->getProperty('sources');
+        $sourcesProperty->setAccessible(true);
+        $sourcesProperty->setValue($api, ['all']);
+        
+        // Set up parameters
+        $parametersProperty = $reflection->getProperty('parameters');
+        $parametersProperty->setAccessible(true);
+        $parametersProperty->setValue($api, $_GET);
+        
+        $result = $method->invoke($api);
+        
+        // Verify the result structure
+        $this->assertArrayHasKey('contentType', $result);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertEquals('text/calendar', $result['contentType']);
+        
+        // Verify the output contains the events including expanded recurring events
+        $outputIcs = $result['data'];
+        $this->assertStringContainsString('BEGIN:VCALENDAR', $outputIcs);
+        $this->assertStringContainsString('BEGIN:VEVENT', $outputIcs);
+        $this->assertStringContainsString('Source A Event 1', $outputIcs);
+        $this->assertStringContainsString('Source B Event 2 (recurring)', $outputIcs);
+        
+        // Most importantly: verify that ATTENDEE properties are removed from all events,
+        // including the expanded recurring events, at the API level
+        $this->assertStringNotContainsString('ATTENDEE:', $outputIcs);
+        $this->assertStringNotContainsString('ATTENDEE:mailto:icke@da.de', $outputIcs);
+        $this->assertStringNotContainsString('ATTENDEE:meinereiner', $outputIcs);
+        
+        // Verify other properties are still present
+        $this->assertStringContainsString('SUMMARY:', $outputIcs);
+        $this->assertStringContainsString('DESCRIPTION:', $outputIcs);
+        $this->assertStringContainsString('LOCATION:', $outputIcs);
+        $this->assertStringContainsString('X-WR-SOURCE:', $outputIcs);
+        
+        // Verify that recurring events are properly expanded (should have multiple instances)
+        $summaryCount = substr_count($outputIcs, 'Source B Event 2 (recurring)');
+        $this->assertGreaterThan(1, $summaryCount, 'Recurring event should be expanded into multiple instances');
+        
+        // Verify source filtering works correctly
+        $this->assertStringContainsString('source-a', $outputIcs);
+        $this->assertStringContainsString('source-b', $outputIcs);
+        $this->assertStringContainsString('source-c', $outputIcs);
+    }
 } 

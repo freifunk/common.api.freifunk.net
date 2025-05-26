@@ -19,5 +19,7 @@ DTSTART;TZID=Europe/Berlin:20240430T100000
 DTEND;TZID=Europe/Berlin:20240430T120000
 DESCRIPTION:This is another test event
 LOCATION:Another Test Location
+ATTENDEE:mailto:icke@da.de
+ATTENDEE:meinereiner
 END:VEVENT
 END:VCALENDAR

@@ -20,6 +20,14 @@ class SabreVObjectCalendarHandler
     private DateTimeZone $defaultTimezone;
 
     /**
+     * Properties to exclude from output (for privacy/cleanliness)
+     */
+    private array $excludedProperties = [
+        'ATTENDEE',
+        'ORGANIZER'
+    ];
+
+    /**
      * Default calendar header properties
      */
     private array $defaultHeader = [
@@ -160,10 +168,33 @@ class SabreVObjectCalendarHandler
         }
 
         foreach ($events as $event) {
-            $calendar->add($event);
+            // Clean the event before adding it to the calendar
+            $cleanedEvent = $this->cleanEvent($event);
+            $calendar->add($cleanedEvent);
         }
 
         return $calendar->serialize();
+    }
+
+    /**
+     * Clean an event by removing excluded properties
+     * 
+     * @param VEvent $event
+     * @return VEvent
+     */
+    private function cleanEvent(VEvent $event): VEvent
+    {
+        // Clone the event to avoid modifying the original
+        $cleanedEvent = clone $event;
+        
+        // Remove excluded properties
+        foreach ($this->excludedProperties as $property) {
+            if (isset($cleanedEvent->{$property})) {
+                $cleanedEvent->remove($property);
+            }
+        }
+        
+        return $cleanedEvent;
     }
 
     /**
@@ -216,6 +247,50 @@ class SabreVObjectCalendarHandler
     public function getDefaultHeader(): array
     {
         return $this->defaultHeader;
+    }
+
+    /**
+     * Set properties to exclude from output
+     * 
+     * @param array $properties Array of property names to exclude
+     */
+    public function setExcludedProperties(array $properties): void
+    {
+        $this->excludedProperties = $properties;
+    }
+
+    /**
+     * Get properties excluded from output
+     * 
+     * @return array
+     */
+    public function getExcludedProperties(): array
+    {
+        return $this->excludedProperties;
+    }
+
+    /**
+     * Add a property to the exclusion list
+     * 
+     * @param string $property Property name to exclude
+     */
+    public function addExcludedProperty(string $property): void
+    {
+        if (!in_array($property, $this->excludedProperties)) {
+            $this->excludedProperties[] = $property;
+        }
+    }
+
+    /**
+     * Remove a property from the exclusion list
+     * 
+     * @param string $property Property name to include again
+     */
+    public function removeExcludedProperty(string $property): void
+    {
+        $this->excludedProperties = array_filter($this->excludedProperties, function($prop) use ($property) {
+            return $prop !== $property;
+        });
     }
 
     /**

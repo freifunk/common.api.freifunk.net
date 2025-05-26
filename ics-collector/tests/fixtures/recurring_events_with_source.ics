@@ -42,6 +42,8 @@ SUMMARY:Source B Event 2 (recurring)
 DTSTART;TZID=Europe/Berlin:20240505T140000
 DTEND;TZID=Europe/Berlin:20240505T150000
 RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=SU
+ATTENDEE:mailto:icke@da.de
+ATTENDEE:meinereiner
 DESCRIPTION:This event is from Source B and repeats weekly 3 times
 LOCATION:Test Location B
 X-WR-SOURCE:source-b
@@ -58,4 +60,4 @@ LOCATION:Test Location C
 X-WR-SOURCE:source-c
 X-WR-SOURCE-URL:https://example.com/source-c
 END:VEVENT
-END:VCALENDAR 
+END:VCALENDAR
