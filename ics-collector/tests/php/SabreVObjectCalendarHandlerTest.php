@@ -182,6 +182,11 @@ SUMMARY:Test Event
 ATTENDEE:mailto:attendee@example.com
 ORGANIZER:mailto:organizer@example.com
 DESCRIPTION:Test Description
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT15M
+DESCRIPTION:Event reminder
+END:VALARM
 END:VEVENT
 END:VCALENDAR
 ICS;
@@ -189,11 +194,13 @@ ICS;
         $events = $this->handler->parseIcsString($icsContent);
         $outputIcs = $this->handler->eventsToIcsString($events);
         
-        // Should contain the event but not ATTENDEE or ORGANIZER
+        // Should contain the event but not ATTENDEE, ORGANIZER or VALARM
         $this->assertStringContainsString('SUMMARY:Test Event', $outputIcs);
         $this->assertStringContainsString('DESCRIPTION:Test Description', $outputIcs);
         $this->assertStringNotContainsString('ATTENDEE:', $outputIcs);
         $this->assertStringNotContainsString('ORGANIZER:', $outputIcs);
+        $this->assertStringNotContainsString('BEGIN:VALARM', $outputIcs);
+        $this->assertStringNotContainsString('END:VALARM', $outputIcs);
     }
     
     public function testCanConfigureExcludedProperties(): void
@@ -326,5 +333,51 @@ ICS;
         // Count occurrences of the recurring event summary
         $summaryCount = substr_count($outputIcs, 'Source B Event 2 (recurring)');
         $this->assertGreaterThan(1, $summaryCount, 'Recurring event should be expanded into multiple instances');
+    }
+
+    public function testProcessCalendarRequestRemovesValarmComponents(): void
+    {
+        // Use the recurring_events fixture that contains VALARM components
+        $fixtureFile = __DIR__ . '/../fixtures/recurring_events.ics';
+        
+        // Verify the fixture file exists and contains VALARM components
+        $this->assertFileExists($fixtureFile);
+        $originalContent = file_get_contents($fixtureFile);
+        $this->assertStringContainsString('BEGIN:VALARM', $originalContent);
+        $this->assertStringContainsString('END:VALARM', $originalContent);
+        $this->assertStringContainsString('ACTION:DISPLAY', $originalContent);
+        $this->assertStringContainsString('TRIGGER:-PT15M', $originalContent);
+        
+        // Process the calendar request with a date range that includes the events with VALARM
+        $result = $this->handler->processCalendarRequest($fixtureFile, [
+            'from' => '2025-05-01',
+            'to' => '2025-06-30',
+            'format' => 'ics'
+        ]);
+        
+        // Verify the result structure
+        $this->assertArrayHasKey('contentType', $result);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertEquals('text/calendar', $result['contentType']);
+        
+        // Verify the output contains the events
+        $outputIcs = $result['data'];
+        $this->assertStringContainsString('BEGIN:VCALENDAR', $outputIcs);
+        $this->assertStringContainsString('BEGIN:VEVENT', $outputIcs);
+        $this->assertStringContainsString('Neander-Stammtisch-Freifunk', $outputIcs);
+        
+        // Most importantly: verify that VALARM components are completely removed
+        $this->assertStringNotContainsString('BEGIN:VALARM', $outputIcs);
+        $this->assertStringNotContainsString('END:VALARM', $outputIcs);
+        $this->assertStringNotContainsString('ACTION:DISPLAY', $outputIcs);
+        $this->assertStringNotContainsString('TRIGGER:-PT15M', $outputIcs);
+        
+        // Verify other event properties are still present
+        $this->assertStringContainsString('SUMMARY:', $outputIcs);
+        $this->assertStringContainsString('LOCATION:', $outputIcs);
+        $this->assertStringContainsString('DESCRIPTION:', $outputIcs);
+        
+        // Verify recurring events are expanded (the fixture contains recurring events)
+        $this->assertGreaterThan(1, substr_count($outputIcs, 'BEGIN:VEVENT'));
     }
 } 

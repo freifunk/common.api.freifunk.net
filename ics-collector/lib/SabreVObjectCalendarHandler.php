@@ -190,9 +190,10 @@ class SabreVObjectCalendarHandler
         // Remove excluded properties
         foreach ($this->excludedProperties as $property) {
             if (isset($cleanedEvent->{$property})) {
-                $cleanedEvent->remove($property);
+                unset($cleanedEvent->{$property});
             }
         }
+        $cleanedEvent->remove('VALARM');
         
         return $cleanedEvent;
     }
