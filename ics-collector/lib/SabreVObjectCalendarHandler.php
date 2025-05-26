@@ -22,24 +22,19 @@ class SabreVObjectCalendarHandler
     /**
      * Properties to exclude from output (for privacy/cleanliness)
      */
-    private array $excludedProperties = [
-        'ATTENDEE',
-        'ORGANIZER'
-    ];
+    private array $excludedProperties;
 
     /**
      * Default calendar header properties
      */
-    private array $defaultHeader = [
-        'VERSION' => '2.0',
-        'PRODID' => '-//Freifunk//ICS Collector//EN',
-        'CALSCALE' => 'GREGORIAN',
-        'METHOD' => 'PUBLISH'
-    ];
+    private array $defaultHeader;
 
-    public function __construct(string $timezone = 'Europe/Berlin')
+    public function __construct(?string $timezone = null)
     {
-        $this->defaultTimezone = new DateTimeZone($timezone);
+        // Use central configuration
+        $this->defaultTimezone = new DateTimeZone($timezone ?? CalendarConfig::getDefaultTimezone());
+        $this->excludedProperties = CalendarConfig::getDefaultExcludedProperties();
+        $this->defaultHeader = CalendarConfig::getDefaultCalendarHeader();
     }
 
     /**
@@ -422,12 +417,16 @@ class SabreVObjectCalendarHandler
      */
     public function processCalendarRequest(string $icsFilePath, array $parameters = []): array
     {
+        // Merge parameters with defaults from central configuration
+        $defaultParams = CalendarConfig::getDefaultApiParameters();
+        $parameters = CalendarConfig::mergeWithDefaults($parameters, $defaultParams);
+        
         // Parse parameters
-        $from = $parameters['from'] ?? 'now';
-        $to = $parameters['to'] ?? '+6 months';
+        $from = $parameters['from'];
+        $to = $parameters['to'];
         $sources = isset($parameters['source']) ? explode(',', $parameters['source']) : ['all'];
         $limit = isset($parameters['limit']) ? (int)$parameters['limit'] : 0;
-        $format = $parameters['format'] ?? 'ics';
+        $format = $parameters['format'];
 
         // Parse date range
         $fromDate = $this->parseDate($from);

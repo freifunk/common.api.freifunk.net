@@ -1,123 +1,323 @@
-# Calendar API
-Calendar API is a FOSSASIA open-source web service that provides events information of all FOSSASIA community,
- in ics/iCal or json format.
+# Freifunk Calendar API
 
-## How it works ?
+A modern, RESTful web service that provides calendar events from Freifunk communities in iCalendar (ICS) format. The API aggregates events from multiple community calendars and provides filtering, privacy protection, and timezone normalization.
 
-The API is backed by data retrieved from iCal feeds from FOSSASIA communities. Your community events are not here ? Please follow these simple steps :
+## Features
 
-1. Get the link to your community iCal feed ([What is iCal ?](https://en.wikipedia.org/wiki/ICalendar))
-2. Add it to your community json file, under section `feeds`, category `ics` : 
+- 🗓️ **Event Aggregation**: Combines events from multiple Freifunk community calendars
+- 🔍 **Smart Filtering**: Filter by source, date range, and limit results
+- 🔒 **Privacy Protection**: Automatically removes sensitive information (ATTENDEE, ORGANIZER)
+- 🌍 **Timezone Handling**: Consistent timezone normalization and TZID support
+- 🔄 **Recurring Events**: Automatic expansion of recurring events within date ranges
+- ⚡ **Caching**: Built-in caching for improved performance
+- ✅ **Validation**: Automatic ICS file validation and repair
+- 🤖 **Automated Updates**: ICS-Updater system for continuous feed synchronization
+- 🧪 **Well Tested**: Comprehensive test suite with 100+ assertions
+
+## Quick Start
+
+### Basic Usage
+
+Get all events for the next 6 months:
+```
+GET https://api.freifunk.net/ics-collector/CalendarAPI.php?source=all
+```
+
+Get events from specific communities:
+```
+GET https://api.freifunk.net/ics-collector/CalendarAPI.php?source=berlin,hamburg
+```
+
+Get events for a specific date range:
+```
+GET https://api.freifunk.net/ics-collector/CalendarAPI.php?source=all&from=2024-01-01&to=2024-12-31
+```
+
+## API Documentation
+
+For complete API documentation, see [docs/CalendarAPI.md](docs/CalendarAPI.md).
+
+### Parameters
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `source` | ✅ | - | Community sources: `all` or comma-separated list |
+| `format` | ❌ | `ics` | Output format (currently only `ics`) |
+| `from` | ❌ | `now` | Start date (ISO date, relative date, or `now`) |
+| `to` | ❌ | `+6 months` | End date (ISO date, relative date) |
+| `limit` | ❌ | unlimited | Maximum number of events |
+
+### Response Format
+
+The API returns valid iCalendar (ICS) data with:
+- Cleaned events (no ATTENDEE/ORGANIZER/VALARM)
+- Proper timezone information
+- Expanded recurring events
+- Sorted by start date
+
+## Installation
+
+### Requirements
+
+- PHP 8.1+
+- Composer
+- Sabre VObject library
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/freifunk/common.api.freifunk.net.git
+cd common.api.freifunk.net/ics-collector
+```
+
+2. Install dependencies:
+```bash
+composer install
+```
+
+3. Set up the data directory:
+```bash
+mkdir -p data
+# Place your merged ICS file at data/ffMerged.ics
+```
+
+4. Configure your web server to serve `CalendarAPI.php`
+
+### Directory Structure
+
+```
+ics-collector/
+├── CalendarAPI.php          # Main API endpoint
+├── ics-collector.php        # Feed discovery endpoint
+├── lib/
+│   ├── CalendarConfig.php   # Central configuration
+│   ├── SabreVObjectCalendarHandler.php
+│   ├── IcsValidator.php
+│   ├── ics-updater.php     # Automated feed updater
+│   └── ics-merger.php      # ICS file merger
+├── data/
+│   ├── ffMerged.ics        # Merged calendar data
+│   └── *.ics               # Individual community feeds
+├── docs/
+│   ├── CalendarAPI.md      # Complete API documentation
+│   └── ICS-Updater.md      # ICS updater documentation
+├── logs/
+│   └── ics_updater.log     # Update logs
+└── tests/                  # Test suite
+```
+
+## Configuration
+
+The API uses centralized configuration through the `CalendarConfig` class:
+
+### Default Settings
+
+```php
+// Default timezone
+DEFAULT_TIMEZONE = 'Europe/Berlin'
+
+// Default date range
+DEFAULT_FROM_DATE = 'now'
+DEFAULT_TO_DATE = '+6 months'
+
+// Privacy protection
+DEFAULT_EXCLUDED_PROPERTIES = ['ATTENDEE', 'ORGANIZER']
+DEFAULT_EXCLUDED_COMPONENTS = ['VALARM']
+
+// Caching
+CACHE_LIFETIME = 3600 // 1 hour
+```
+
+### Customization
+
+To customize settings, modify `lib/CalendarConfig.php` or extend the configuration class.
+
+## Development
+
+### Running Tests
+
+```bash
+# Run all tests
+composer test
+
+# Run specific test suites
+vendor/bin/phpunit tests/php/CalendarConfigTest.php
+vendor/bin/phpunit tests/php/SabreVObjectCalendarHandlerTest.php
+vendor/bin/phpunit tests/php/CalendarAPIIntegrationTest.php
+```
+
+### Test Coverage
+
+The project includes comprehensive tests covering:
+- ✅ Configuration management
+- ✅ Event parsing and processing
+- ✅ Date range filtering
+- ✅ Recurring event expansion
+- ✅ Privacy protection (ATTENDEE/ORGANIZER/VALARM removal)
+- ✅ Timezone handling
+- ✅ API integration
+- ✅ Error handling
+
+### Code Quality
+
+```bash
+# Run PHP linting
+find . -name "*.php" -exec php -l {} \;
+
+# Run tests with coverage
+vendor/bin/phpunit --coverage-html coverage/
+```
+
+## Adding Community Calendars
+
+To add your Freifunk community calendar:
+
+1. Ensure your community has an iCal feed URL
+2. Add the feed to your community's JSON configuration:
+
 ```json
-   "UELT": {
-   "feeds": [
-            {
-                "name": "calendar",
-                "url": "http://loco.ubuntu.com/events/ubuntu-eg/ical",
-                "category": "ics"
-            }
-        ]
-   }
-```
-You should see your ics feeds added shortly after our ics updater reruns.
-
-## How to use
-
-An up-to-date instance of Calendar API is deployed here. That's where you should send all data requests :
-```
-http://api.fossasia.net/ics-collector/CalendarAPI.php?
+{
+  "feeds": [
+    {
+      "name": "calendar",
+      "url": "https://your-community.freifunk.net/events.ics",
+      "category": "ics"
+    }
+  ]
+}
 ```
 
-You can host your own instace as well. CalendarAPI.php requires 2 dependencies : the ics parser and the merged ics file. To set up your own instance, please follow this directory structure :
+3. The feed will be included in the next update cycle
 
-```
-  api-folder
-   |
-   | -- CalendarAPI.php
-   | -- data
-         |
-         | -- ffMerged.ics
-   | -- lib
-         |
-         | -- ICal.php
-```
-(or you can just clone the whole repo)
+## ICS-Updater System
 
-## Parameters
+The ICS-Updater automatically collects, validates, and merges calendar feeds from all Freifunk communities:
 
-Parameter | Required | Value Formats | Multiple values* | Default Value | Description
---- | --- | --- | --- | --- | ---
-source | x |  `all`<br/>a community short name | x| | The community source of event feeds 
-format |  | `ics`<br/> `json`||`json`|Result format. Note that some other parameters don't work with `ics` format (`fields` parameter for example)
-fields | | `start`, `end`, `location`, `summary`,  `description`, .. |x ||In `json` mode, filter the event field to be returned. If this parameter is not specified, the fields will be returned by default : `start`, `end`, `summary`, `description`, `location`
-from | | date* <br/>datetime* <br/>`now` | ||Lower bound of returned events datetime. Based on `start` time.
-to | | date<br/>datetime<br/>`now` | || Upper bound of returned events datetime. Based on `start` time.
-limit | |An integer | | |   The limit number of return results. If not specified, the API will return as many events as it can.
+### System Architecture
 
-
-**\*Multiple values** : Support multiple values, separated by commas
-
-**\*date-format** : `YYYY-MM-DD`, for e.g. `1997-04-10`
-
-**\*datetime-format** : `YYYY-MM-DD\TH:m:s`, for e.g. `2015-08-16T10:09:59`
-## Examples 
-
- * Events from all communities, starting now until the end of 2015, ordered from oldest to latest :
-```
-    ?source=all&start=now&end=2015-12-31T23:59:59&sort=asc-date
+```mermaid
+graph LR
+    A[Community APIs] --> B[ICS-Collector]
+    B --> C[ICS-Updater]
+    C --> D[ffMerged.ics]
+    D --> E[Calendar API]
+    E --> F[REST Endpoints]
+    
+    style A fill:#e1f5fe
+    style D fill:#c8e6c9
+    style E fill:#fff3e0
 ```
 
- * Events from halle community, maximum 6 events, and return only fields `start`, `source` and `url` :
-```
-   ?source=halle&limit=6&fields=start,source,url
-```
- * Simplestquery
-```
-   ?source=all
+### Automated Process
+1. **Discovery**: Finds all community ICS feeds via the Community API
+2. **Download**: Retrieves each feed and stores it locally
+3. **Validation**: Checks feed validity and attempts automatic repair
+4. **Merging**: Combines all valid feeds into `ffMerged.ics`
+5. **Logging**: Records all activities and statistics
+
+### Manual Update
+```bash
+# Run the updater manually
+php lib/ics-updater.php
+
+# Check update logs
+tail -f logs/ics_updater.log
 ```
 
-## Supported method
- Only `HTTP GET` is supported. This is a read-only API, meaning that users can not update events information with this API. It could be updated directly from ics sources.
-
-## Testing
-  
- To run API tests : 
-
-```sh
-cd common.api.fossasia.net/ics-collector/tests
-jasmine-node test_spec.js
-```
-
-*Requirement* : jasmine-node. To install jasmine-node globally, run this command :
-```sh
-npm install jasmine-node -g
-```
-
-## Contribute
- We're happy to have reported issues and pull requests. Please clearly specify scenario, API call and API result.
- 
+For detailed information, see [docs/ICS-Updater.md](docs/ICS-Updater.md).
 
 ## ICS Validation and Repair
 
-The application now features automatic validation and repair of ICS files to prevent issues with invalid calendar data:
+The API includes automatic validation and repair features:
 
-- Automatic validation integrated directly into the ICS update process
-- Validation and repair happen during the regular update cycle, no separate cron job needed
-- Failed repairs are logged and skipped from the final merged calendar
-- Statistics about valid, repaired, and invalid files are logged
-
-The validation checks:
-- Basic ICS structure (BEGIN:VCALENDAR, END:VCALENDAR)
-- Required ICS components (VERSION, PRODID)
-- Validity of individual events (DTSTART, DTEND/DURATION, UID)
+### Automatic Validation
+- Validates ICS structure and required components
+- Checks event validity (DTSTART, UID, etc.)
+- Attempts automatic repair of common issues
+- Logs validation results and statistics
 
 ### Manual Validation
+```bash
+# Validate a specific ICS file
+php validate_all_ics.php --file=data/community.ics
 
-For manual validation of ICS files, a command-line tool is available:
+# Validate all ICS files
+php validate_all_ics.php --all
 
+# Get help
+php validate_all_ics.php --help
 ```
-php validate_all_ics.php --file=data/filename.ics
-```
 
-Run `php validate_all_ics.php --help` for more options.
+## Performance
+
+### Caching Strategy
+- Response caching based on request parameters
+- 1-hour cache lifetime
+- Cache headers indicate HIT/MISS status
+- Automatic cache invalidation
+
+### Optimization Tips
+- Use specific source filters when possible
+- Limit date ranges for better performance
+- Implement client-side caching for frequently accessed data
+- Use the `limit` parameter for pagination
+
+## Security
+
+### Privacy Protection
+The API automatically removes sensitive information:
+- **ATTENDEE**: Email addresses and attendee names
+- **ORGANIZER**: Organizer contact information  
+- **VALARM**: Personal reminder/alarm settings
+
+### Input Validation
+- All parameters are validated against allowed formats
+- Date formats are strictly checked
+- Source parameters are sanitized
+- No SQL injection vectors (file-based data)
+
+## Contributing
+
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new functionality
+4. Ensure all tests pass
+5. Submit a pull request
+
+### Development Guidelines
+- Follow PSR-12 coding standards
+- Add tests for new features
+- Update documentation
+- Use meaningful commit messages
+
+## Support
+
+- **Documentation**: [docs/CalendarAPI.md](docs/CalendarAPI.md)
+- **Issues**: [GitHub Issues](https://github.com/freifunk/common.api.freifunk.net/issues)
+- **Mailing List**: [wlannews@freifunk.net](mailto:wlannews@freifunk.net)
+- **Chat**: [freifunk at matrix](https://matrix.to/#/#freifunk:matrix.org)
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Changelog
+
+### Version 1.0.0
+- ✨ Centralized configuration system
+- ✨ Privacy protection (ATTENDEE/ORGANIZER/VALARM removal)
+- ✨ Modern Sabre VObject implementation
+- ✨ Comprehensive test suite
+- ✨ Improved timezone handling
+- ✨ Automatic ICS validation and repair
+- ✨ Performance optimizations and caching
+- 📚 Complete API documentation
+
+### Previous Versions
+- Legacy implementation with basic functionality
+- JSON format support (deprecated)
+- Basic event filtering
  

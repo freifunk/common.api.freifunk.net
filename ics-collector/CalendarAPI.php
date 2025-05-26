@@ -13,9 +13,11 @@ if (ob_get_level() == 0) ob_start();
 
 require_once 'lib/IcsValidator.php';
 require_once 'lib/SabreVObjectCalendarHandler.php';
+require_once 'lib/CalendarConfig.php';
 
 use ICal\IcsValidator;
 use ICal\SabreVObjectCalendarHandler;
+use ICal\CalendarConfig;
 
 /**
  * CalendarAPI class for handling iCal data and generating responses
@@ -32,54 +34,34 @@ class CalendarAPI {
         protected string $icsMergedFile;
         
         /**
-         * Supported HTTP methods
+         * Supported HTTP methods (from central configuration)
          * @var array<string>
          */
-        protected array $supportedMethods = ['GET'];
+        protected array $supportedMethods;
         
         /**
-         * Mandatory parameters fields
+         * Mandatory parameters fields (from central configuration)
          * @var array<string>
          */
-        protected array $mandatory = ['source'];
+        protected array $mandatory;
         
         /**
-         * If not specified, the parameters will take these default values
+         * If not specified, the parameters will take these default values (from central configuration)
          * @var array<string, string>
          */
-        protected array $defaultValues = [
-            'format' => 'ics'
-        ];
+        protected array $defaultValues;
         
         /**
-         * Supported sets of values for some parameters
+         * Supported sets of values for some parameters (from central configuration)
          * @var array<string, array<string>>
          */
-        protected array $supportedValues = [
-            'format' => ['ics']  // Removed JSON support - deprecated
-        ];
+        protected array $supportedValues;
         
         /**
-         * Supported formats (in regexp) for some parameters
+         * Supported formats (in regexp) for some parameters (from central configuration)
          * @var array<string, array<string>>
          */
-        protected array $supportedFormat = [
-            'from' => [
-                "/^now$/",
-                "/^\+\d+ weeks$/",
-                "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/", // date format, e.g. 1997-12-31
-                "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/" // datetime format, e.g. 2015-06-10T10:09:59
-            ],
-            'to' => [
-                "/^now$/",
-                "/^\+\d+ weeks$/",
-                "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]$/",
-                "/^[1-2][0-9]{3}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]$/"
-            ],
-            'limit' => [
-                "/^[0-9]*$/"
-            ]
-        ];
+        protected array $supportedFormat;
         
         /**
          * Parameters passed to the API
@@ -111,14 +93,21 @@ class CalendarAPI {
          * @param string|null $icsMergedFile Optional Pfad zur Merged-ICS-Datei (für Tests)
          */
         public function __construct(?string $icsMergedFile = null) {
+            // Initialize configuration from central config
+            $this->supportedMethods = CalendarConfig::getSupportedHttpMethods();
+            $this->mandatory = CalendarConfig::getMandatoryParameters();
+            $this->defaultValues = CalendarConfig::getDefaultApiParameters();
+            $this->supportedValues = CalendarConfig::getSupportedParameterValues();
+            $this->supportedFormat = CalendarConfig::getSupportedParameterFormats();
+            
             // Initialize validator
             $this->validator = new IcsValidator();
             
             // Set merged ICS file path
             $this->icsMergedFile = $icsMergedFile ?? self::DEFAULT_ICS_MERGED_FILE;
             
-            // Initialize Sabre handler (always enabled now)
-            $this->sabreHandler = new SabreVObjectCalendarHandler('Europe/Berlin');
+            // Initialize Sabre handler with default timezone from central config
+            $this->sabreHandler = new SabreVObjectCalendarHandler();
         }
         
         /**
@@ -286,7 +275,7 @@ class CalendarAPI {
             // Generate cache key based on request parameters
             $cacheKey = md5(json_encode($this->parameters));
             $cacheFile = sys_get_temp_dir() . '/ff_calendar_' . $cacheKey . '.cache';
-            $cacheLifetime = 3600; // 1 hour cache lifetime (in seconds)
+            $cacheLifetime = CalendarConfig::getCacheLifetime();
             
             // Check if a valid cache exists
             if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheLifetime)) {
@@ -339,34 +328,14 @@ class CalendarAPI {
          */
         protected function processCalendarDataWithSabre(): array {
             try {
-                // Prepare parameters for Sabre handler
-                $parameters = [];
+                // Prepare parameters for Sabre handler - pass through all parameters
+                // The Sabre handler will handle defaults via central configuration
+                $parameters = $this->parameters;
                 
-                // Map 'from' parameter
-                if (array_key_exists('from', $this->parameters)) {
-                    $parameters['from'] = $this->parameters['from'];
-                }
-                
-                // Map 'to' parameter
-                if (array_key_exists('to', $this->parameters)) {
-                    $parameters['to'] = $this->parameters['to'];
-                } else {
-                    // Default: 6 months into the future
-                    $parameters['to'] = '+6 months';
-                }
-                
-                // Map 'source' parameter
+                // Map 'source' parameter from sources array
                 if (!empty($this->sources) && !in_array('all', $this->sources, true)) {
                     $parameters['source'] = implode(',', $this->sources);
                 }
-                
-                // Map 'limit' parameter
-                if (array_key_exists('limit', $this->parameters)) {
-                    $parameters['limit'] = $this->parameters['limit'];
-                }
-                
-                // Map 'format' parameter
-                $parameters['format'] = $this->parameters['format'] ?? 'ics';
                 
                 // Use Sabre handler to process the request
                 $result = $this->sabreHandler->processCalendarRequest($this->icsMergedFile, $parameters);
