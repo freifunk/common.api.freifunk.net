@@ -116,11 +116,30 @@ class SabreVObjectCalendarHandler
                 // Use our default timezone as reference for floating times
                 $expandedCalendar = $tempCalendar->expand($from, $to, $this->defaultTimezone);
                 
+                $originalUid = (string)$event->UID;
+                
                 foreach ($expandedCalendar->VEVENT as $expandedEvent) {
+                    // Remove RECURRENCE-ID: after expansion there is no parent
+                    // event with RRULE, so consumers (e.g. WP Event Aggregator)
+                    // cannot resolve the reference and skip these events entirely.
+                    if (isset($expandedEvent->{'RECURRENCE-ID'})) {
+                        $dtStart = $expandedEvent->DTSTART->getDateTime();
+                        $expandedEvent->remove('RECURRENCE-ID');
+                        $expandedEvent->UID = $originalUid . '-' . $dtStart->format('Ymd\THis');
+                    }
+                    
                     $expandedEvents[] = $expandedEvent;
                 }
             } else {
-                // Non-recurring event - add it as is (filtering happens later)
+                // Non-recurring event — but it may already carry a RECURRENCE-ID
+                // from a pre-expanded source feed.  Strip it for the same reason
+                // as above: there is no parent RRULE event in our output.
+                if (isset($event->{'RECURRENCE-ID'})) {
+                    $dtStart = $event->DTSTART->getDateTime();
+                    $originalUid = (string)$event->UID;
+                    $event->remove('RECURRENCE-ID');
+                    $event->UID = $originalUid . '-' . $dtStart->format('Ymd\THis');
+                }
                 $expandedEvents[] = $event;
             }
         }
