@@ -439,6 +439,7 @@ class SabreVObjectCalendarHandler
         // First expand recurring events, then filter by date range
         // This ensures that events with DTSTART in the past can still generate future instances
         $events = $this->expandRecurringEvents($events, $fromDate, $toDate);
+        $events = $this->convertEventsToTimezone($events);
         $events = $this->filterEventsByDateRange($events, $fromDate, $toDate);
         $events = $this->filterEventsBySource($events, $sources);
         $events = $this->sortEventsByStartDate($events);
@@ -453,6 +454,64 @@ class SabreVObjectCalendarHandler
         $result['data'] = $this->eventsToIcsString($events);
 
         return $result;
+    }
+
+    /**
+     * Convert all event DTSTART/DTEND to a target timezone.
+     * 
+     * Handles all cases:
+     * - UTC times (Z suffix) -> converted to target timezone with TZID
+     * - Floating times (no Z, no TZID) -> assumed as target timezone, TZID added
+     * - Other TZID -> converted to target timezone
+     * - Already in target timezone -> unchanged
+     * - DATE-only (all-day) -> unchanged
+     * 
+     * @param VEvent[] $events
+     * @param DateTimeZone|null $targetTimezone Falls null, wird defaultTimezone verwendet
+     * @return VEvent[]
+     */
+    public function convertEventsToTimezone(array $events, ?DateTimeZone $targetTimezone = null): array
+    {
+        $tz = $targetTimezone ?? $this->defaultTimezone;
+
+        foreach ($events as $event) {
+            foreach (['DTSTART', 'DTEND', 'RECURRENCE-ID'] as $propName) {
+                if (isset($event->{$propName})) {
+                    $this->convertDateTimePropertyToTimezone($event->{$propName}, $tz);
+                }
+            }
+        }
+
+        return $events;
+    }
+
+    /**
+     * Convert a single datetime property to the target timezone.
+     * 
+     * @param \Sabre\VObject\Property $property
+     * @param DateTimeZone $targetTimezone
+     */
+    private function convertDateTimePropertyToTimezone(
+        \Sabre\VObject\Property $property,
+        DateTimeZone $targetTimezone
+    ): void {
+        if ($property instanceof \Sabre\VObject\Property\ICalendar\DateTime
+            && !$property->hasTime()) {
+            return;
+        }
+
+        $targetTzName = $targetTimezone->getName();
+        $existingTzid = $property->offsetGet('TZID');
+
+        if ($existingTzid && (string)$existingTzid === $targetTzName) {
+            return;
+        }
+
+        $dt = $property->getDateTime();
+        $localDt = $dt->setTimezone($targetTimezone);
+
+        $property->setValue($localDt->format('Ymd\THis'));
+        $property->offsetSet('TZID', $targetTzName);
     }
 
     /**
